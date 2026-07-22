@@ -499,9 +499,9 @@
   <div class="branch-point-wrap">
     <div class="node node-question">
       <div class="label">Pergunta</div>
-      <div class="txt">Você quer falar sobre atendimento em Psiquiatria ou sobre infusão de Cetamina?</div>
+      <div class="txt">Você quer falar sobre consulta com psiquiatra ou sobre infusão de Cetamina?</div>
       <div class="options-row">
-        <div class="option-pill">Atendimento em Psiquiatria</div>
+        <div class="option-pill">Consulta com Psiquiatra</div>
         <div class="option-pill">Infusão de Cetamina</div>
       </div>
     </div>
@@ -517,7 +517,7 @@
       </div>
     </div>
   </div>
-  <div style="text-align:center; font-size:0.8rem; color:var(--texto-claro); margin: 10px 0 4px;">(pergunta feita para todo mundo — paciente novo ou já conhecido; "Atendimento em Psiquiatria" segue abaixo)</div>
+  <div style="text-align:center; font-size:0.8rem; color:var(--texto-claro); margin: 10px 0 4px;">(pergunta feita para todo mundo — paciente novo ou já conhecido; "Consulta com Psiquiatra" segue abaixo)</div>
 
   <div class="arrow-down" style="margin-top:10px;">↓</div>
 
@@ -560,70 +560,22 @@
           </div>
 
           <div class="mini-arrow">↓ (se convênio)</div>
-          <div class="node node-question">
-            <div class="label">Pergunta</div>
-            <div class="txt">Quer saber quais convênios atendemos antes de eu te transferir, ou prefere já falar com a equipe?</div>
-            <div class="options-row">
-              <div class="option-pill">Quais convênios vocês atendem?</div>
-              <div class="option-pill">Pode me transferir</div>
-            </div>
-          </div>
-
-          <div class="parallel-row">
-            <div class="parallel-col">
-              <div class="parallel-col-title">"Quais convênios vocês atendem?"</div>
-              <div class="node node-msg node-convenios" style="margin:0;">
-                <div class="label">Mensagem do bot</div>
-                <div class="txt">Convênios atendidos:</div>
-                <ul class="convenio-list">
-                  <li>AMIL / NEXT / AMIL FÁCIL (adulto e infantil)</li>
-                  <li>ABET (adulto e infantil)</li>
-                  <li>ABMED</li>
-                  <li>CASSI</li>
-                  <li>CARE PLUS</li>
-                  <li>GAMA SAÚDE</li>
-                  <li>FUNDAÇÃO ITAÚ / PORTO SEGURO / PORTO SEGURO SERVIÇOS</li>
-                  <li>GARANTIA DE SAÚDE (adulto e infantil)</li>
-                  <li>GRUPO HAPVIDA NOTREDAME INTERMÉDICA</li>
-                  <li>NEW LEADER SAÚDE</li>
-                  <li>NOVA SAÚDE</li>
-                  <li>PREVENT SENIOR (sujeito à confirmação de rede/plano)</li>
-                  <li>SEGUROS UNIMED</li>
-                  <li>SEPACO (adulto e infantil)</li>
-                  <li>TEM SAÚDE</li>
-                  <li>TRANSMONTANO SAÚDE (adulto e infantil)</li>
-                  <li>VIDA CLASS</li>
-                  <li>VIVEST / FUNDAÇÃO CESP / SABESPREV</li>
-                </ul>
-                <div class="txt convenio-disclaimer">Planos sujeitos à verificação nas operadoras para agendar o atendimento.</div>
-              </div>
-            </div>
-            <div class="parallel-col">
-              <div class="parallel-col-title">"Pode me transferir"</div>
-              <div class="parallel-passthrough">
-                <span>↓</span>
-                <em>segue direto para a transferência abaixo</em>
-              </div>
-            </div>
-          </div>
-
-          <div class="mini-arrow">↓ (nos dois casos — pediu a lista ou não)</div>
           <div class="node node-handoff">
             <div class="label">Transferência</div>
-            <div class="txt">"Vou te transferir para nossa equipe finalizar o agendamento." → abre chat com atendente, já sabendo unidade e convênio informado.</div>
+            <div class="txt">Vai direto pro atendente, sem perguntar qual convênio — decisão da Meire (22/jul/2026): explicar pelo bot como achar o nome certo do plano dentro de uma rede gigante (ex.: Notredame) é complicado demais; o atendente já faz a checagem de elegibilidade ao vivo, com o paciente na linha.</div>
           </div>
 
           <div class="mini-arrow" style="margin-top:22px;">↓ (se particular)</div>
-          <div class="node node-msg node-standby">
-            <span class="tag-standby">Confirmar c/ Meire</span>
+          <div class="node node-msg">
             <div class="label">Pergunta</div>
             <div class="txt">Qual a idade de quem vai à consulta?</div>
           </div>
-          <div class="mini-arrow">↓ (bot aplica o corte de idade adulto × infantil — corte exato ainda a definir)</div>
+          <div class="mini-arrow">↓ (infantil = 3 anos até 17 anos, 11 meses e 29 dias · adulto = 18 anos ou mais — confirmado pela Meire, 22/jul/2026)</div>
           <div class="node node-msg">
             <div class="label">Mensagem do bot</div>
             <div class="txt">O valor da consulta é R$600 (adulto) ou R$700 (infantil), pagamento via PIX ou dinheiro — valor certo já calculado pela idade informada.</div>
           </div>
+          <div class="mini-note" style="text-align:center; font-size:0.78rem; color:var(--texto-claro); margin:-4px 0 10px;">Meire: informar o valor antes do atendente ajuda a filtrar quem desiste por preço, sem gastar tempo de atendimento à toa.</div>
           <div class="mini-arrow">↓</div>
           <div class="node node-handoff">
             <div class="label">Transferência</div>
@@ -672,10 +624,32 @@
           </div>
 
           <div class="mini-arrow" style="margin-top:16px;">↓ (se "convênios atendidos")</div>
-          <div class="node node-msg">
+          <div class="node node-msg node-convenios">
             <div class="label">Mensagem do bot</div>
-            <div class="txt">Mesma lista formatada de convênios (arquivo oficial "Convênios Atendidos ASSIS", ver ramo "Agendar consulta") + aviso de validação no agendamento.</div>
+            <div class="txt">Convênios atendidos:</div>
+            <ul class="convenio-list">
+              <li>AMIL / NEXT / AMIL FÁCIL (adulto e infantil)</li>
+              <li>ABET (adulto e infantil)</li>
+              <li>ABMED</li>
+              <li>CASSI</li>
+              <li>CARE PLUS</li>
+              <li>GAMA SAÚDE</li>
+              <li>FUNDAÇÃO ITAÚ / PORTO SEGURO / PORTO SEGURO SERVIÇOS</li>
+              <li>GARANTIA DE SAÚDE (adulto e infantil)</li>
+              <li>GRUPO HAPVIDA NOTREDAME INTERMÉDICA</li>
+              <li>NEW LEADER SAÚDE</li>
+              <li>NOVA SAÚDE</li>
+              <li>PREVENT SENIOR (sujeito à confirmação de rede/plano)</li>
+              <li>SEGUROS UNIMED</li>
+              <li>SEPACO (adulto e infantil)</li>
+              <li>TEM SAÚDE</li>
+              <li>TRANSMONTANO SAÚDE (adulto e infantil)</li>
+              <li>VIDA CLASS</li>
+              <li>VIVEST / FUNDAÇÃO CESP / SABESPREV</li>
+            </ul>
+            <div class="txt convenio-disclaimer">Todos os planos estão sujeitos à confirmação de cobertura na rede do plano — a checagem final é sempre feita com o atendente no agendamento.</div>
           </div>
+          <div class="mini-note" style="text-align:center; font-size:0.78rem; color:var(--texto-claro); margin:-6px 0 4px;">Só aparece se o paciente pedir explicitamente — a clínica não empurra essa lista proativamente (decisão da Meire, 22/jul/2026)</div>
 
           <div class="mini-arrow" style="margin-top:16px;">↓ (se "outras informações")</div>
           <div class="node node-handoff">
@@ -805,8 +779,16 @@
       <li>"Infusão de Cetamina" é filtrado logo no início da conversa (antes de perguntar se já é paciente) e <b>sempre</b> cai em atendente humano — não passa pelo resto das perguntas, nem para quem já é paciente.</li>
       <li>"Cancelar consulta" foi desenhado para coletar data e horário <b>antes</b> de transferir, assim o atendente já tenta remarcar direto na conversa, sem precisar perguntar de novo.</li>
       <li><b>"Solicitar receita ou relatório" — revisado e corrigido nesta rodada:</b> a versão anterior deste resumo estava incompleta (faltavam telefone e data de nascimento na coleta). É o único ramo que <b>não</b> termina em atendente humano — o backend (busca por CPF, painel da secretaria, notificações automáticas) já está construído e testado; falta só montar a conversa em si no bot. Fluxo completo, com todos os campos, textos exatos e o papel da secretaria/médico, agora em documento próprio: <a href="https://gagarciam.github.io/static-shares/fluxo-receita-relatorio/" target="_blank" style="color: var(--verde-escuro); font-weight: 600;">fluxo detalhado de Receita/Relatório</a>.</li>
-      <li><b>Pendência para a Meire:</b> no ramo "Agendar minha primeira consulta → Particular", o bot pergunta a idade do paciente para aplicar o valor certo (R$600 adulto / R$700 infantil) — falta definir qual é exatamente o corte de idade que separa "infantil" de "adulto".</li>
-      <li><b>Lista de convênios — resolvida:</b> usei a lista oficial do arquivo "Convênios Atendidos ASSIS" (a mesma que já é usada com pacientes), não o cadastro interno de faturamento do CliMed — esse último tem muito mais entradas (testes, duplicatas, códigos internos) e não devia ser usado como fonte para o paciente. Mantive o aviso "Planos sujeitos à verificação nas operadoras" que já vem no arquivo original.</li>
+      <li><b>Retorno da Meire (22/jul/2026, WhatsApp) — mudanças aplicadas:</b>
+        <ul style="margin-top:6px;">
+          <li>"Atendimento em Psiquiatria" → renomeado para "Consulta com Psiquiatra".</li>
+          <li>Corte de idade confirmado: <b>infantil = 3 anos até 17 anos, 11 meses e 29 dias · adulto = 18 anos ou mais</b>. Aplicado no ramo Particular.</li>
+          <li>Informar o valor da consulta antes do atendente foi validado por ela ("perfeito... muitos já desistem aí") — mantido como está.</li>
+          <li><b>Mudança de decisão no ramo Convênio:</b> ela pensou melhor e decidiu <b>não</b> perguntar nada sobre convênio na hora de agendar — vai direto pro atendente, que já checa a elegibilidade ao vivo. Motivo: explicar pelo bot como achar o nome certo do plano numa rede gigante (ex.: Notredame) é complicado demais. A sub-pergunta "quais convênios/pode me transferir" e a lista que existiam aqui foram removidas.</li>
+          <li>A lista de convênios continua existindo, mas só no menu <b>Informações</b>, e só se o paciente perguntar — a clínica não empurra isso proativamente. Texto ajustado para destacar que todo plano está sujeito à confirmação de cobertura na rede.</li>
+        </ul>
+      </li>
+      <li><b>Pergunta em aberto da Meire, ainda sem resposta sua:</b> ela sugeriu, pro caso de paciente particular querendo consulta rápida (ex.: dia seguinte), considerar um "encaixe particular prioritário" mesmo sem vaga real na agenda, com qualquer médico disponível. Isso é uma ideia nova dela, não uma decisão — pediu pra você pensar a respeito antes de decidir se entra no fluxo.</li>
       <li><b>Lista de médicos — resolvida:</b> usei a lista e ordem que você confirmou (Dr. Leonardo Maranhão sempre primeiro, depois ordem alfabética) — São Paulo: Dr. Leonardo Maranhão, Dra. Camila Lino, Dr. Gabriel Garcia, Dr. Silvio Simenov · Mogi das Cruzes: Dr. Leonardo Maranhão, Dra. Camila Lino, Dra. Glauce Torres, Dra. Pamella Siqueira. A mensagem já cruza com a unidade escolhida no início da conversa, não pergunta de novo.</li>
     </ul>
   </div>
