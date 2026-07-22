@@ -468,7 +468,7 @@
 
         <div class="node node-backend">
           <div class="label">Gatilho</div>
-          <div class="txt">Cron diário (horário a definir, ex. 08h00) — só roda de fato terça/quarta/quinta, já que segunda e sexta não têm cetamina:<br><code>SELECT * FROM cetamina_agendamentos WHERE status='AGENDADO' AND data = hoje+2</code></div>
+          <div class="txt">Cron diário às <b>10h00</b> — só roda de fato terça/quarta/quinta, já que segunda e sexta não têm cetamina:<br><code>SELECT * FROM cetamina_agendamentos WHERE status='AGENDADO' AND data = hoje+2</code></div>
         </div>
 
         <div class="node node-backend">
@@ -485,9 +485,7 @@
 Instruções para o dia:
 • Dieta leve antes e depois do procedimento
 • Roupa confortável, com acesso fácil à veia
-• Venha acompanhado(a), se possível
-
-Valor do dia de tratamento: {{valor}}
+• Venha acompanhado(a)
 
 Responda SIM para confirmar ou NÃO para cancelar.</div>
         </div>
@@ -567,6 +565,8 @@ Responda SIM para confirmar ou NÃO para cancelar.</div>
 
 📍 {{endereco_unidade}}
 
+Dúvidas? É só responder por aqui.
+
 Até amanhã! 🏥</div>
         </div>
 
@@ -595,12 +595,10 @@ Até amanhã! 🏥</div>
 Instruções para o dia:
 • Dieta leve antes e depois do procedimento
 • Roupa confortável, com acesso fácil à veia
-• Venha acompanhado(a), se possível
-
-Valor do dia de tratamento: {{4}}
+• Venha acompanhado(a)
 
 Responda SIM para confirmar ou NÃO para cancelar.</div>
-      <div class="t-vars"><code>{{1}}</code> data · <code>{{2}}</code> hora · <code>{{3}}</code> endereço da unidade · <code>{{4}}</code> valor</div>
+      <div class="t-vars"><code>{{1}}</code> data · <code>{{2}}</code> hora · <code>{{3}}</code> endereço da unidade</div>
     </div>
 
     <div class="template-card">
@@ -611,6 +609,8 @@ Responda SIM para confirmar ou NÃO para cancelar.</div>
       <div class="t-body">Lembramos que amanhã é o dia da sua aplicação de Cetamina com {{1}} às {{2}}.
 
 📍 {{3}}
+
+Dúvidas? É só responder por aqui.
 
 Até amanhã! 🏥</div>
       <div class="t-vars"><code>{{1}}</code> nome do médico · <code>{{2}}</code> hora · <code>{{3}}</code> endereço da unidade</div>
