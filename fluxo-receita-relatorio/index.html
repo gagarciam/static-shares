@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Fluxo Completo — Solicitação de Receita/Relatório — Clínica Médica Assis</title>
+<style>
+  :root {
+    --verde-escuro: #07614A;
+    --verde-muito-escuro: #037031;
+    --verde-medio: #03694F;
+    --verde-claro: #E9FCE2;
+    --azul-claro: #DAF7F3;
+    --cinza-escuro: #303B37;
+    --texto-medio: #555;
+    --texto-claro: #999;
+    --bg-cinza-claro: #F5F5F5;
+    --borda-media: #03694F;
+    --aviso: #FFC107;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-cinza-claro);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    color: var(--cinza-escuro);
+  }
+
+  header {
+    background: linear-gradient(135deg, #07614A 0%, #03694F 100%);
+    color: white;
+    padding: 40px 30px 32px;
+    text-align: center;
+  }
+
+  header .logo-eyebrow {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    opacity: 0.85;
+    margin-bottom: 6px;
+  }
+
+  header h1 {
+    margin: 0 0 8px;
+    font-size: 1.9rem;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+  }
+
+  header p {
+    margin: 0 auto;
+    font-size: 1rem;
+    opacity: 0.92;
+    max-width: 760px;
+  }
+
+  .status-pill {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 6px 18px;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+  }
+
+  .container {
+    max-width: 1700px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 30px 24px 60px;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    background: white;
+    border: 2px solid var(--azul-claro);
+    border-radius: 12px;
+    padding: 18px 24px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 12px rgba(3, 105, 79, 0.08);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.86rem;
+    color: var(--texto-medio);
+  }
+
+  .legend-swatch {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    flex-shrink: 0;
+  }
+
+  .sw-msg { background: white; border: 2px solid var(--verde-escuro); }
+  .sw-question { background: var(--azul-claro); border: 2px solid var(--verde-medio); }
+  .sw-backend { background: var(--cinza-escuro); }
+  .sw-human { background: var(--aviso); }
+  .sw-end { background: #ccc; }
+
+  .scroll-hint {
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--texto-claro);
+    margin-bottom: 18px;
+  }
+
+  /* ===== SCROLL BARS (topo + baixo, sincronizadas) ===== */
+  .scroll-sync {
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 18px;
+  }
+  .scroll-sync-inner {
+    height: 1px;
+  }
+  .scroll-sync,
+  .board {
+    scrollbar-color: var(--verde-medio) var(--azul-claro);
+    scrollbar-width: thin;
+  }
+  .scroll-sync::-webkit-scrollbar,
+  .board::-webkit-scrollbar {
+    height: 10px;
+  }
+  .scroll-sync::-webkit-scrollbar-track,
+  .board::-webkit-scrollbar-track {
+    background: var(--azul-claro);
+    border-radius: 6px;
+  }
+  .scroll-sync::-webkit-scrollbar-thumb,
+  .board::-webkit-scrollbar-thumb {
+    background: var(--verde-medio);
+    border-radius: 6px;
+  }
+
+  /* ===== KANBAN BOARD ===== */
+  .board {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    overflow-x: auto;
+    padding: 6px 6px 26px;
+  }
+
+  .column {
+    flex: 0 0 auto;
+    width: clamp(220px, 26vw, 300px);
+    background: white;
+    border: 2px solid var(--azul-claro);
+    border-radius: 16px;
+    padding: 0 0 20px;
+    box-shadow: 0 4px 14px rgba(3, 105, 79, 0.08);
+  }
+
+  .column-connector {
+    flex: 0 0 auto;
+    width: clamp(24px, 3vw, 44px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+  }
+
+  @media (max-width: 640px) {
+    .column { width: 84vw; }
+  }
+
+  .column-connector span {
+    font-size: 1.8rem;
+    color: var(--verde-medio);
+  }
+
+  .column-header {
+    background: linear-gradient(135deg, #07614A 0%, #03694F 100%);
+    color: white;
+    border-radius: 14px 14px 0 0;
+    padding: 14px 16px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .column-number {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  .column-header-text h2 {
+    margin: 0;
+    font-size: 0.96rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .column-header-text .col-actor {
+    font-size: 0.68rem;
+    opacity: 0.85;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-top: 2px;
+  }
+
+  .column-body {
+    padding: 16px 14px 4px;
+  }
+
+  .node {
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin: 0 0 12px;
+    width: 100%;
+    text-align: left;
+    box-shadow: 0 2px 6px rgba(3, 105, 79, 0.08);
+    position: relative;
+  }
+
+  .node-msg {
+    background: white;
+    border: 2px solid var(--verde-escuro);
+    border-left: 5px solid var(--verde-escuro);
+  }
+  .node-msg .label { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--verde-medio); font-weight: 700; margin-bottom: 5px; }
+  .node-msg .txt { font-size: 0.84rem; color: var(--cinza-escuro); white-space: pre-line; line-height: 1.5; }
+
+  .node-question {
+    background: var(--azul-claro);
+    border: 2px solid var(--verde-medio);
+  }
+  .node-question .label { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--verde-escuro); font-weight: 700; margin-bottom: 5px; }
+  .node-question .txt { font-size: 0.86rem; font-weight: 600; color: var(--cinza-escuro); line-height: 1.4; }
+
+  .node-backend {
+    background: #2f3a36;
+    color: #eafff5;
+    border: none;
+  }
+  .node-backend .label { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.5px; color: #8fd9bd; font-weight: 700; margin-bottom: 5px; }
+  .node-backend .txt { font-size: 0.82rem; line-height: 1.55; color: #eafff5; }
+  .node-backend code {
+    background: rgba(255,255,255,0.12);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.74rem;
+  }
+
+  .node-human {
+    background: #fff8e6;
+    border: 2px solid var(--aviso);
+  }
+  .node-human .label { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.5px; color: #8a6d00; font-weight: 700; margin-bottom: 5px; }
+  .node-human .txt { font-size: 0.83rem; color: #4a3800; line-height: 1.5; }
+
+  .node-end {
+    background: #e4e4e4;
+    border: 2px solid #bbb;
+    color: #444;
+  }
+  .node-end .label { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.5px; color: #777; font-weight: 700; margin-bottom: 5px; }
+  .node-end .txt { font-size: 0.82rem; line-height: 1.5; }
+
+  .node code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.78rem;
+  }
+  .node-msg code, .node-question code, .node-human code, .node-end code {
+    background: var(--verde-claro);
+    padding: 1px 4px;
+    border-radius: 4px;
+  }
+
+  .tag-approved {
+    display: inline-block;
+    background: var(--verde-claro);
+    color: var(--verde-escuro);
+    font-size: 0.62rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    margin-left: 4px;
+  }
+
+  .mini-down {
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--verde-medio);
+    margin: -2px 0 10px;
+  }
+
+  .branch-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--verde-escuro);
+    margin: 4px 0 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--azul-claro);
+  }
+  .branch-label:first-child { border-top: none; padding-top: 0; }
+
+  .field-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.76rem;
+    margin-bottom: 12px;
+  }
+  .field-table th, .field-table td {
+    border: 1px solid var(--azul-claro);
+    padding: 5px 7px;
+    text-align: left;
+  }
+  .field-table th {
+    background: var(--verde-claro);
+    color: var(--verde-escuro);
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+  }
+
+  .esteira {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+  .esteira-step {
+    background: white;
+    border: 2px solid var(--verde-medio);
+    color: var(--verde-escuro);
+    font-weight: 700;
+    font-size: 0.68rem;
+    padding: 5px 8px;
+    border-radius: 7px;
+    white-space: nowrap;
+  }
+  .esteira-arrow {
+    color: var(--verde-medio);
+    font-size: 0.85rem;
+  }
+
+  .painel-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .painel-action-pill {
+    background: var(--verde-claro);
+    color: var(--verde-escuro);
+    border: 1px solid var(--verde-medio);
+    padding: 4px 10px;
+    border-radius: 14px;
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  .col-mini-note {
+    font-size: 0.74rem;
+    color: var(--texto-claro);
+    margin: -4px 0 12px;
+    line-height: 1.4;
+  }
+
+  .note-box {
+    max-width: 1100px;
+    margin: 44px auto 0;
+    background: white;
+    border: 2px solid var(--azul-claro);
+    border-left: 6px solid var(--aviso);
+    border-radius: 12px;
+    padding: 20px 24px;
+    font-size: 0.9rem;
+    color: var(--texto-medio);
+  }
+  .note-box h4 { margin: 0 0 10px; color: var(--cinza-escuro); font-size: 0.95rem; }
+  .note-box ul { margin: 0; padding-left: 20px; }
+  .note-box li { margin-bottom: 8px; }
+
+  footer {
+    text-align: center;
+    padding: 30px;
+    font-size: 0.85rem;
+    color: var(--texto-claro);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-eyebrow">Clínica Médica Assis</div>
+  <h1>Fluxo Completo — Solicitação de Receita ou Relatório</h1>
+  <p>Do primeiro contato do paciente pelo WhatsApp até o documento pronto para retirada — cobrindo o bot, os bastidores no n8n, o painel da secretaria e a passagem (manual) pelo médico no CliMed.</p>
+  <div class="status-pill">Referência técnica — Bloco D da Operação SendPulse</div>
+</header>
+
+<div class="container">
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-swatch sw-msg"></span> Mensagem do bot / template WhatsApp</div>
+    <div class="legend-item"><span class="legend-swatch sw-question"></span> Pergunta do bot ao paciente</div>
+    <div class="legend-item"><span class="legend-swatch sw-backend"></span> Automação nos bastidores (n8n)</div>
+    <div class="legend-item"><span class="legend-swatch sw-human"></span> Ação manual de uma pessoa</div>
+    <div class="legend-item"><span class="legend-swatch sw-end"></span> Fim de uma etapa</div>
+  </div>
+
+  <div class="scroll-hint">← Esteira do processo, ponta a ponta — role para o lado para ver todas as 5 etapas →</div>
+
+  <div class="scroll-sync" id="scrollTop">
+    <div class="scroll-sync-inner" id="scrollTopInner"></div>
+  </div>
+
+  <div class="board" id="board">
+
+    <!-- COLUNA 1 -->
+    <div class="column">
+      <div class="column-header">
+        <div class="column-number">1</div>
+        <div class="column-header-text">
+          <h2>Paciente conversa com o bot</h2>
+          <div class="col-actor">WhatsApp · conversacional</div>
+        </div>
+      </div>
+      <div class="column-body">
+
+        <div class="node node-msg">
+          <div class="label">Contexto</div>
+          <div class="txt">Chega vindo do menu "Sobre o que você precisa? → Solicitar receita ou relatório" do Fluxo de Primeiro Contato (unidade SP/MC já conhecida), ou de gatilho dedicado.</div>
+        </div>
+
+        <div class="node node-question">
+          <div class="label">Pergunta 1 — identificação</div>
+          <div class="txt">Nome completo, telefone, CPF e data de nascimento (um campo por vez)</div>
+        </div>
+        <div class="col-mini-note">CPF é a chave de busca automática no CliMed · nome/telefone/nascimento servem pra busca manual se o CPF não bater</div>
+
+        <div class="node node-question">
+          <div class="label">Pergunta 2</div>
+          <div class="txt">Você precisa de receita ou de relatório?</div>
+        </div>
+
+        <div class="branch-label">SE "RECEITA"</div>
+        <div class="node node-msg">
+          <div class="label">Aviso importante</div>
+          <div class="txt">"A última receita registrada no sistema será replicada pelo(a) médico(a), sem quaisquer alterações. Serviço realizado a critério clínico."</div>
+        </div>
+        <div class="node node-question">
+          <div class="label">Pergunta (opcional)</div>
+          <div class="txt">Observações — texto livre</div>
+        </div>
+
+        <div class="branch-label">SE "RELATÓRIO"</div>
+        <div class="node node-question">
+          <div class="label">Pergunta</div>
+          <div class="txt">Tipo do relatório (texto livre — ex.: relatório médico psiquiátrico)</div>
+        </div>
+        <div class="node node-question">
+          <div class="label">Pergunta</div>
+          <div class="txt">Finalidade — exemplos: INSS, médico do trabalho, escola, judicial, psicólogo, perícia médica, nutricionista, hospital dia, neuroavaliação, LOAS, EMTU, SPTrans, atestado (até 14 dias), acompanhante</div>
+        </div>
+        <div class="node node-question">
+          <div class="label">Pergunta</div>
+          <div class="txt">O que deve constar (texto livre — sugestão do paciente, não é compromisso do médico)</div>
+        </div>
+        <div class="node node-question">
+          <div class="label">Pergunta (opcional)</div>
+          <div class="txt">Observações — texto livre</div>
+        </div>
+
+        <div class="branch-label">NOS 2 CASOS</div>
+        <div class="node node-msg">
+          <div class="label">Mensagem final do bot</div>
+          <div class="txt">"Pedido registrado! Em até 48h úteis você receberá a confirmação com a previsão de retirada."</div>
+        </div>
+        <div class="col-mini-note">Confirmação é do próprio bot (janela de 24h) — o n8n só entra nas notificações da coluna 5</div>
+      </div>
+    </div>
+
+    <div class="column-connector"><span>→</span></div>
+
+    <!-- COLUNA 2 -->
+    <div class="column">
+      <div class="column-header">
+        <div class="column-number">2</div>
+        <div class="column-header-text">
+          <h2>Bastidores (n8n) — Intake</h2>
+          <div class="col-actor">Automação · sem humano</div>
+        </div>
+      </div>
+      <div class="column-body">
+
+        <div class="node node-backend">
+          <div class="label">Gatilho</div>
+          <div class="txt">Bot chama, ao fim da coleta:<br><code>GET /webhook/receitas-relatorios-intake?...</code> com todos os campos na query string</div>
+        </div>
+
+        <table class="field-table">
+          <tr><th>Campo</th><th>Vem de</th></tr>
+          <tr><td><code>nome_completo</code>, <code>telefone</code>, <code>cpf</code>, <code>data_nascimento</code></td><td>Pergunta 1</td></tr>
+          <tr><td><code>tipo</code></td><td>receita/relatorio</td></tr>
+          <tr><td><code>tipo_relatorio</code>, <code>finalidade</code>, <code>o_que_deve_constar</code></td><td>só se relatório</td></tr>
+          <tr><td><code>observacoes</code></td><td>qualquer ramo</td></tr>
+        </table>
+
+        <div class="node node-backend">
+          <div class="label">Busca por CPF</div>
+          <div class="txt">Em <b>tblpaciente</b> nos dois bancos (climedsp e climedmc). CPF robusto: formatado, só dígitos ou parcial (parcial só aceita se bater 1 único paciente).<br><br>Não achou? Segue mesmo assim, marca <code>pac_id_encontrado=false</code> — secretaria busca manual.</div>
+        </div>
+
+        <div class="node node-backend">
+          <div class="label">Grava no Postgres</div>
+          <div class="txt">Tabela <code>solicitacoes_receitas_relatorios</code>: tipo, identificação, <code>pac_id</code>/<code>unidade</code> se achado, <code>detalhes</code> (JSONB), <code>status='NOVA'</code>, <code>notificado_validada/pronta=false</code>.</div>
+        </div>
+        <div class="col-mini-note">Sem card no CRM SendPulse (API travou em 403) — virou painel n8n nativo, coluna 3</div>
+      </div>
+    </div>
+
+    <div class="column-connector"><span>→</span></div>
+
+    <!-- COLUNA 3 -->
+    <div class="column">
+      <div class="column-header">
+        <div class="column-number">3</div>
+        <div class="column-header-text">
+          <h2>Secretaria trabalha o pedido</h2>
+          <div class="col-actor">Painel interno · manual</div>
+        </div>
+      </div>
+      <div class="column-body">
+
+        <div class="node node-human">
+          <div class="label">Onde ela vê isso</div>
+          <div class="txt">Painel próprio (identidade ASSIS), acesso por token na URL (<code>?k=...</code>, MVP — ver pendência no fim). Lista pendências com nome, tipo, CPF/telefone, unidade e status.</div>
+        </div>
+
+        <div class="esteira">
+          <div class="esteira-step">NOVA</div><div class="esteira-arrow">→</div>
+          <div class="esteira-step">VALIDADA</div><div class="esteira-arrow">→</div>
+          <div class="esteira-step">DIRECIONADA</div><div class="esteira-arrow">→</div>
+          <div class="esteira-step">NO CLIMED</div><div class="esteira-arrow">→</div>
+          <div class="esteira-step">PRONTA</div><div class="esteira-arrow">→</div>
+          <div class="esteira-step">ENTREGUE</div>
+        </div>
+
+        <div class="painel-actions">
+          <div class="painel-action-pill">validar</div>
+          <div class="painel-action-pill">direcionada</div>
+          <div class="painel-action-pill">no_climed</div>
+          <div class="painel-action-pill">pronta</div>
+          <div class="painel-action-pill">entregue</div>
+        </div>
+
+        <div class="node node-human">
+          <div class="label">Validar</div>
+          <div class="txt">Confere dados (usa nome/telefone/nascimento se o CPF não achou) e define <b>data/hora prevista</b> → dispara notificação 1 (coluna 5).</div>
+        </div>
+        <div class="node node-human">
+          <div class="label">Direcionar / No CliMed</div>
+          <div class="txt">Leva o pedido ao médico <b>dentro do CliMed</b> (coluna 4) — sem contato direto por WhatsApp.</div>
+        </div>
+        <div class="node node-human">
+          <div class="label">Pronta</div>
+          <div class="txt">Documento pronto → dispara notificação 2 (coluna 5).</div>
+        </div>
+        <div class="node node-human">
+          <div class="label">Entregue</div>
+          <div class="txt">Paciente retirou na unidade — fecha o ciclo, sem notificação.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column-connector"><span>→</span></div>
+
+    <!-- COLUNA 4 -->
+    <div class="column">
+      <div class="column-header">
+        <div class="column-number">4</div>
+        <div class="column-header-text">
+          <h2>Médico prepara o documento</h2>
+          <div class="col-actor">100% no CliMed</div>
+        </div>
+      </div>
+      <div class="column-body">
+        <div class="node node-human">
+          <div class="label">Como participa</div>
+          <div class="txt">Nunca recebe nada por WhatsApp — o pedido chega só pela recepção/CliMed, no perfil do paciente.</div>
+        </div>
+        <div class="node node-human">
+          <div class="label">Receita</div>
+          <div class="txt">Replica a última receita registrada no sistema, sem alterações, a critério clínico. Observações do paciente são só apoio, não compromisso.</div>
+        </div>
+        <div class="node node-human">
+          <div class="label">Relatório</div>
+          <div class="txt">Usa tipo/finalidade/o que deve constar como sugestão do paciente — decide o conteúdo final por critério próprio.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column-connector"><span>→</span></div>
+
+    <!-- COLUNA 5 -->
+    <div class="column">
+      <div class="column-header">
+        <div class="column-number">5</div>
+        <div class="column-header-text">
+          <h2>Notificações automáticas</h2>
+          <div class="col-actor">n8n · polling 30 min</div>
+        </div>
+      </div>
+      <div class="column-body">
+
+        <div class="node node-backend">
+          <div class="label">Mecanismo</div>
+          <div class="txt">A cada 30 min verifica o Postgres: <code>status='VALIDADA'</code>+<code>notificado_validada=false</code>, ou <code>status='PRONTA'</code>+<code>notificado_pronta=false</code>. Dispara o template, marca notificado (não duplica), fiado ao Bloco G.</div>
+        </div>
+
+        <div class="branch-label">QUANDO VIRA "VALIDADA"</div>
+        <div class="node node-msg">
+          <div class="label"><code>solicitacao_validada_{sp|mc}</code><span class="tag-approved">Aprovado</span></div>
+          <div class="txt">Prezado(a) {{nome_paciente}},
+
+Sua solicitação foi validada ✅ e já está em processamento.
+Previsão de retirada: {{data_prevista}} a partir das {{hora_prevista}}.
+
+📍 {{endereco_unidade}}
+
+Dúvidas? Pode responder por aqui ou ligar: (11) 4723-6565.
+Horário: seg–qui 09h–18h | sex 09h–17h.</div>
+        </div>
+
+        <div class="branch-label">QUANDO VIRA "PRONTA"</div>
+        <div class="node node-msg">
+          <div class="label">Se receita — <code>receita_disponivel</code><span class="tag-approved">Aprovado</span></div>
+          <div class="txt">Prezado(a) {{nome_paciente}},
+
+Sua receita está disponível para retirada a partir de {{data_disponivel}} às 09h.
+
+📍 {{endereco_unidade}}
+
+Dúvidas? Pode responder por aqui ou ligar: (11) 4723-6565.
+Horário: seg–qui 09h–18h | sex 09h–17h.</div>
+        </div>
+        <div class="node node-msg">
+          <div class="label">Se relatório — <code>relatorio_disponivel_{sp|mc}</code><span class="tag-approved">Aprovado</span></div>
+          <div class="txt">Prezado(a) {{nome_paciente}},
+
+Seu relatório está disponível para retirada a partir de {{data_disponivel}} às 09h.
+
+📍 {{endereco_unidade}}
+
+Dúvidas? Pode responder por aqui ou ligar: (11) 4723-6565.
+Horário: seg–qui 09h–18h | sex 09h–17h.</div>
+        </div>
+
+        <div class="node node-end">
+          <div class="label">Fim do ciclo</div>
+          <div class="txt">Paciente retira na unidade → secretaria marca "Entregue" (coluna 3).</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="note-box">
+    <h4>Estado real de construção (22/jul/2026) — o que já existe vs. o que falta</h4>
+    <ul>
+      <li><b>Já construído e testado pelo Claude Code (n8n):</b> os 4 workflows das colunas 2, 3 e 5 — Intake (busca CPF + grava Postgres), Painel da Secretaria, Notificação de Validação e Notificação de Conclusão. Todos testados headless com dados simulados, ainda <code>active:false</code> (não publicados em produção).</li>
+      <li><b>Falta — coleta no bot (coluna 1):</b> a conversa em si ainda não foi montada no flow builder da SendPulse — só o backend que a recebe já está pronto. É a próxima peça a construir, mesmo padrão dos outros fluxos (A/B/C) já montados no painel.</li>
+      <li><b>Templates:</b> <code>solicitacao_validada_sp/mc</code> e <code>relatorio_disponivel_sp/mc</code> fazem parte do Lote 5, submetido à Meta em 20/jul/2026; conferência de 21/jul/2026 encontrou 30 dos 31 templates da operação inteira já <b>Aprovados</b> (só faltava confirmar 1, de outro fluxo, sem relação com este). <code>receita_disponivel</code> é mais antigo (Lote 4) e também já está aprovado.</li>
+      <li><b>Pendência de segurança do painel (coluna 3):</b> hoje o acesso é só por um token simples na URL (<code>?k=...</code>), pensado como MVP. Existe a opção de migrar para o login individual (usuário/senha) já construído para o painel de Cetamina — decisão ainda em aberto, sem urgência, não bloqueia nada em produção.</li>
+      <li><b>Ativação:</b> mesmo depois de tudo construído e testado, os 4 workflows só entram em produção quando alguém der "Publish" no editor do n8n — isso é sempre uma ação manual, a API não registra webhook/cron de produção sozinha.</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  Clínica Médica Assis — Operação SendPulse · Gerado em 22/jul/2026 a partir da spec técnica e do estado de construção registrados em <code>handoff.md</code> e <code>operacao_sendpulse.md</code> (seção 11).
+</footer>
+
+<script>
+  (function () {
+    var board = document.getElementById('board');
+    var scrollTop = document.getElementById('scrollTop');
+    var scrollTopInner = document.getElementById('scrollTopInner');
+
+    function syncWidth() {
+      scrollTopInner.style.width = board.scrollWidth + 'px';
+    }
+
+    var syncing = false;
+    function syncFrom(source, target) {
+      if (syncing) return;
+      syncing = true;
+      target.scrollLeft = source.scrollLeft;
+      syncing = false;
+    }
+
+    syncWidth();
+    window.addEventListener('resize', syncWidth);
+    board.addEventListener('scroll', function () { syncFrom(board, scrollTop); });
+    scrollTop.addEventListener('scroll', function () { syncFrom(scrollTop, board); });
+  })();
+</script>
+
+</body>
+</html>
