@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Fluxo de Confirmação e Lembrete — Cetamina — Clínica Médica Assis</title>
+<style>
+  :root {
+    --verde-escuro: #07614A;
+    --verde-muito-escuro: #037031;
+    --verde-medio: #03694F;
+    --verde-claro: #E9FCE2;
+    --azul-claro: #DAF7F3;
+    --cinza-escuro: #303B37;
+    --texto-medio: #555;
+    --texto-claro: #999;
+    --bg-cinza-claro: #F5F5F5;
+    --borda-media: #03694F;
+    --aviso: #FFC107;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-cinza-claro);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    color: var(--cinza-escuro);
+  }
+
+  header {
+    background: linear-gradient(135deg, #07614A 0%, #03694F 100%);
+    color: white;
+    padding: 40px 30px 32px;
+    text-align: center;
+  }
+
+  header .logo-eyebrow {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    opacity: 0.85;
+    margin-bottom: 6px;
+  }
+
+  header h1 {
+    margin: 0 0 8px;
+    font-size: 1.9rem;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+  }
+
+  header p {
+    margin: 0 auto;
+    font-size: 1rem;
+    opacity: 0.92;
+    max-width: 760px;
+  }
+
+  .status-pill {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 6px 18px;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+  }
+
+  .container {
+    max-width: 1700px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 30px 24px 60px;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    background: white;
+    border: 2px solid var(--azul-claro);
+    border-radius: 12px;
+    padding: 18px 24px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 12px rgba(3, 105, 79, 0.08);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.86rem;
+    color: var(--texto-medio);
+  }
+
+  .legend-swatch {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    flex-shrink: 0;
+  }
+
+  .sw-msg { background: white; border: 2px solid var(--verde-escuro); }
+  .sw-question { background: var(--azul-claro); border: 2px solid var(--verde-medio); }
+  .sw-backend { background: var(--cinza-escuro); }
+  .sw-human { background: var(--aviso); }
+  .sw-end { background: #ccc; }
+
+  .scroll-hint {
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--texto-claro);
+    margin-bottom: 18px;
+  }
+
+  .scroll-sync {
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: 18px;
+  }
+  .scroll-sync-inner {
+    height: 1px;
+  }
+  .scroll-sync,
+  .board {
+    scrollbar-color: var(--verde-medio) var(--azul-claro);
+    scrollbar-width: thin;
+  }
+  .scroll-sync::-webkit-scrollbar,
+  .board::-webkit-scrollbar {
+    height: 10px;
+  }
+  .scroll-sync::-webkit-scrollbar-track,
+  .board::-webkit-scrollbar-track {
+    background: var(--azul-claro);
+    border-radius: 6px;
+  }
+  .scroll-sync::-webkit-scrollbar-thumb,
+  .board::-webkit-scrollbar-thumb {
+    background: var(--verde-medio);
+    border-radius: 6px;
+  }
+
+  .board {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    overflow-x: auto;
+    padding: 6px 6px 26px;
+  }
+
+  .column {
+    flex: 0 0 auto;
+    width: clamp(240px, 27vw, 320px);
+    background: white;
+    border: 2px solid var(--azul-claro);
+    border-radius: 16px;
+    padding: 0 0 20px;
+    box-shadow: 0 4px 14px rgba(3, 105, 79, 0.08);
+  }
+
+  .column-connector {
+    flex: 0 0 auto;
+    width: clamp(24px, 3vw, 44px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+  }
+
+  @media (max-width: 640px) {
+    .column { width: 84vw; }
+  }
+
+  .column-connector span {
+    font-size: 1.8rem;
+    color: var(--verde-medio);
+  }
+
+  .column-header {
+    background: linear-gradient(135deg, #07614A 0%, #03694F 100%);
+    color: white;
+    border-radius: 14px 14px 0 0;
+    padding: 14px 16px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .column-number {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+
+  .column-header-text h2 {
+    margin: 0;
+    font-size: 0.96rem;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .column-header-text .col-actor {
+    font-size: 0.68rem;
+    opacity: 0.85;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-top: 2px;
+  }
+
+  .column-body {
+    padding: 16px 14px 4px;
+  }
+
+  .node {
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin: 0 0 12px;
+    width: 100%;
+    text-align: left;
+    box-shadow: 0 2px 6px rgba(3, 105, 79, 0.08);
+    position: relative;
+  }
+
+  .node-msg {
+    background: white;
+    border: 2px solid var(--verde-escuro);
+    border-left: 5px solid var(--verde-escuro);
+  }
+  .node-msg .label { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--verde-medio); font-weight: 700; margin-bottom: 5px; }
+  .node-msg .txt { font-size: 0.84rem; color: var(--cinza-escuro); white-space: pre-line; line-height: 1.5; }
+
+  .node-question {
+    background: var(--azul-claro);
+    border: 2px solid var(--verde-medio);
+  }
+  .node-question .label { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--verde-escuro); font-weight: 700; margin-bottom: 5px; }
+  .node-question .txt { font-size: 0.86rem; font-weight: 600; color: var(--cinza-escuro); line-height: 1.4; }
+
+  .node-backend {
+    background: #2f3a36;
+    color: #eafff5;
+    border: none;
+  }
+  .node-backend .label { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.5px; color: #8fd9bd; font-weight: 700; margin-bottom: 5px; }
+  .node-backend .txt { font-size: 0.82rem; line-height: 1.55; color: #eafff5; }
+  .node-backend code {
+    background: rgba(255,255,255,0.12);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.74rem;
+  }
+
+  .node-human {
+    background: #fff8e6;
+    border: 2px solid var(--aviso);
+  }
+  .node-human .label { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.5px; color: #8a6d00; font-weight: 700; margin-bottom: 5px; }
+  .node-human .txt { font-size: 0.83rem; color: #4a3800; line-height: 1.5; }
+
+  .node-end {
+    background: #e4e4e4;
+    border: 2px solid #bbb;
+    color: #444;
+  }
+  .node-end .label { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.5px; color: #777; font-weight: 700; margin-bottom: 5px; }
+  .node-end .txt { font-size: 0.82rem; line-height: 1.5; }
+
+  .node code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.78rem;
+  }
+  .node-msg code, .node-question code, .node-human code, .node-end code {
+    background: var(--verde-claro);
+    padding: 1px 4px;
+    border-radius: 4px;
+  }
+
+  .tag-suggested {
+    display: inline-block;
+    background: #fff3cd;
+    color: #8a6d00;
+    font-size: 0.62rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    margin-left: 4px;
+  }
+
+  .branch-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--verde-escuro);
+    margin: 4px 0 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--azul-claro);
+  }
+  .branch-label:first-child { border-top: none; padding-top: 0; }
+
+  .field-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.76rem;
+    margin-bottom: 12px;
+  }
+  .field-table th, .field-table td {
+    border: 1px solid var(--azul-claro);
+    padding: 5px 7px;
+    text-align: left;
+  }
+  .field-table th {
+    background: var(--verde-claro);
+    color: var(--verde-escuro);
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+  }
+
+  .col-mini-note {
+    font-size: 0.74rem;
+    color: var(--texto-claro);
+    margin: -4px 0 12px;
+    line-height: 1.4;
+  }
+
+  .note-box {
+    max-width: 1100px;
+    margin: 44px auto 0;
+    background: white;
+    border: 2px solid var(--azul-claro);
+    border-left: 6px solid var(--aviso);
+    border-radius: 12px;
+    padding: 20px 24px;
+    font-size: 0.9rem;
+    color: var(--texto-medio);
+  }
+  .note-box h4 { margin: 0 0 10px; color: var(--cinza-escuro); font-size: 0.95rem; }
+  .note-box ul { margin: 0; padding-left: 20px; }
+  .note-box li { margin-bottom: 8px; }
+
+  .template-box {
+    max-width: 1100px;
+    margin: 24px auto 0;
+    background: white;
+    border: 2px solid var(--azul-claro);
+    border-radius: 12px;
+    padding: 24px 28px;
+  }
+  .template-box h3 {
+    margin: 0 0 6px;
+    color: var(--verde-escuro);
+    font-size: 1.1rem;
+  }
+  .template-box > p {
+    margin: 0 0 20px;
+    font-size: 0.86rem;
+    color: var(--texto-medio);
+  }
+  .template-card {
+    background: var(--bg-cinza-claro);
+    border: 1px solid var(--azul-claro);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 16px;
+  }
+  .template-card:last-child { margin-bottom: 0; }
+  .template-card .t-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .template-card .t-name {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, monospace;
+    font-weight: 700;
+    color: var(--verde-escuro);
+    font-size: 0.88rem;
+  }
+  .template-card .t-meta {
+    font-size: 0.7rem;
+    color: var(--texto-claro);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .template-card .t-body {
+    background: white;
+    border: 1px solid var(--azul-claro);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 0.85rem;
+    line-height: 1.55;
+    white-space: pre-line;
+    color: var(--cinza-escuro);
+  }
+  .template-card .t-vars {
+    margin-top: 8px;
+    font-size: 0.76rem;
+    color: var(--texto-medio);
+  }
+  .template-card .t-vars code {
+    background: var(--verde-claro);
+    padding: 1px 4px;
+    border-radius: 4px;
+  }
+
+  footer {
+    text-align: center;
+    padding: 30px;
+    font-size: 0.85rem;
+    color: var(--texto-claro);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-eyebrow">Clínica Médica Assis</div>
+  <h1>Fluxo de Confirmação e Lembrete — Agenda de Cetamina</h1>
+  <p>D-2 confirma o agendamento (SIM/NÃO), D-1 às 19h lembra todo mundo que ainda está na agenda — lendo direto de <code>cetamina_agendamentos</code>, mesmo padrão do Bloco A de consultas.</p>
+  <div class="status-pill">Proposta — Bloco E, ainda não construído</div>
+</header>
+
+<div class="container">
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-swatch sw-msg"></span> Mensagem do bot / template WhatsApp</div>
+    <div class="legend-item"><span class="legend-swatch sw-question"></span> Pergunta do bot ao paciente</div>
+    <div class="legend-item"><span class="legend-swatch sw-backend"></span> Automação nos bastidores (n8n)</div>
+    <div class="legend-item"><span class="legend-swatch sw-human"></span> Ação manual de uma pessoa</div>
+    <div class="legend-item"><span class="legend-swatch sw-end"></span> Fim de uma etapa</div>
+  </div>
+
+  <div class="scroll-hint">← Esteira do processo, ponta a ponta — role para o lado para ver as 3 etapas →</div>
+
+  <div class="scroll-sync" id="scrollTop">
+    <div class="scroll-sync-inner" id="scrollTopInner"></div>
+  </div>
+
+  <div class="board" id="board">
+
+    <!-- COLUNA 1 -->
+    <div class="column">
+      <div class="column-header">
+        <div class="column-number">1</div>
+        <div class="column-header-text">
+          <h2>D-2 — Confirmação (envio)</h2>
+          <div class="col-actor">Cron n8n · sem humano</div>
+        </div>
+      </div>
+      <div class="column-body">
+
+        <div class="node node-backend">
+          <div class="label">Gatilho</div>
+          <div class="txt">Cron diário (horário a definir, ex. 08h00) — só roda de fato terça/quarta/quinta, já que segunda e sexta não têm cetamina:<br><code>SELECT * FROM cetamina_agendamentos WHERE status='AGENDADO' AND data = hoje+2</code></div>
+        </div>
+
+        <div class="node node-backend">
+          <div class="label">Disparo</div>
+          <div class="txt">Um disparo por linha (um por agendamento, não agrupa sessões) via <code>POST /whatsapp/contacts/sendTemplateByPhone</code> — mesmo mecanismo primário já em uso no Bloco A.</div>
+        </div>
+
+        <div class="node node-msg">
+          <div class="label">Template — <code>cetamina_confirmacao_sp</code><span class="tag-suggested">Sugestão</span></div>
+          <div class="txt">Confirmamos sua aplicação de Cetamina:
+📅 {{data}} às {{hora}}
+📍 {{endereco_unidade}}
+
+Instruções para o dia:
+• Dieta leve antes e depois do procedimento
+• Roupa confortável, com acesso fácil à veia
+• Venha acompanhado(a), se possível
+
+Valor do dia de tratamento: {{valor}}
+
+Responda SIM para confirmar ou NÃO para cancelar.</div>
+        </div>
+        <div class="col-mini-note">Sem etapa de triagem — decisão de 22/jul/2026, remove a pergunta de contraindicações do fluxo automático.</div>
+      </div>
+    </div>
+
+    <div class="column-connector"><span>→</span></div>
+
+    <!-- COLUNA 2 -->
+    <div class="column">
+      <div class="column-header">
+        <div class="column-number">2</div>
+        <div class="column-header-text">
+          <h2>Resposta do paciente</h2>
+          <div class="col-actor">Webhook + bastidores</div>
+        </div>
+      </div>
+      <div class="column-body">
+
+        <div class="node node-question">
+          <div class="label">Resposta esperada</div>
+          <div class="txt">SIM ou NÃO — mesma regra dos outros blocos: só SIM ou texto livre resolvem sozinhos, NÃO sempre aciona atendimento humano.</div>
+        </div>
+
+        <div class="branch-label">SE "SIM"</div>
+        <div class="node node-backend">
+          <div class="label">Bastidores</div>
+          <div class="txt">Webhook <code>cetamina-resposta</code> (auth none, correlaciona por telefone) grava em <code>cetamina_confirmacoes</code> e faz:<br><code>UPDATE cetamina_agendamentos SET status='CONFIRMADO'</code></div>
+        </div>
+        <div class="node node-msg">
+          <div class="label">Mensagem de fechamento</div>
+          <div class="txt">"Aplicação confirmada! Até lá. 🏥"</div>
+        </div>
+
+        <div class="branch-label">SE "NÃO"</div>
+        <div class="node node-human">
+          <div class="label">Handoff ao vivo</div>
+          <div class="txt">Abre chat com atendente (mesmo elemento "Action → abrir chat com gerente" dos outros blocos). Se cancelar de fato, o atendente marca <code>status='CANCELADO'</code> direto no painel da Cetamina — não é automático.</div>
+        </div>
+
+        <div class="branch-label">SEM RESPOSTA</div>
+        <div class="node node-end">
+          <div class="label">Nada muda</div>
+          <div class="txt"><code>status</code> segue <code>AGENDADO</code> — sem insistência separada, o lembrete do D-1 já cobre esse caso.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column-connector"><span>→</span></div>
+
+    <!-- COLUNA 3 -->
+    <div class="column">
+      <div class="column-header">
+        <div class="column-number">3</div>
+        <div class="column-header-text">
+          <h2>D-1 19h — Lembrete véspera</h2>
+          <div class="col-actor">Cron n8n · sem humano</div>
+        </div>
+      </div>
+      <div class="column-body">
+
+        <div class="node node-backend">
+          <div class="label">Gatilho</div>
+          <div class="txt">Cron diário às 19h:<br><code>SELECT * FROM cetamina_agendamentos WHERE status IN ('AGENDADO','CONFIRMADO') AND data = hoje+1</code></div>
+        </div>
+        <div class="col-mini-note">Pega confirmados e quem não respondeu ao D-2 — só exclui quem foi cancelado, porque o cancelamento já tira a linha da lista (via painel).</div>
+
+        <div class="node node-backend">
+          <div class="label">Disparo</div>
+          <div class="txt">Mesmo mecanismo (<code>sendTemplateByPhone</code>), um disparo por linha.</div>
+        </div>
+
+        <div class="node node-msg">
+          <div class="label">Template — <code>cetamina_lembrete_vespera_sp</code><span class="tag-suggested">Sugestão</span></div>
+          <div class="txt">Lembramos que amanhã é o dia da sua aplicação de Cetamina com {{nome_medico}} às {{hora}}.
+
+📍 {{endereco_unidade}}
+
+Até amanhã! 🏥</div>
+        </div>
+
+        <div class="node node-end">
+          <div class="label">Fim do ciclo</div>
+          <div class="txt">Texto informativo — não espera resposta nem aciona handoff.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="template-box">
+    <h3>Templates sugeridos para submissão à Meta</h3>
+    <p>Ainda não criados no painel SendPulse nem submetidos — texto proposto abaixo, pronto pra validar com você antes de ir pra aprovação da Meire/Anne e depois pra fila da Meta. Categoria Utility, idioma Português (Brasil), seguindo as mesmas regras já aplicadas nos outros lotes (variável numerada sequencial, texto não pode começar nem terminar em variável).</p>
+
+    <div class="template-card">
+      <div class="t-head">
+        <span class="t-name">cetamina_confirmacao_sp</span>
+        <span class="t-meta">Utility · pt_BR · disparo D-2</span>
+      </div>
+      <div class="t-body">Confirmamos sua aplicação de Cetamina:
+📅 {{1}} às {{2}}
+📍 {{3}}
+
+Instruções para o dia:
+• Dieta leve antes e depois do procedimento
+• Roupa confortável, com acesso fácil à veia
+• Venha acompanhado(a), se possível
+
+Valor do dia de tratamento: {{4}}
+
+Responda SIM para confirmar ou NÃO para cancelar.</div>
+      <div class="t-vars"><code>{{1}}</code> data · <code>{{2}}</code> hora · <code>{{3}}</code> endereço da unidade · <code>{{4}}</code> valor</div>
+    </div>
+
+    <div class="template-card">
+      <div class="t-head">
+        <span class="t-name">cetamina_lembrete_vespera_sp</span>
+        <span class="t-meta">Utility · pt_BR · disparo D-1 19h</span>
+      </div>
+      <div class="t-body">Lembramos que amanhã é o dia da sua aplicação de Cetamina com {{1}} às {{2}}.
+
+📍 {{3}}
+
+Até amanhã! 🏥</div>
+      <div class="t-vars"><code>{{1}}</code> nome do médico · <code>{{2}}</code> hora · <code>{{3}}</code> endereço da unidade</div>
+    </div>
+  </div>
+
+  <div class="note-box">
+    <h4>Estado real — o que já existe vs. o que falta</h4>
+    <ul>
+      <li><b>Já existe:</b> a agenda em si (<code>cetamina_agendamentos</code>, painel de agendamento, motor de capacidade) — Bloco E construído em 21/jul/2026, falta só ativação por toggle no editor (pendência separada, sem relação com este fluxo de WhatsApp).</li>
+      <li><b>Falta:</b> criar a coluna <code>status='CONFIRMADO'</code> em <code>cetamina_agendamentos</code> (hoje só AGENDADO/REALIZADO/FALTOU/CANCELADO); criar a tabela <code>cetamina_confirmacoes</code>; construir os 2 workflows de cron (D-2 e D-1); construir o webhook <code>cetamina-resposta</code>; submeter os 2 templates acima à Meta; montar a sequência conversacional no flow builder da SendPulse.</li>
+      <li><b>Sem etapa de triagem</b> — removida da proposta original (22/jul/2026); qualquer avaliação de contraindicação continua manual, fora do WhatsApp.</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  Clínica Médica Assis — Operação SendPulse · Bloco E (Cetamina) · Proposta gerada em 22/jul/2026, ainda não validada com Meire/Anne nem submetida à Meta.
+</footer>
+
+<script>
+  (function () {
+    var board = document.getElementById('board');
+    var scrollTop = document.getElementById('scrollTop');
+    var scrollTopInner = document.getElementById('scrollTopInner');
+
+    function syncWidth() {
+      scrollTopInner.style.width = board.scrollWidth + 'px';
+    }
+
+    var syncing = false;
+    function syncFrom(source, target) {
+      if (syncing) return;
+      syncing = true;
+      target.scrollLeft = source.scrollLeft;
+      syncing = false;
+    }
+
+    syncWidth();
+    window.addEventListener('resize', syncWidth);
+    board.addEventListener('scroll', function () { syncFrom(board, scrollTop); });
+    scrollTop.addEventListener('scroll', function () { syncFrom(scrollTop, board); });
+  })();
+</script>
+
+</body>
+</html>
