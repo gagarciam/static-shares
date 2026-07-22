@@ -478,7 +478,10 @@
 
         <div class="node node-msg">
           <div class="label">Template — <code>cetamina_confirmacao_sp</code><span class="tag-suggested">Sugestão</span></div>
-          <div class="txt">Confirmamos sua aplicação de Cetamina:
+          <div class="txt">Olá, {{nome_paciente}}!
+
+A Clínica Médica Assis aguarda sua presença para a aplicação de Cetamina:
+
 📅 {{data}} às {{hora}}
 📍 {{endereco_unidade}}
 
@@ -487,7 +490,9 @@ Instruções para o dia:
 • Roupa confortável, com acesso fácil à veia
 • Venha acompanhado(a)
 
-Responda SIM para confirmar ou NÃO para cancelar.</div>
+Responda SIM para confirmar ou NÃO para cancelar.
+
+Para remarcar, ligue: (11) 4723-6565.</div>
         </div>
         <div class="col-mini-note">Sem etapa de triagem — decisão de 22/jul/2026, remove a pergunta de contraindicações do fluxo automático.</div>
       </div>
@@ -588,17 +593,22 @@ Até amanhã! 🏥</div>
         <span class="t-name">cetamina_confirmacao_sp</span>
         <span class="t-meta">Utility · pt_BR · disparo D-2</span>
       </div>
-      <div class="t-body">Confirmamos sua aplicação de Cetamina:
-📅 {{1}} às {{2}}
-📍 {{3}}
+      <div class="t-body">Olá, {{1}}!
+
+A Clínica Médica Assis aguarda sua presença para a aplicação de Cetamina:
+
+📅 {{2}} às {{3}}
+📍 {{4}}
 
 Instruções para o dia:
 • Dieta leve antes e depois do procedimento
 • Roupa confortável, com acesso fácil à veia
 • Venha acompanhado(a)
 
-Responda SIM para confirmar ou NÃO para cancelar.</div>
-      <div class="t-vars"><code>{{1}}</code> data · <code>{{2}}</code> hora · <code>{{3}}</code> endereço da unidade</div>
+Responda SIM para confirmar ou NÃO para cancelar.
+
+Para remarcar, ligue: (11) 4723-6565.</div>
+      <div class="t-vars"><code>{{1}}</code> nome do paciente · <code>{{2}}</code> data · <code>{{3}}</code> hora · <code>{{4}}</code> endereço da unidade</div>
     </div>
 
     <div class="template-card">
