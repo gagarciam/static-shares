@@ -591,7 +591,6 @@
             <div class="options-row">
               <div class="option-pill">Endereço e horário</div>
               <div class="option-pill">Médicos da unidade</div>
-              <div class="option-pill">Convênios atendidos</div>
               <div class="option-pill">Outras informações</div>
             </div>
           </div>
@@ -623,41 +622,13 @@
             </ul>
           </div>
 
-          <div class="mini-arrow" style="margin-top:16px;">↓ (se "convênios atendidos")</div>
-          <div class="node node-msg node-convenios">
-            <div class="label">Mensagem do bot</div>
-            <div class="txt">Convênios atendidos:</div>
-            <ul class="convenio-list">
-              <li>AMIL / NEXT / AMIL FÁCIL (adulto e infantil)</li>
-              <li>ABET (adulto e infantil)</li>
-              <li>ABMED</li>
-              <li>CASSI</li>
-              <li>CARE PLUS</li>
-              <li>GAMA SAÚDE</li>
-              <li>FUNDAÇÃO ITAÚ / PORTO SEGURO / PORTO SEGURO SERVIÇOS</li>
-              <li>GARANTIA DE SAÚDE (adulto e infantil)</li>
-              <li>GRUPO HAPVIDA NOTREDAME INTERMÉDICA</li>
-              <li>NEW LEADER SAÚDE</li>
-              <li>NOVA SAÚDE</li>
-              <li>PREVENT SENIOR (sujeito à confirmação de rede/plano)</li>
-              <li>SEGUROS UNIMED</li>
-              <li>SEPACO (adulto e infantil)</li>
-              <li>TEM SAÚDE</li>
-              <li>TRANSMONTANO SAÚDE (adulto e infantil)</li>
-              <li>VIDA CLASS</li>
-              <li>VIVEST / FUNDAÇÃO CESP / SABESPREV</li>
-            </ul>
-            <div class="txt convenio-disclaimer">Todos os planos estão sujeitos à confirmação de cobertura na rede do plano — a checagem final é sempre feita com o atendente no agendamento.</div>
-          </div>
-          <div class="mini-note" style="text-align:center; font-size:0.78rem; color:var(--texto-claro); margin:-6px 0 4px;">Só aparece se o paciente pedir explicitamente — a clínica não empurra essa lista proativamente (decisão da Meire, 22/jul/2026)</div>
-
-          <div class="mini-arrow" style="margin-top:16px;">↓ (se "outras informações")</div>
+          <div class="mini-arrow" style="margin-top:16px;">↓ (se "outras informações" — inclui qualquer pergunta sobre convênio, que o bot nunca responde)</div>
           <div class="node node-handoff">
             <div class="label">Transferência</div>
-            <div class="txt">Vai direto pro atendente — cobre qualquer pergunta que não seja endereço/horário, médicos ou convênios.</div>
+            <div class="txt">Vai direto pro atendente — cobre qualquer pergunta que não seja endereço/horário ou médicos, incluindo convênios (decisão final da Meire, 22/jul/2026: o bot não fala sobre quais convênios são atendidos em nenhuma hipótese, isso fica sempre com o atendimento humano).</div>
           </div>
 
-          <div class="mini-arrow" style="margin-top:16px;">↓ (nos 3 primeiros casos — não se aplica a "outras informações", que já foi pro atendente)</div>
+          <div class="mini-arrow" style="margin-top:16px;">↓ (nos 2 primeiros casos — não se aplica a "outras informações", que já foi pro atendente)</div>
           <div class="node node-question">
             <div class="label">Pergunta</div>
             <div class="txt">Quer saber mais alguma coisa?</div>
@@ -784,8 +755,7 @@
           <li>"Atendimento em Psiquiatria" → renomeado para "Consulta com Psiquiatra".</li>
           <li>Corte de idade confirmado: <b>infantil = 3 anos até 17 anos, 11 meses e 29 dias · adulto = 18 anos ou mais</b>. Aplicado no ramo Particular.</li>
           <li>Informar o valor da consulta antes do atendente foi validado por ela ("perfeito... muitos já desistem aí") — mantido como está.</li>
-          <li><b>Mudança de decisão no ramo Convênio:</b> ela pensou melhor e decidiu <b>não</b> perguntar nada sobre convênio na hora de agendar — vai direto pro atendente, que já checa a elegibilidade ao vivo. Motivo: explicar pelo bot como achar o nome certo do plano numa rede gigante (ex.: Notredame) é complicado demais. A sub-pergunta "quais convênios/pode me transferir" e a lista que existiam aqui foram removidas.</li>
-          <li>A lista de convênios continua existindo, mas só no menu <b>Informações</b>, e só se o paciente perguntar — a clínica não empurra isso proativamente. Texto ajustado para destacar que todo plano está sujeito à confirmação de cobertura na rede.</li>
+          <li><b>Decisão final sobre convênio (23/jul/2026, confirmada pelo Gabriel):</b> o bot <b>nunca</b> fala sobre quais convênios a clínica atende, em nenhum ponto da conversa — nem no agendamento, nem no menu Informações. Qualquer pergunta sobre convênio cai em "Outras informações" → atendente humano. Removida a lista de convênios do fluxo inteiro (ela só existe agora como referência externa, não dentro do bot).</li>
         </ul>
       </li>
       <li><b>Pergunta em aberto da Meire, ainda sem resposta sua:</b> ela sugeriu, pro caso de paciente particular querendo consulta rápida (ex.: dia seguinte), considerar um "encaixe particular prioritário" mesmo sem vaga real na agenda, com qualquer médico disponível. Isso é uma ideia nova dela, não uma decisão — pediu pra você pensar a respeito antes de decidir se entra no fluxo.</li>
