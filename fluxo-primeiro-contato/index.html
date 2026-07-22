@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Fluxo de Primeiro Contato — Clínica Médica Assis</title>
+<style>
+  :root {
+    --verde-escuro: #07614A;
+    --verde-muito-escuro: #037031;
+    --verde-medio: #03694F;
+    --verde-claro: #E9FCE2;
+    --azul-claro: #DAF7F3;
+    --cinza-escuro: #303B37;
+    --texto-medio: #555;
+    --texto-claro: #999;
+    --bg-cinza-claro: #F5F5F5;
+    --borda-media: #03694F;
+    --aviso: #FFC107;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-cinza-claro);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    color: var(--cinza-escuro);
+  }
+
+  header {
+    background: linear-gradient(135deg, #07614A 0%, #03694F 100%);
+    color: white;
+    padding: 40px 30px 32px;
+    text-align: center;
+  }
+
+  header .logo-eyebrow {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    opacity: 0.85;
+    margin-bottom: 6px;
+  }
+
+  header h1 {
+    margin: 0 0 8px;
+    font-size: 1.9rem;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+  }
+
+  header p {
+    margin: 0;
+    font-size: 1rem;
+    opacity: 0.92;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .status-pill {
+    display: inline-block;
+    margin-top: 14px;
+    padding: 6px 18px;
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+  }
+
+  .container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 30px 24px 60px;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    background: white;
+    border: 2px solid var(--azul-claro);
+    border-radius: 12px;
+    padding: 18px 24px;
+    margin-bottom: 40px;
+    box-shadow: 0 4px 12px rgba(3, 105, 79, 0.08);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    color: var(--texto-medio);
+  }
+
+  .legend-swatch {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    flex-shrink: 0;
+  }
+
+  .sw-msg { background: white; border: 2px solid var(--verde-escuro); }
+  .sw-question { background: var(--azul-claro); border: 2px solid var(--verde-medio); }
+  .sw-handoff { background: var(--verde-escuro); }
+  .sw-end { background: #ccc; }
+  .sw-wait { background: var(--aviso); }
+
+  .trigger-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+
+  .trigger-box {
+    background: white;
+    border: 2px dashed var(--verde-medio);
+    border-radius: 10px;
+    padding: 14px 22px;
+    text-align: center;
+    font-size: 0.9rem;
+    max-width: 320px;
+  }
+
+  .trigger-box b { color: var(--verde-escuro); display: block; margin-bottom: 4px; font-size: 0.95rem; }
+
+  .arrow-down {
+    text-align: center;
+    font-size: 1.6rem;
+    color: var(--verde-medio);
+    line-height: 1;
+    margin: 4px 0;
+  }
+
+  .node {
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 0 auto;
+    max-width: 560px;
+    text-align: center;
+    box-shadow: 0 3px 10px rgba(3, 105, 79, 0.08);
+    position: relative;
+  }
+
+  .node-msg {
+    background: white;
+    border: 2px solid var(--verde-escuro);
+    border-left: 6px solid var(--verde-escuro);
+  }
+
+  .node-msg .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--verde-medio); font-weight: 700; margin-bottom: 6px; }
+  .node-msg .txt { font-size: 0.95rem; color: var(--cinza-escuro); white-space: pre-line; }
+
+  .parallel-row {
+    display: flex;
+    gap: 18px;
+    align-items: stretch;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 14px 0;
+  }
+
+  .parallel-col {
+    flex: 1 1 220px;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .parallel-col-title {
+    text-align: center;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--verde-escuro);
+    margin-bottom: 8px;
+  }
+
+  .parallel-passthrough {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed var(--azul-claro);
+    border-radius: 12px;
+    padding: 18px 12px;
+    background: white;
+  }
+
+  .parallel-passthrough span {
+    font-size: 1.6rem;
+    color: var(--verde-medio);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .parallel-passthrough em {
+    font-style: normal;
+    font-size: 0.8rem;
+    color: var(--texto-claro);
+    text-align: center;
+  }
+
+  .node-convenios { max-width: 300px; text-align: left; }
+  .node-convenios .txt { text-align: left; }
+  .convenio-list {
+    text-align: left;
+    margin: 8px 0 14px;
+    padding-left: 20px;
+    font-size: 0.86rem;
+    line-height: 1.55;
+    color: var(--cinza-escuro);
+  }
+  .convenio-list li { margin-bottom: 3px; }
+  .convenio-disclaimer {
+    font-size: 0.82rem;
+    font-style: italic;
+    color: var(--texto-medio);
+    border-top: 1px dashed var(--azul-claro);
+    padding-top: 10px;
+    margin-top: 4px;
+  }
+
+  .node-question {
+    background: var(--azul-claro);
+    border: 2px solid var(--verde-medio);
+  }
+  .node-question .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--verde-escuro); font-weight: 700; margin-bottom: 6px; }
+  .node-question .txt { font-size: 0.98rem; font-weight: 600; color: var(--cinza-escuro); }
+
+  .node-handoff {
+    background: linear-gradient(135deg, #07614A 0%, #03694F 100%);
+    color: white;
+    border: none;
+  }
+  .node-handoff .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.6px; opacity: 0.85; font-weight: 700; margin-bottom: 6px; }
+  .node-handoff .txt { font-size: 0.95rem; }
+
+  .node-end {
+    background: #e4e4e4;
+    border: 2px solid #bbb;
+    color: #444;
+  }
+  .node-end .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.6px; color: #777; font-weight: 700; margin-bottom: 6px; }
+  .node-end .txt { font-size: 0.92rem; }
+
+  .node-standby {
+    border-color: var(--aviso) !important;
+  }
+  .tag-standby {
+    position: absolute;
+    top: -11px;
+    right: 14px;
+    background: var(--aviso);
+    color: #4a3800;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .options-row {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin: 10px 0 2px;
+  }
+
+  .option-pill {
+    background: white;
+    border: 2px solid var(--verde-medio);
+    color: var(--verde-escuro);
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .branch-point-wrap {
+    position: relative;
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  .side-offshoot {
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    width: 280px;
+    padding-left: 46px;
+    display: flex;
+    align-items: center;
+  }
+
+  .connector-arrow.arrow-h {
+    position: absolute;
+    left: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2rem;
+    color: var(--verde-medio);
+    line-height: 1;
+  }
+
+  .connector-arrow.arrow-v {
+    display: none;
+  }
+
+  .side-offshoot-inner {
+    width: 100%;
+  }
+
+  .side-offshoot-connector {
+    text-align: center;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--verde-medio);
+    margin-bottom: 8px;
+  }
+
+  @media (max-width: 980px) {
+    .side-offshoot {
+      position: static;
+      transform: none;
+      width: 100%;
+      max-width: 380px;
+      margin: 20px auto 0;
+      padding-left: 0;
+      flex-direction: column;
+    }
+    .connector-arrow.arrow-h { display: none; }
+    .connector-arrow.arrow-v {
+      display: block;
+      position: static;
+      font-size: 1.8rem;
+      color: var(--verde-medio);
+      margin-bottom: 8px;
+    }
+  }
+
+  .main-branches {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+    align-items: start;
+    margin-top: 40px;
+  }
+
+  .branch-column {
+    background: var(--verde-claro);
+    border: 2px solid var(--azul-claro);
+    border-radius: 16px;
+    padding: 26px 20px 30px;
+  }
+
+  .branch-column.col-paciente {
+    background: #FFFFFF;
+  }
+
+  @media (max-width: 900px) {
+    .main-branches { grid-template-columns: 1fr; }
+  }
+
+  .branch-title {
+    text-align: center;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 1.25rem;
+    color: var(--verde-escuro);
+    font-weight: 700;
+    margin: 0 0 18px;
+    letter-spacing: 0.2px;
+  }
+
+  .branch-title .sub {
+    display: block;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.82rem;
+    color: var(--texto-claro);
+    font-weight: 400;
+    letter-spacing: normal;
+    margin-top: 4px;
+  }
+
+  .sub-branches {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 18px;
+  }
+
+  .sub-branch {
+    background: white;
+    border: 2px solid var(--azul-claro);
+    border-radius: 14px;
+    padding: 20px 16px 22px;
+  }
+
+  .sub-branch h4 {
+    text-align: center;
+    margin: 0 0 16px;
+    color: var(--verde-escuro);
+    font-size: 1rem;
+    border-bottom: 2px dashed var(--azul-claro);
+    padding-bottom: 10px;
+  }
+
+  .sub-branch .node { max-width: 100%; }
+
+  .mini-arrow {
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--verde-medio);
+    margin: 4px 0;
+  }
+
+  footer {
+    text-align: center;
+    padding: 30px;
+    font-size: 0.85rem;
+    color: var(--texto-claro);
+  }
+
+  .note-box {
+    max-width: 900px;
+    margin: 50px auto 0;
+    background: white;
+    border: 2px solid var(--azul-claro);
+    border-left: 6px solid var(--aviso);
+    border-radius: 12px;
+    padding: 20px 24px;
+    font-size: 0.9rem;
+    color: var(--texto-medio);
+  }
+  .note-box h4 { margin: 0 0 10px; color: var(--cinza-escuro); font-size: 0.95rem; }
+  .note-box ul { margin: 0; padding-left: 20px; }
+  .note-box li { margin-bottom: 6px; }
+
+  @media print {
+    body { background: white; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-eyebrow">Clínica Médica Assis</div>
+  <h1>Fluxo de Primeiro Contato pelo WhatsApp</h1>
+  <p>Proposta de conversa automática para quando um paciente entra em contato pela primeira vez, ou quando um paciente já conhecido manda uma mensagem fora de qualquer lembrete/confirmação em andamento.</p>
+  <div class="status-pill">Rascunho para avaliação — Meire &amp; Anne</div>
+</header>
+
+<div class="container">
+
+  <div class="legend">
+    <div class="legend-item"><span class="legend-swatch sw-msg"></span> Mensagem do bot</div>
+    <div class="legend-item"><span class="legend-swatch sw-question"></span> Pergunta / menu de opções</div>
+    <div class="legend-item"><span class="legend-swatch sw-handoff"></span> Transferido para atendente humano</div>
+    <div class="legend-item"><span class="legend-swatch sw-end"></span> Conversa encerra sozinha (sem humano)</div>
+    <div class="legend-item"><span class="legend-swatch sw-wait"></span> Depende de algo em andamento (stand-by)</div>
+  </div>
+
+  <!-- ENTRY -->
+  <div class="trigger-row">
+    <div class="trigger-box"><b>Gatilho 1 — Contato novo</b>Número que nunca falou com a clínica manda a primeira mensagem</div>
+    <div class="trigger-box"><b>Gatilho 2 — Saudação</b>Qualquer paciente manda "oi", "olá", "bom dia" etc. fora de uma conversa já em andamento</div>
+  </div>
+  <div class="arrow-down">↓ ↓</div>
+
+  <div class="node node-msg">
+    <div class="label">Mensagem do bot</div>
+    <div class="txt">Olá! 👋 Aqui é a Clínica Médica Assis (Psiquiatria).</div>
+  </div>
+  <div class="arrow-down">↓</div>
+
+  <div class="node node-question">
+    <div class="label">Pergunta</div>
+    <div class="txt">Em qual unidade você é ou quer ser atendido(a)?</div>
+    <div class="options-row">
+      <div class="option-pill">São Paulo (Vila Mariana)</div>
+      <div class="option-pill">Mogi das Cruzes</div>
+    </div>
+  </div>
+  <div class="arrow-down">↓</div>
+  <div style="text-align:center; font-size:0.82rem; color:var(--texto-claro); margin-bottom:10px;">(a unidade escolhida fica guardada e é usada em todo o resto da conversa — não se repete a pergunta depois)</div>
+
+  <div class="branch-point-wrap">
+    <div class="node node-question">
+      <div class="label">Pergunta</div>
+      <div class="txt">Você quer falar sobre atendimento em Psiquiatria ou sobre infusão de Cetamina?</div>
+      <div class="options-row">
+        <div class="option-pill">Atendimento em Psiquiatria</div>
+        <div class="option-pill">Infusão de Cetamina</div>
+      </div>
+    </div>
+    <div class="side-offshoot">
+      <span class="connector-arrow arrow-h">→</span>
+      <span class="connector-arrow arrow-v">↓</span>
+      <div class="side-offshoot-inner">
+        <div class="side-offshoot-connector">Se "Infusão de Cetamina"</div>
+        <div class="node node-handoff" style="margin:0; max-width:none; font-size:0.86rem; padding:14px 16px;">
+          <div class="label">Transferência</div>
+          <div class="txt">Sempre cai direto em atendente humano — "Vou te transferir para nossa equipe de Cetamina." Não passa pelas perguntas abaixo, seja paciente novo ou já conhecido.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="text-align:center; font-size:0.8rem; color:var(--texto-claro); margin: 10px 0 4px;">(pergunta feita para todo mundo — paciente novo ou já conhecido; "Atendimento em Psiquiatria" segue abaixo)</div>
+
+  <div class="arrow-down" style="margin-top:10px;">↓</div>
+
+  <div class="node node-question">
+    <div class="label">Pergunta</div>
+    <div class="txt">Você já é paciente da clínica?</div>
+    <div class="options-row">
+      <div class="option-pill">Sim, já sou paciente</div>
+      <div class="option-pill">Não, é minha primeira vez</div>
+    </div>
+  </div>
+
+  <!-- OS DOIS RAMOS LADO A LADO -->
+  <div class="main-branches">
+
+    <!-- BRANCH: NÃO É PACIENTE -->
+    <div class="branch-column col-novo">
+      <div class="branch-title">Ramo "Não, é minha primeira vez"<span class="sub">paciente novo, ainda sem consulta marcada</span></div>
+
+      <div class="node node-question">
+        <div class="label">Pergunta</div>
+        <div class="txt">Sobre o que você quer falar?</div>
+        <div class="options-row">
+          <div class="option-pill">Agendar minha primeira consulta</div>
+          <div class="option-pill">Informações</div>
+          <div class="option-pill">Outro assunto</div>
+        </div>
+      </div>
+
+      <div class="sub-branches">
+        <div class="sub-branch">
+          <h4>Agendar minha primeira consulta</h4>
+          <div class="node node-question">
+            <div class="label">Pergunta</div>
+            <div class="txt">Sua consulta será por convênio ou particular?</div>
+            <div class="options-row">
+              <div class="option-pill">Convênio</div>
+              <div class="option-pill">Particular</div>
+            </div>
+          </div>
+
+          <div class="mini-arrow">↓ (se convênio)</div>
+          <div class="node node-question">
+            <div class="label">Pergunta</div>
+            <div class="txt">Quer saber quais convênios atendemos antes de eu te transferir, ou prefere já falar com a equipe?</div>
+            <div class="options-row">
+              <div class="option-pill">Quais convênios vocês atendem?</div>
+              <div class="option-pill">Pode me transferir</div>
+            </div>
+          </div>
+
+          <div class="parallel-row">
+            <div class="parallel-col">
+              <div class="parallel-col-title">"Quais convênios vocês atendem?"</div>
+              <div class="node node-msg node-convenios" style="margin:0;">
+                <div class="label">Mensagem do bot</div>
+                <div class="txt">Convênios atendidos:</div>
+                <ul class="convenio-list">
+                  <li>AMIL / NEXT / AMIL FÁCIL (adulto e infantil)</li>
+                  <li>ABET (adulto e infantil)</li>
+                  <li>ABMED</li>
+                  <li>CASSI</li>
+                  <li>CARE PLUS</li>
+                  <li>GAMA SAÚDE</li>
+                  <li>FUNDAÇÃO ITAÚ / PORTO SEGURO / PORTO SEGURO SERVIÇOS</li>
+                  <li>GARANTIA DE SAÚDE (adulto e infantil)</li>
+                  <li>GRUPO HAPVIDA NOTREDAME INTERMÉDICA</li>
+                  <li>NEW LEADER SAÚDE</li>
+                  <li>NOVA SAÚDE</li>
+                  <li>PREVENT SENIOR (sujeito à confirmação de rede/plano)</li>
+                  <li>SEGUROS UNIMED</li>
+                  <li>SEPACO (adulto e infantil)</li>
+                  <li>TEM SAÚDE</li>
+                  <li>TRANSMONTANO SAÚDE (adulto e infantil)</li>
+                  <li>VIDA CLASS</li>
+                  <li>VIVEST / FUNDAÇÃO CESP / SABESPREV</li>
+                </ul>
+                <div class="txt convenio-disclaimer">Planos sujeitos à verificação nas operadoras para agendar o atendimento.</div>
+              </div>
+            </div>
+            <div class="parallel-col">
+              <div class="parallel-col-title">"Pode me transferir"</div>
+              <div class="parallel-passthrough">
+                <span>↓</span>
+                <em>segue direto para a transferência abaixo</em>
+              </div>
+            </div>
+          </div>
+
+          <div class="mini-arrow">↓ (nos dois casos — pediu a lista ou não)</div>
+          <div class="node node-handoff">
+            <div class="label">Transferência</div>
+            <div class="txt">"Vou te transferir para nossa equipe finalizar o agendamento." → abre chat com atendente, já sabendo unidade e convênio informado.</div>
+          </div>
+
+          <div class="mini-arrow" style="margin-top:22px;">↓ (se particular)</div>
+          <div class="node node-msg node-standby">
+            <span class="tag-standby">Confirmar c/ Meire</span>
+            <div class="label">Pergunta</div>
+            <div class="txt">Qual a idade de quem vai à consulta?</div>
+          </div>
+          <div class="mini-arrow">↓ (bot aplica o corte de idade adulto × infantil — corte exato ainda a definir)</div>
+          <div class="node node-msg">
+            <div class="label">Mensagem do bot</div>
+            <div class="txt">O valor da consulta é R$600 (adulto) ou R$700 (infantil), pagamento via PIX ou dinheiro — valor certo já calculado pela idade informada.</div>
+          </div>
+          <div class="mini-arrow">↓</div>
+          <div class="node node-handoff">
+            <div class="label">Transferência</div>
+            <div class="txt">"Vou te transferir para nossa equipe finalizar o agendamento." → abre chat com atendente, já sabendo unidade e particular.</div>
+          </div>
+        </div>
+
+        <div class="sub-branch">
+          <h4>Informações</h4>
+          <div class="node node-question">
+            <div class="label">Pergunta</div>
+            <div class="txt">Que tipo de informação você quer saber?</div>
+            <div class="options-row">
+              <div class="option-pill">Endereço e horário</div>
+              <div class="option-pill">Médicos da unidade</div>
+              <div class="option-pill">Convênios atendidos</div>
+              <div class="option-pill">Outras informações</div>
+            </div>
+          </div>
+
+          <div class="mini-arrow">↓ (se "endereço e horário")</div>
+          <div class="node node-msg">
+            <div class="label">Mensagem do bot</div>
+            <div class="txt">Endereço da unidade escolhida, horário de atendimento (seg–qui 09h–18h / sex 09h–17h) e especialidade (Psiquiatria).</div>
+          </div>
+
+          <div class="mini-arrow" style="margin-top:16px;">↓ (se "médicos da unidade" — cruza com a unidade escolhida lá no início da conversa)</div>
+          <div class="node node-msg node-convenios" style="max-width:280px;">
+            <div class="label">Mensagem do bot — se unidade = São Paulo</div>
+            <ul class="convenio-list">
+              <li>Dr. Leonardo Maranhão</li>
+              <li>Dra. Camila Lino</li>
+              <li>Dr. Gabriel Garcia</li>
+              <li>Dr. Silvio Simenov</li>
+            </ul>
+          </div>
+          <div class="mini-arrow" style="margin-top:10px;">ou</div>
+          <div class="node node-msg node-convenios" style="max-width:280px;">
+            <div class="label">Mensagem do bot — se unidade = Mogi das Cruzes</div>
+            <ul class="convenio-list">
+              <li>Dr. Leonardo Maranhão</li>
+              <li>Dra. Camila Lino</li>
+              <li>Dra. Glauce Torres</li>
+              <li>Dra. Pamella Siqueira</li>
+            </ul>
+          </div>
+
+          <div class="mini-arrow" style="margin-top:16px;">↓ (se "convênios atendidos")</div>
+          <div class="node node-msg">
+            <div class="label">Mensagem do bot</div>
+            <div class="txt">Mesma lista formatada de convênios (arquivo oficial "Convênios Atendidos ASSIS", ver ramo "Agendar consulta") + aviso de validação no agendamento.</div>
+          </div>
+
+          <div class="mini-arrow" style="margin-top:16px;">↓ (se "outras informações")</div>
+          <div class="node node-handoff">
+            <div class="label">Transferência</div>
+            <div class="txt">Vai direto pro atendente — cobre qualquer pergunta que não seja endereço/horário, médicos ou convênios.</div>
+          </div>
+
+          <div class="mini-arrow" style="margin-top:16px;">↓ (nos 3 primeiros casos — não se aplica a "outras informações", que já foi pro atendente)</div>
+          <div class="node node-question">
+            <div class="label">Pergunta</div>
+            <div class="txt">Quer saber mais alguma coisa?</div>
+            <div class="options-row">
+              <div class="option-pill">Sim</div>
+              <div class="option-pill">Não</div>
+            </div>
+          </div>
+          <div class="mini-arrow">↓</div>
+          <div class="node node-end">
+            <div class="label">Fim / volta ao menu</div>
+            <div class="txt">"Sim" volta para o menu de tipos de informação (acima) · "Não" encerra a conversa, sem transferir para ninguém.</div>
+          </div>
+        </div>
+
+        <div class="sub-branch">
+          <h4>Outro assunto</h4>
+          <div class="node node-handoff">
+            <div class="label">Transferência</div>
+            <div class="txt">Transfere direto para atendente, sem mais perguntas.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BRANCH: JÁ É PACIENTE -->
+    <div class="branch-column col-paciente">
+      <div class="branch-title">Ramo "Sim, já sou paciente"<span class="sub">já tem cadastro na clínica</span></div>
+
+      <div class="node node-question">
+        <div class="label">Pergunta</div>
+        <div class="txt">Sobre o que você precisa?</div>
+        <div class="options-row">
+          <div class="option-pill">Agendar ou remarcar consulta</div>
+          <div class="option-pill">Cancelar consulta</div>
+          <div class="option-pill">Solicitar receita ou relatório</div>
+          <div class="option-pill">Informações</div>
+          <div class="option-pill">Outro assunto</div>
+        </div>
+      </div>
+
+      <div class="sub-branches">
+
+        <div class="sub-branch">
+          <h4>Agendar ou remarcar consulta</h4>
+          <div class="node node-handoff">
+            <div class="label">Transferência</div>
+            <div class="txt">Transfere direto para atendente — só a secretária vê a agenda real no sistema da clínica.</div>
+          </div>
+        </div>
+
+        <div class="sub-branch">
+          <h4>Cancelar consulta</h4>
+          <div class="node node-msg">
+            <div class="label">Mensagem do bot</div>
+            <div class="txt">Qual a data e o horário da consulta que você quer cancelar?</div>
+          </div>
+          <div class="mini-arrow">↓</div>
+          <div class="node node-msg">
+            <div class="label">Coleta (texto livre)</div>
+            <div class="txt">Paciente responde com data e horário</div>
+          </div>
+          <div class="mini-arrow">↓</div>
+          <div class="node node-handoff">
+            <div class="label">Transferência</div>
+            <div class="txt">"Vou te transferir para nossa equipe, eles já vão te ajudar a remarcar." → atendente recebe o chat já com unidade, data e horário anotados, pronto para tentar remarcar na hora.</div>
+          </div>
+        </div>
+
+        <div class="sub-branch">
+          <h4>Solicitar receita ou relatório</h4>
+          <div class="node node-msg node-standby">
+            <span class="tag-standby">Ver fluxo detalhado</span>
+            <div class="label">Coleta conversacional (resumo)</div>
+            <div class="txt">Bot pergunta, um de cada vez: nome completo, telefone, CPF, data de nascimento → tipo (receita ou relatório) → se receita: aviso de que a última receita é replicada sem alterações + observações opcionais; se relatório: tipo do relatório, finalidade, o que deve constar, observações. Termina com "Pedido registrado! Em até 48h úteis..." — sem passar por atendente.</div>
+          </div>
+          <div class="mini-arrow">↓</div>
+          <div class="node node-msg">
+            <div class="label">Nos bastidores</div>
+            <div class="txt">Busca automática do paciente por CPF no CliMed (SP+MC) + grava no Postgres para a secretaria trabalhar no painel próprio → depois valida (com previsão) → direciona ao médico dentro do CliMed → marca pronto. 2 notificações automáticas de volta ao paciente ao longo do processo.</div>
+          </div>
+          <div class="mini-arrow">↓</div>
+          <div class="node node-end">
+            <div class="label">Fim automático (desta etapa)</div>
+            <div class="txt">Detalhe completo — coleta campo a campo, textos exatos dos templates, esteira de status da secretaria e papel do médico — está no arquivo separado <code>fluxo-receita-relatorio-detalhado.html</code>.</div>
+          </div>
+        </div>
+
+        <div class="sub-branch">
+          <h4>Informações</h4>
+          <div class="node node-msg">
+            <div class="label">Mensagem do bot</div>
+            <div class="txt">Mesmo conteúdo do ramo "não é paciente": endereço, horário, especialidade, médicos por unidade e (se pedir) lista de convênios com aviso de validação no agendamento.</div>
+          </div>
+          <div class="mini-arrow">↓</div>
+          <div class="node node-end">
+            <div class="label">Fim / volta ao menu</div>
+            <div class="txt">Pergunta se pode ajudar em algo mais, mesma lógica de antes.</div>
+          </div>
+        </div>
+
+        <div class="sub-branch">
+          <h4>Outro assunto</h4>
+          <div class="node node-handoff">
+            <div class="label">Transferência</div>
+            <div class="txt">Transfere direto para atendente, sem mais perguntas.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <div class="note-box">
+    <h4>Pontos de atenção para a revisão</h4>
+    <ul>
+      <li>Os textos exatos das mensagens ainda podem ser ajustados — o que importa nesta etapa é validar a <b>lógica</b> (quais perguntas, em que ordem, o que vira transferência para humano e o que a automação resolve sozinha).</li>
+      <li>"Infusão de Cetamina" é filtrado logo no início da conversa (antes de perguntar se já é paciente) e <b>sempre</b> cai em atendente humano — não passa pelo resto das perguntas, nem para quem já é paciente.</li>
+      <li>"Cancelar consulta" foi desenhado para coletar data e horário <b>antes</b> de transferir, assim o atendente já tenta remarcar direto na conversa, sem precisar perguntar de novo.</li>
+      <li><b>"Solicitar receita ou relatório" — revisado e corrigido nesta rodada:</b> a versão anterior deste resumo estava incompleta (faltavam telefone e data de nascimento na coleta). É o único ramo que <b>não</b> termina em atendente humano — o backend (busca por CPF, painel da secretaria, notificações automáticas) já está construído e testado; falta só montar a conversa em si no bot. Fluxo completo, com todos os campos, textos exatos e o papel da secretaria/médico, agora em documento próprio: <code>fluxo-receita-relatorio-detalhado.html</code>.</li>
+      <li><b>Pendência para a Meire:</b> no ramo "Agendar minha primeira consulta → Particular", o bot pergunta a idade do paciente para aplicar o valor certo (R$600 adulto / R$700 infantil) — falta definir qual é exatamente o corte de idade que separa "infantil" de "adulto".</li>
+      <li><b>Lista de convênios — resolvida:</b> usei a lista oficial do arquivo "Convênios Atendidos ASSIS" (a mesma que já é usada com pacientes), não o cadastro interno de faturamento do CliMed — esse último tem muito mais entradas (testes, duplicatas, códigos internos) e não devia ser usado como fonte para o paciente. Mantive o aviso "Planos sujeitos à verificação nas operadoras" que já vem no arquivo original.</li>
+      <li><b>Lista de médicos — resolvida:</b> usei a lista e ordem que você confirmou (Dr. Leonardo Maranhão sempre primeiro, depois ordem alfabética) — São Paulo: Dr. Leonardo Maranhão, Dra. Camila Lino, Dr. Gabriel Garcia, Dr. Silvio Simenov · Mogi das Cruzes: Dr. Leonardo Maranhão, Dra. Camila Lino, Dra. Glauce Torres, Dra. Pamella Siqueira. A mensagem já cruza com a unidade escolhida no início da conversa, não pergunta de novo.</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  Clínica Médica Assis — Operação SendPulse · Rascunho gerado em 22/jul/2026 para avaliação de Meire e Anne, antes do encaminhamento da especificação técnica.
+</footer>
+
+</body>
+</html>
