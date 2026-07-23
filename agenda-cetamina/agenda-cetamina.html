@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prévia — Agenda Cetamina (ASSIS)</title>
+<style>
+  :root {
+    --verde-escuro: #07614A;
+    --verde-muito-escuro: #037031;
+    --verde-medio: #03694F;
+    --verde-claro: #E9FCE2;
+    --azul-claro: #DAF7F3;
+    --cinza-escuro: #303B37;
+    --texto-medio: #555;
+    --texto-claro: #999;
+    --borda-clara: #DAF7F3;
+    --erro: #DC3545;
+    --sucesso: #037031;
+  }
+  * { box-sizing: border-box; margin:0; padding:0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #F5F5F5;
+    color: var(--cinza-escuro);
+    padding: 24px;
+  }
+  .tag-nota {
+    max-width: 1100px; margin: 0 auto 20px; background: #FFF8E1; border: 1px solid #FFC107;
+    border-radius: 8px; padding: 10px 16px; font-size: 13px; color: #6b5300;
+  }
+  .secao { max-width: 1100px; margin: 0 auto 40px; }
+  .secao-titulo {
+    font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px;
+    color: var(--texto-claro); margin-bottom: 10px;
+  }
+
+  /* ---- Tela de login ---- */
+  .tela-login {
+    background: #fff; border-radius: 14px; border: 1px solid var(--borda-clara);
+    box-shadow: 0 4px 12px rgba(3,105,79,0.08);
+    max-width: 380px; margin: 0 auto; overflow: hidden;
+  }
+  .login-header {
+    background: linear-gradient(135deg, #07614A 0%, #03694F 100%);
+    padding: 32px 24px 24px; text-align: center;
+  }
+  .logo-assis {
+    font-family: Georgia, 'Times New Roman', serif; color: #fff; font-size: 26px;
+    letter-spacing: 3px; text-transform: uppercase; font-weight: 700;
+  }
+  .logo-sub { color: rgba(255,255,255,0.85); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+  .login-body { padding: 24px; }
+  .login-body h2 { font-size: 15px; font-weight: 600; margin-bottom: 16px; color: var(--cinza-escuro); }
+  .campo { margin-bottom: 14px; }
+  .campo label { display:block; font-size: 12.5px; color: var(--texto-medio); margin-bottom: 5px; }
+  .campo input, .campo select {
+    width: 100%; padding: 10px 12px; border: 1px solid var(--borda-clara); border-radius: 8px;
+    font-size: 14px; color: var(--cinza-escuro); background: #fff;
+  }
+  .btn-primario {
+    width: 100%; padding: 12px; border-radius: 8px; font-weight: 600; letter-spacing: 0.3px;
+    background: linear-gradient(135deg, #07614A 0%, #03694F 100%); color: #fff; border: none;
+    font-size: 14px; cursor: pointer; margin-top: 6px;
+  }
+  .login-rodape { text-align: center; font-size: 11.5px; color: var(--texto-claro); margin-top: 14px; }
+
+  /* ---- Barra superior ---- */
+  .topbar {
+    background: linear-gradient(135deg, #07614A 0%, #03694F 100%);
+    border-radius: 12px; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .topbar-esq { display: flex; align-items: center; gap: 12px; }
+  .topbar-logo { font-family: Georgia, serif; color: #fff; font-size: 17px; letter-spacing: 1.5px; font-weight: 700; }
+  .topbar-titulo { color: rgba(255,255,255,0.9); font-size: 13px; border-left: 1px solid rgba(255,255,255,0.3); padding-left: 12px; }
+  .topbar-dir { display: flex; align-items: center; gap: 12px; }
+  .topbar-user { color: #fff; font-size: 13px; }
+  .btn-sair {
+    background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.4);
+    padding: 6px 14px; border-radius: 7px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px; cursor: pointer;
+  }
+
+  /* ---- Controles ---- */
+  .controles {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;
+  }
+  .semana-nav { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--texto-medio); }
+  .semana-nav button {
+    border: 1px solid var(--borda-clara); background: #fff; border-radius: 6px; padding: 5px 10px; cursor: pointer; color: var(--verde-escuro);
+  }
+  .legenda { display: flex; gap: 14px; font-size: 12px; color: var(--texto-medio); }
+  .legenda span { display: inline-flex; align-items: center; gap: 5px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+
+  /* ---- Resumo de ocupacao ---- */
+  .ocupacao-wrap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 14px; }
+  .ocupacao-card { background: #fff; border: 1px solid var(--borda-clara); border-radius: 10px; padding: 10px 14px; }
+  .ocupacao-dia { font-size: 12.5px; font-weight: 700; color: var(--cinza-escuro); margin-bottom: 6px; }
+  .ocupacao-linha { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: var(--texto-medio); margin-bottom: 4px; }
+  .barra { flex: 1; height: 6px; border-radius: 3px; background: #EEEEE6; overflow: hidden; }
+  .barra-fill { height: 100%; border-radius: 3px; }
+  .fill-ok { background: #378ADD; }
+  .fill-alerta { background: #FFC107; }
+  .fill-lotado { background: var(--erro); }
+  .alerta-banner {
+    display: flex; align-items: center; gap: 8px; background: #FFF8E1; border: 1px solid #FFC107;
+    color: #6b5300; font-size: 12.5px; padding: 8px 14px; border-radius: 8px; margin-bottom: 14px;
+  }
+  .alerta-banner.lotado { background: #FDEEEE; border-color: #E4A0A0; color: #7a1f1f; }
+
+  /* ---- Sugestoes ---- */
+  .btn-sugerir {
+    width: 100%; padding: 9px; border-radius: 8px; font-weight: 600; background: var(--azul-claro); color: var(--verde-escuro);
+    border: 1px solid var(--borda-clara); font-size: 13px; cursor: pointer; margin-bottom: 10px;
+  }
+  .chips-sugestao { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  .chip {
+    background: #fff; border: 1px solid var(--verde-escuro); color: var(--verde-escuro); font-size: 12px; font-weight: 600;
+    padding: 6px 12px; border-radius: 20px; cursor: pointer;
+  }
+  .chip:hover { background: var(--verde-escuro); color: #fff; }
+  .alerta-form {
+    font-size: 12px; color: #6b5300; background: #FFF8E1; border: 1px solid #FFC107; border-radius: 8px;
+    padding: 7px 10px; margin-bottom: 12px;
+  }
+
+  /* ---- Grade ---- */
+  .grade-wrap { background: #fff; border: 1px solid var(--borda-clara); border-radius: 12px; overflow: hidden; }
+  .grade { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .grade th {
+    background: var(--verde-claro); color: var(--verde-escuro); padding: 10px 8px; text-align: center;
+    font-weight: 700; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.3px;
+    border-bottom: 1px solid var(--borda-clara);
+  }
+  .grade th.col-hora { background: #fff; }
+  .grade td { border-bottom: 1px solid #F0F0EC; border-right: 1px solid #F0F0EC; vertical-align: top; padding: 0; }
+  .grade td.col-hora {
+    background: #FAFAF7; color: var(--texto-medio); font-weight: 600; text-align: center; padding: 10px 6px; white-space: nowrap;
+  }
+  .celula { padding: 6px; display: flex; flex-direction: column; gap: 5px; }
+  .card-paciente { padding: 6px 8px; border-radius: 6px; position: relative; }
+  .status-agendado { background: #F5FAFF; border-left: 3px solid #378ADD; }
+  .status-realizado { background: #EFF8F0; border-left: 3px solid var(--sucesso); }
+  .status-faltou { background: #FDEEEE; border-left: 3px solid var(--erro); }
+  .paciente-nome { font-weight: 600; color: var(--cinza-escuro); font-size: 12.5px; }
+  .paciente-meta { color: var(--texto-claro); font-size: 11px; margin-top: 2px; }
+  .btn-add-slot {
+    border: 1px dashed #C7C7C0; border-radius: 6px; color: #999; font-size: 11.5px; text-align: center;
+    padding: 5px; cursor: pointer; background: #fff;
+  }
+  .btn-add-slot:hover { background: var(--azul-claro); border-color: var(--verde-escuro); color: var(--verde-escuro); }
+  .badge-mc {
+    display: inline-block; background: #EAF0FA; color: #185FA5; font-size: 9.5px; font-weight: 700;
+    padding: 1px 6px; border-radius: 4px; margin-top: 3px; margin-left: 4px; text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  .badge-maca {
+    display: inline-block; background: #FFF3E0; color: #B36B00; font-size: 9.5px; font-weight: 700;
+    padding: 1px 6px; border-radius: 4px; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.3px;
+  }
+  .linha-almoco td { background: repeating-linear-gradient(45deg, #F2F2EC, #F2F2EC 8px, #EAEAE2 8px, #EAEAE2 16px); text-align:center; color: var(--texto-claro); font-size: 11px; padding: 6px; }
+
+  /* ---- Taxas de ocupacao ---- */
+  .taxas-wrap { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 14px; border-top: 1px solid var(--borda-clara); }
+  .taxas-card { background: var(--verde-claro); border-radius: 10px; padding: 14px 16px; }
+  .taxas-titulo { font-size: 11.5px; color: var(--verde-escuro); font-weight: 600; margin-bottom: 6px; }
+  .taxas-numero { font-size: 26px; font-weight: 700; color: var(--verde-escuro); margin-bottom: 4px; }
+  .taxas-detalhe { font-size: 11.5px; color: var(--texto-medio); }
+
+  /* ---- Modal de agendamento ---- */
+  .modal-wrap {
+    min-height: 480px; background: rgba(0,0,0,0.45); border-radius: 12px;
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+  }
+  .modal {
+    background: #fff; border-radius: 14px; width: 100%; max-width: 420px; overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+  .modal-head {
+    background: linear-gradient(135deg, #07614A 0%, #03694F 100%); color: #fff; padding: 16px 20px; font-size: 14px; font-weight: 600;
+  }
+  .modal-body { padding: 18px 20px; }
+  .busca-resultado {
+    border: 1px solid var(--borda-clara); border-radius: 8px; padding: 8px 10px; margin-top: 6px; font-size: 12.5px;
+    display: flex; justify-content: space-between; align-items: center; background: var(--azul-claro);
+  }
+  .busca-resultado b { color: var(--verde-escuro); }
+  .linha2 { display: flex; gap: 10px; }
+  .linha2 .campo { flex: 1; }
+  .radio-linha { display: flex; gap: 16px; font-size: 13px; color: var(--texto-medio); margin-top: 4px; }
+  .modal-acoes { display: flex; gap: 10px; margin-top: 16px; }
+  .btn-secundario {
+    flex: 1; padding: 11px; border-radius: 8px; font-weight: 600; background: #fff; color: var(--cinza-escuro);
+    border: 1px solid var(--borda-clara); font-size: 13.5px; cursor: pointer;
+  }
+  .modal-acoes .btn-primario { flex: 1; margin-top: 0; }
+
+  /* ---- Log ---- */
+  .log-lista { background: #fff; border: 1px solid var(--borda-clara); border-radius: 12px; padding: 4px 0; }
+  .log-item {
+    padding: 10px 18px; border-bottom: 1px solid #F0F0EC; font-size: 13px; color: var(--cinza-escuro);
+    display: flex; justify-content: space-between; gap: 10px;
+  }
+  .log-item:last-child { border-bottom: none; }
+  .log-quando { color: var(--texto-claro); font-size: 11.5px; white-space: nowrap; }
+  .log-acao-tag {
+    font-size: 10.5px; font-weight: 700; text-transform: uppercase; padding: 1px 7px; border-radius: 4px; margin-right: 6px;
+  }
+  .tag-criou { background: var(--azul-claro); color: #185FA5; }
+  .tag-realizado { background: #EAF3DE; color: var(--sucesso); }
+  .tag-faltou { background: #FCEBEB; color: var(--erro); }
+  .tag-cancelou { background: #F1EFE8; color: #666; }
+</style>
+</head>
+<body>
+
+<div class="tag-nota">
+  Prévia estática de design — dados fictícios, sem back-end. Reflete o painel já construído e publicado em cetamina.climed.tech (login unificado via auth.climed.tech, compartilhado com o Bloco D). Identidade ASSIS aplicada conforme <code>reference_identidade_visual_assis</code>.
+</div>
+
+<div class="secao">
+  <div class="secao-titulo">1 · Tela de login</div>
+  <div class="tela-login">
+    <div class="login-header">
+      <div class="logo-assis">Assis</div>
+      <div class="logo-sub">clínica médica</div>
+    </div>
+    <div class="login-body">
+      <h2>Agenda Cetamina</h2>
+      <div class="campo">
+        <label>Usuário</label>
+        <input type="text" placeholder="ex: meire" value="meire">
+      </div>
+      <div class="campo">
+        <label>Senha</label>
+        <input type="password" value="••••••••">
+      </div>
+      <button class="btn-primario">Entrar</button>
+      <div class="login-rodape">Login único do CliMed — mesmo usuário vale em outros painéis da clínica</div>
+    </div>
+  </div>
+</div>
+
+<div class="secao">
+  <div class="secao-titulo">1b · Primeiro acesso — troca de senha obrigatória</div>
+  <div class="tela-login">
+    <div class="login-header">
+      <div class="logo-assis">Assis</div>
+      <div class="logo-sub">clínica médica</div>
+    </div>
+    <div class="login-body">
+      <h2>Defina sua senha</h2>
+      <div class="campo" style="background:#FFF8E1; border:1px solid #FFC107; border-radius:8px; padding:8px 10px; font-size:12px; color:#6b5300;">
+        Sua senha é temporária. Defina uma nova senha pra continuar — ela vale pra todos os sistemas do CliMed.
+      </div>
+      <div class="campo" style="margin-top:12px;">
+        <label>Nova senha</label>
+        <input type="password" placeholder="mínimo 8 caracteres">
+      </div>
+      <div class="campo">
+        <label>Confirmar nova senha</label>
+        <input type="password">
+      </div>
+      <button class="btn-primario">Salvar e entrar</button>
+    </div>
+  </div>
+</div>
+
+<div class="secao">
+  <div class="secao-titulo">2 · Tela principal — grade da semana</div>
+
+  <div class="topbar">
+    <div class="topbar-esq">
+      <div class="topbar-logo">ASSIS</div>
+      <div class="topbar-titulo">Agenda Cetamina</div>
+    </div>
+    <div class="topbar-dir">
+      <div class="topbar-user">Meire</div>
+      <button class="btn-sair">Sair</button>
+    </div>
+  </div>
+
+  <div class="controles">
+    <div class="semana-nav">
+      <button>‹ Semana anterior</button>
+      <span>21 a 23 de julho de 2026 · só SP, só terça/quarta/quinta</span>
+      <button>Próxima semana ›</button>
+    </div>
+    <div class="legenda">
+      <span><span class="dot" style="background:#378ADD"></span> Agendado</span>
+      <span><span class="dot" style="background:#037031"></span> Realizado</span>
+      <span><span class="dot" style="background:#DC3545"></span> Faltou</span>
+      <span><span class="dot" style="background:#B36B00"></span> Maca</span>
+    </div>
+  </div>
+
+  <div class="ocupacao-wrap">
+    <div class="ocupacao-card">
+      <div class="ocupacao-dia">Terça 21/07</div>
+      <div style="font-size:10.5px; color:var(--texto-claro); text-transform:uppercase; letter-spacing:0.4px; margin-bottom:4px;">Manhã</div>
+      <div class="ocupacao-linha">Poltronas <div class="barra"><div class="barra-fill fill-ok" style="width:50%"></div></div> 3/6</div>
+      <div class="ocupacao-linha">Maca <div class="barra"><div class="barra-fill fill-ok" style="width:0%"></div></div> 0/1</div>
+      <div class="ocupacao-linha">Equipe (agora) <div class="barra"><div class="barra-fill fill-lotado" style="width:100%"></div></div> 1/1</div>
+      <div style="font-size:10.5px; color:var(--texto-claro); text-transform:uppercase; letter-spacing:0.4px; margin:8px 0 4px;">Tarde</div>
+      <div class="ocupacao-linha">Poltronas <div class="barra"><div class="barra-fill fill-alerta" style="width:83%"></div></div> 5/6</div>
+      <div class="ocupacao-linha">Maca <div class="barra"><div class="barra-fill fill-lotado" style="width:100%"></div></div> 1/1</div>
+      <div class="ocupacao-linha">Equipe (agora) <div class="barra"><div class="barra-fill fill-ok" style="width:0%"></div></div> 0/1</div>
+    </div>
+    <div class="ocupacao-card">
+      <div class="ocupacao-dia">Quarta 22/07</div>
+      <div style="font-size:10.5px; color:var(--texto-claro); text-transform:uppercase; letter-spacing:0.4px; margin-bottom:4px;">Manhã</div>
+      <div class="ocupacao-linha">Poltronas <div class="barra"><div class="barra-fill fill-alerta" style="width:86%"></div></div> 6/7</div>
+      <div class="ocupacao-linha">Maca <div class="barra"><div class="barra-fill fill-ok" style="width:0%"></div></div> 0/1</div>
+      <div class="ocupacao-linha">Equipe (agora) <div class="barra"><div class="barra-fill fill-lotado" style="width:100%"></div></div> 1/1</div>
+      <div style="font-size:10.5px; color:var(--texto-claro); text-transform:uppercase; letter-spacing:0.4px; margin:8px 0 4px;">Tarde</div>
+      <div class="ocupacao-linha">Poltronas <div class="barra"><div class="barra-fill fill-ok" style="width:29%"></div></div> 2/7</div>
+      <div class="ocupacao-linha">Maca <div class="barra"><div class="barra-fill fill-ok" style="width:0%"></div></div> 0/1</div>
+      <div class="ocupacao-linha">Equipe (agora) <div class="barra"><div class="barra-fill fill-ok" style="width:0%"></div></div> 0/1</div>
+    </div>
+    <div class="ocupacao-card">
+      <div class="ocupacao-dia">Quinta 23/07</div>
+      <div style="font-size:10.5px; color:var(--texto-claro); text-transform:uppercase; letter-spacing:0.4px; margin-bottom:4px;">Manhã</div>
+      <div class="ocupacao-linha">Poltronas <div class="barra"><div class="barra-fill fill-lotado" style="width:100%"></div></div> 6/6</div>
+      <div class="ocupacao-linha">Maca <div class="barra"><div class="barra-fill fill-lotado" style="width:100%"></div></div> 1/1</div>
+      <div class="ocupacao-linha">Equipe (agora) <div class="barra"><div class="barra-fill fill-lotado" style="width:100%"></div></div> 1/1</div>
+      <div style="font-size:10.5px; color:var(--texto-claro); text-transform:uppercase; letter-spacing:0.4px; margin:8px 0 4px;">Tarde</div>
+      <div class="ocupacao-linha">Poltronas <div class="barra"><div class="barra-fill fill-ok" style="width:0%"></div></div> 0/6</div>
+      <div class="ocupacao-linha">Maca <div class="barra"><div class="barra-fill fill-ok" style="width:0%"></div></div> 0/1</div>
+      <div class="ocupacao-linha">Equipe (agora) <div class="barra"><div class="barra-fill fill-ok" style="width:0%"></div></div> 0/1</div>
+    </div>
+  </div>
+
+  <div class="alerta-banner">
+    <span>⚠</span> Quarta de manhã: só resta 1 vaga de poltrona. Quinta de manhã já está lotada (poltronas e maca) — novos agendamentos exigem confirmação de "forçar".
+  </div>
+
+  <div class="grade-wrap">
+    <table class="grade">
+      <thead>
+        <tr>
+          <th class="col-hora">Horário</th>
+          <th>Terça · 21/07</th>
+          <th>Quarta · 22/07</th>
+          <th>Quinta · 23/07</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-hora">08:00</td>
+          <td><div class="celula">
+            <div class="card-paciente status-realizado">
+              <div class="paciente-nome">Luandre de Souza</div>
+              <div class="paciente-meta">08:00–10:30 · Poltrona 1 · realizado</div>
+            </div>
+            <div class="btn-add-slot">+ agendar</div>
+          </div></td>
+          <td><div class="celula">
+            <div class="card-paciente status-agendado">
+              <div class="paciente-nome">Silvia Regina Sabadini</div>
+              <div class="paciente-meta">08:00–10:30 · Poltrona 1 · agendado por Meire</div>
+            </div>
+            <div class="btn-add-slot">+ agendar</div>
+          </div></td>
+          <td><div class="celula">
+            <div class="card-paciente status-agendado">
+              <div class="paciente-nome">Thais Barbosa</div>
+              <div class="paciente-meta">08:00–10:30 · Maca · agendado por Dai</div>
+              <span class="badge-maca">Maca</span>
+            </div>
+            <div class="btn-add-slot">+ agendar</div>
+          </div></td>
+        </tr>
+        <tr>
+          <td class="col-hora">08:30</td>
+          <td><div class="celula">
+            <div class="card-paciente status-faltou">
+              <div class="paciente-nome">Karin Cristina <span class="badge-mc">MC</span></div>
+              <div class="paciente-meta">08:30 · Poltrona 2 · faltou</div>
+            </div>
+            <div class="btn-add-slot">+ agendar</div>
+          </div></td>
+          <td><div class="celula">
+            <div class="card-paciente status-agendado">
+              <div class="paciente-nome">Elitania de Lima Teixeira</div>
+              <div class="paciente-meta">08:30–11:00 · Poltrona 2 · agendado por Afrânio</div>
+            </div>
+            <div class="btn-add-slot">+ agendar</div>
+          </div></td>
+          <td><div class="celula">
+            <div class="btn-add-slot">+ agendar</div>
+          </div></td>
+        </tr>
+        <tr>
+          <td class="col-hora">09:00</td>
+          <td><div class="celula">
+            <div class="card-paciente status-agendado">
+              <div class="paciente-nome">Santina Maria</div>
+              <div class="paciente-meta">09:00–11:30 · Poltrona 3 · 1ª vez · agendado por Dai</div>
+            </div>
+            <div class="btn-add-slot">+ agendar</div>
+          </div></td>
+          <td><div class="celula">
+            <div class="card-paciente status-agendado">
+              <div class="paciente-nome">Mariane Garcia</div>
+              <div class="paciente-meta">09:00–11:30 · Poltrona 3 · agendado por Meire</div>
+            </div>
+            <div class="btn-add-slot">+ agendar</div>
+          </div></td>
+          <td><div class="celula">
+            <div class="btn-add-slot">+ agendar</div>
+          </div></td>
+        </tr>
+        <tr>
+          <td class="col-hora">09:30</td>
+          <td><div class="celula">
+            <div class="btn-add-slot">+ agendar</div>
+            <div class="paciente-meta" style="opacity:.6">equipe livre de novo às 09:30 (30min após 09:00) — poltrona 4, 5 e 6 seguem livres</div>
+          </div></td>
+          <td><div class="celula">
+            <div class="card-paciente status-agendado">
+              <div class="paciente-nome">Pedro Paulo Alcade</div>
+              <div class="paciente-meta">09:30–12:00 · Poltrona 4 · agendado por Meire</div>
+            </div>
+          </div></td>
+          <td><div class="celula">
+            <div class="btn-add-slot">+ agendar</div>
+          </div></td>
+        </tr>
+        <tr>
+          <td class="col-hora">10:00</td>
+          <td><div class="celula">
+            <div class="paciente-meta" style="opacity:.6">chegada às 10:00 não caberia: ocupação terminaria 12:30, depois do fim do turno (12:20) — motor bloqueia/exige forçar</div>
+          </div></td>
+          <td><div class="celula">
+            <div class="btn-add-slot">+ agendar</div>
+          </div></td>
+          <td><div class="celula">
+            <div class="btn-add-slot">+ agendar</div>
+          </div></td>
+        </tr>
+        <tr>
+          <td class="col-hora">12:20 – 13:20</td>
+          <td colspan="3" class="linha-almoco">almoço · horário bloqueado</td>
+        </tr>
+        <tr>
+          <td class="col-hora">13:20</td>
+          <td><div class="celula">
+            <div class="card-paciente status-agendado">
+              <div class="paciente-nome">Karin Cristina (remarcada) <span class="badge-mc">MC</span></div>
+              <div class="paciente-meta">13:20–15:50 · Poltrona 1 · reaproveitando a poltrona 1 (livre desde 10:30) · agendado por Dai</div>
+            </div>
+            <div class="btn-add-slot">+ agendar</div>
+          </div></td>
+          <td><div class="celula">
+            <div class="btn-add-slot">+ agendar</div>
+          </div></td>
+          <td><div class="celula">
+            <div class="btn-add-slot">+ agendar</div>
+          </div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:12px;color:#666;margin-top:6px">Exemplo ilustra a rotatividade: equipe libera a cada 30min (novo horário de chegada a cada 30min, nunca 2 ao mesmo tempo) e cada poltrona libera 140min após o início da ocupação, podendo ser reaproveitada por outro paciente ainda no mesmo turno (se houver tempo) ou no turno seguinte — como a Poltrona 1, usada de manhã por Luandre e reaproveitada à tarde por Karin Cristina.</p>
+
+  <div class="taxas-wrap">
+    <div class="taxas-card">
+      <div class="taxas-titulo">Taxa de ocupação · semana atual (21 a 23/07)</div>
+      <div class="taxas-numero">64%</div>
+      <div class="taxas-detalhe">Poltronas 61% (35 de 57 vagas) · Maca 100% (3 de 3 vagas)</div>
+    </div>
+    <div class="taxas-card">
+      <div class="taxas-titulo">Taxa de ocupação · julho/2026</div>
+      <div class="taxas-numero">71%</div>
+      <div class="taxas-detalhe">Poltronas 69% · Maca 92% · comparado a junho/2026: 66%</div>
+    </div>
+  </div>
+</div>
+
+<div class="secao">
+  <div class="secao-titulo">3 · Agendar horário — busca CliMed, alerta de capacidade e sugestão inteligente</div>
+  <div class="modal-wrap">
+    <div class="modal">
+      <div class="modal-head">Novo agendamento · Quinta 23/07 (manhã lotada)</div>
+      <div class="modal-body">
+        <button class="btn-sugerir">✨ Sugerir horário com vaga</button>
+        <div class="chips-sugestao">
+          <span class="chip">Ter 21/07 · 10:30 · Poltrona (3 vagas)</span>
+          <span class="chip">Qua 22/07 · 08:00 · Poltrona (1 vaga)</span>
+          <span class="chip">Qui 23/07 · 13:20 · Maca (livre)</span>
+        </div>
+        <div class="campo">
+          <label>Buscar paciente (nome ou CPF)</label>
+          <input type="text" value="ricardo parra">
+          <div class="busca-resultado">
+            <span><b>Ricardo Parra Silva</b> — CPF ***.**4-56 · cadastro MC</span>
+            <span style="color:#037031; font-weight:600; cursor:pointer;">usar</span>
+          </div>
+        </div>
+        <div class="linha2">
+          <div class="campo"><label>Telefone</label><input type="text" value="(11) 9****-1234" disabled></div>
+          <div class="campo"><label>Nascimento</label><input type="text" value="14/03/1978" disabled></div>
+        </div>
+        <div class="linha2">
+          <div class="campo"><label>Início</label><input type="text" value="09:20"></div>
+          <div class="campo"><label>Fim (auto, +150min)</label><input type="text" value="11:50" disabled></div>
+        </div>
+        <div class="linha2">
+          <div class="campo">
+            <label>Recurso</label>
+            <select><option>Poltrona</option><option>Maca</option></select>
+          </div>
+          <div class="campo">
+            <label>Unidade de cadastro (informativo)</label>
+            <input type="text" value="MC" disabled>
+          </div>
+        </div>
+        <div class="radio-linha">
+          <label><input type="checkbox"> Primeira vez</label>
+        </div>
+        <div class="campo">
+          <label>Observação (opcional)</label>
+          <input type="text" placeholder="ex: acompanhado pela filha">
+        </div>
+        <div class="alerta-form lotado" style="background:#FDEEEE; border-color:#E4A0A0; color:#7a1f1f; font-weight:600;">
+          ⚠ Quinta de manhã já está com 6/6 poltronas ocupadas nesse intervalo. Agendar mesmo assim pode sobrecarregar a equipe.
+        </div>
+        <label style="display:flex; align-items:flex-start; gap:8px; font-size:12px; color:#7a1f1f; margin-bottom:14px; cursor:pointer;">
+          <input type="checkbox" style="margin-top:2px;">
+          Estou ciente de que este horário está acima da capacidade normal e quero agendar assim mesmo
+        </label>
+        <div class="modal-acoes">
+          <button class="btn-secundario">Cancelar</button>
+          <button class="btn-primario" style="opacity:0.5; cursor:not-allowed;" title="Marque o checkbox acima para liberar">Salvar agendamento</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="secao">
+  <div class="secao-titulo">4 · Log de atividade</div>
+  <div class="log-lista">
+    <div class="log-item">
+      <span><span class="log-acao-tag tag-criou">Criou</span>Meire agendou <b>Silvia Regina Sabadini</b> — Quarta 22/07 08:00</span>
+      <span class="log-quando">hoje, 14:32</span>
+    </div>
+    <div class="log-item">
+      <span><span class="log-acao-tag tag-realizado">Realizado</span>Afrânio marcou <b>Luandre de Souza</b> como realizado — Terça 21/07 08:00</span>
+      <span class="log-quando">hoje, 08:24</span>
+    </div>
+    <div class="log-item">
+      <span><span class="log-acao-tag tag-faltou">Faltou</span>Dai marcou <b>Karin Cristina</b> como faltou — Terça 21/07 08:20</span>
+      <span class="log-quando">hoje, 08:41</span>
+    </div>
+    <div class="log-item">
+      <span><span class="log-acao-tag tag-cancelou">Cancelou</span>Meire cancelou agendamento de <b>Julio Cesar Pudo</b> — Quinta 23/07 10:00</span>
+      <span class="log-quando">ontem, 17:05</span>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

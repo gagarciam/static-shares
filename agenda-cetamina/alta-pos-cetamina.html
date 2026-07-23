@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Alta Pós-Cetamina</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f4f4f0;
+      color: #1a1a1a;
+      padding: 16px;
+      padding-bottom: 40px;
+    }
+
+    .page-header {
+      margin-bottom: 20px;
+    }
+    .page-header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 2px;
+    }
+    .page-header p {
+      font-size: 13px;
+      color: #888;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      border: 0.5px solid #e2e2da;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #999;
+      margin-bottom: 13px;
+    }
+
+    label {
+      font-size: 13px;
+      color: #666;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="time"],
+    textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #e2e2da;
+      border-radius: 9px;
+      font-size: 15px;
+      color: #1a1a1a;
+      background: #fff;
+      -webkit-appearance: none;
+      appearance: none;
+      font-family: inherit;
+      transition: border-color 0.15s;
+    }
+
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #888;
+    }
+
+    textarea {
+      resize: none;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+    }
+    .col { flex: 1; min-width: 0; }
+
+    .mb-12 { margin-bottom: 12px; }
+
+    /* Criteria toggles */
+    .criteria-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .toggle-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 13px;
+      border-radius: 10px;
+      border: 1.5px solid #e2e2da;
+      background: #fafaf8;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: #666;
+      min-height: 52px;
+      transition: background 0.12s, border-color 0.12s, color 0.12s;
+      user-select: none;
+    }
+
+    .toggle-btn .icon {
+      font-size: 17px;
+      min-width: 22px;
+      text-align: right;
+    }
+
+    .toggle-btn.yes {
+      background: #eef6e6;
+      border-color: #7ab83e;
+      color: #3a6a12;
+    }
+    .toggle-btn.no {
+      background: #fdeeed;
+      border-color: #e06060;
+      color: #a02020;
+    }
+
+    /* Vitals */
+    .vitals-header {
+      display: grid;
+      grid-template-columns: 72px 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #aaa;
+      text-align: center;
+    }
+    .vitals-header div:first-child { text-align: left; }
+
+    .vitals-row {
+      display: grid;
+      grid-template-columns: 72px 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+      align-items: center;
+    }
+
+    .vitals-label {
+      font-size: 13px;
+      color: #555;
+      font-weight: 500;
+      line-height: 1.3;
+    }
+
+    .vitals-cell {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .vitals-cell input {
+      padding: 9px 4px;
+      text-align: center;
+      font-size: 14px;
+    }
+    .sep {
+      color: #bbb;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    /* Companion */
+    .companion-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .radio-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1.5px solid #e2e2da;
+      text-align: center;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: #777;
+      background: #fafaf8;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.12s, border-color 0.12s, color 0.12s;
+      user-select: none;
+    }
+    .radio-btn.selected-yes {
+      background: #eef6e6;
+      border-color: #7ab83e;
+      color: #3a6a12;
+    }
+    .radio-btn.selected-no {
+      background: #fdeeed;
+      border-color: #e06060;
+      color: #a02020;
+    }
+
+    /* Preview */
+    .preview-box {
+      background: #f2f3f0;
+      border-radius: 10px;
+      padding: 14px;
+      font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+      font-size: 12.5px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #2a2a2a;
+      border: 1px solid #e2e2da;
+      min-height: 80px;
+    }
+
+    /* Action buttons */
+    .btn-copy {
+      width: 100%;
+      padding: 14px;
+      border-radius: 11px;
+      border: 1.5px solid #999;
+      background: #fff;
+      color: #333;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 10px;
+      font-family: inherit;
+      transition: background 0.12s;
+    }
+    .btn-copy:active { background: #f2f2f0; }
+
+    .btn-whatsapp {
+      width: 100%;
+      padding: 15px;
+      border-radius: 11px;
+      border: none;
+      background: #25D366;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      font-family: inherit;
+      transition: background 0.12s;
+    }
+    .btn-whatsapp:active { background: #1ebe5d; }
+
+    .btn-clear {
+      width: 100%;
+      padding: 11px;
+      border-radius: 9px;
+      border: none;
+      background: transparent;
+      color: #bbb;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: inherit;
+      margin-top: 8px;
+    }
+
+    .feedback-msg {
+      text-align: center;
+      font-size: 13px;
+      font-weight: 500;
+      color: #4a9e28;
+      height: 18px;
+      margin-top: 6px;
+      margin-bottom: 2px;
+      transition: opacity 0.3s;
+    }
+    .feedback-msg.hidden { opacity: 0; }
+
+    /* Alert badge on preview */
+    .alert-badge {
+      display: inline-block;
+      background: #fff3e0;
+      color: #b35a00;
+      border: 1px solid #f0b060;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 3px 9px;
+      margin-bottom: 10px;
+    }
+    .ok-badge {
+      display: inline-block;
+      background: #eef6e6;
+      color: #3a6a12;
+      border: 1px solid #7ab83e;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 3px 9px;
+      margin-bottom: 10px;
+    }
+    .badge-row {
+      margin-bottom: 6px;
+      min-height: 26px;
+    }
+
+    input[id="nome"] {
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .hint {
+      font-size: 11px;
+      color: #bbb;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-header">
+    <h1>Alta pós-cetamina</h1>
+    <p>Notificação de término de infusão</p>
+  </div>
+
+  <!-- 1. Identificação -->
+  <div class="card">
+    <div class="card-title">Identificação</div>
+
+    <label for="nome">Paciente</label>
+    <input type="text" id="nome" placeholder="Nome completo" autocomplete="off"
+           autocorrect="off" autocapitalize="words" spellcheck="false"
+           style="margin-bottom: 13px;">
+
+    <div class="row">
+      <div class="col">
+        <label for="sessao">Sessão nº</label>
+        <input type="number" id="sessao" placeholder="—" min="1" max="99" inputmode="numeric"
+               style="text-align: center;">
+      </div>
+      <div class="col">
+        <label for="dose">Dose (mL)</label>
+        <input type="number" id="dose" placeholder="—" min="0.1" max="10" step="0.05"
+               inputmode="decimal" style="text-align: center;">
+      </div>
+      <div class="col">
+        <label for="termino">Término</label>
+        <input type="time" id="termino" style="text-align: center;">
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Critérios clínicos -->
+  <div class="card">
+    <div class="card-title">Critérios de alta</div>
+    <div class="criteria-grid">
+      <button class="toggle-btn" data-key="acordado" onclick="toggleCriteria(this)">
+        <span>Acordado/a</span>
+        <span class="icon">○</span>
+      </button>
+      <button class="toggle-btn" data-key="verbalizando" onclick="toggleCriteria(this)">
+        <span>Verbalizando</span>
+        <span class="icon">○</span>
+      </button>
+      <button class="toggle-btn" data-key="deambulando" onclick="toggleCriteria(this)">
+        <span>Deambulando</span>
+        <span class="icon">○</span>
+      </button>
+      <button class="toggle-btn" data-key="semQueixas" onclick="toggleCriteria(this)">
+        <span>Sem queixas</span>
+        <span class="icon">○</span>
+      </button>
+    </div>
+    <p class="hint">Toque uma vez para ✅, duas vezes para ❌</p>
+  </div>
+
+  <!-- 3. Sinais vitais -->
+  <div class="card">
+    <div class="card-title">Sinais vitais</div>
+    <div class="vitals-header">
+      <div></div>
+      <div>Início</div>
+      <div>Agora</div>
+    </div>
+
+    <div class="vitals-row">
+      <div class="vitals-label">PA<br><span style="font-size:11px;color:#aaa;">mmHg</span></div>
+      <div class="vitals-cell">
+        <input type="number" id="pa-sys-i" placeholder="120" min="60" max="260" inputmode="numeric">
+        <span class="sep">/</span>
+        <input type="number" id="pa-dia-i" placeholder="80" min="40" max="160" inputmode="numeric">
+      </div>
+      <div class="vitals-cell">
+        <input type="number" id="pa-sys-a" placeholder="120" min="60" max="260" inputmode="numeric">
+        <span class="sep">/</span>
+        <input type="number" id="pa-dia-a" placeholder="80" min="40" max="160" inputmode="numeric">
+      </div>
+    </div>
+
+    <div class="vitals-row">
+      <div class="vitals-label">FC<br><span style="font-size:11px;color:#aaa;">bpm</span></div>
+      <div class="vitals-cell">
+        <input type="number" id="fc-i" placeholder="75" min="30" max="200" inputmode="numeric">
+      </div>
+      <div class="vitals-cell">
+        <input type="number" id="fc-a" placeholder="75" min="30" max="200" inputmode="numeric">
+      </div>
+    </div>
+
+    <div class="vitals-row">
+      <div class="vitals-label">SpO₂<br><span style="font-size:11px;color:#aaa;">%</span></div>
+      <div class="vitals-cell">
+        <input type="number" id="spo2-i" placeholder="98" min="70" max="100" inputmode="numeric">
+      </div>
+      <div class="vitals-cell">
+        <input type="number" id="spo2-a" placeholder="98" min="70" max="100" inputmode="numeric">
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Acompanhante -->
+  <div class="card">
+    <div class="card-title">Acompanhante</div>
+    <div class="companion-row">
+      <div class="radio-btn" id="btn-sim" onclick="setAcompanhante(true)">Sim</div>
+      <div class="radio-btn" id="btn-nao" onclick="setAcompanhante(false)">Não</div>
+    </div>
+    <div id="campo-acomp" style="display:none;">
+      <label for="acomp-nome">Nome / grau de parentesco</label>
+      <input type="text" id="acomp-nome" placeholder="Ex: Maria (esposa)"
+             autocorrect="off" autocapitalize="words">
+    </div>
+  </div>
+
+  <!-- 5. Observação -->
+  <div class="card">
+    <div class="card-title">Observação <span style="font-weight:400;font-size:10px;color:#ccc;">opcional</span></div>
+    <textarea id="obs" rows="2"
+              placeholder="Queixa, intercorrência, dado relevante..."></textarea>
+  </div>
+
+  <!-- 6. Prévia -->
+  <div class="card">
+    <div class="card-title">Prévia da mensagem</div>
+    <div class="badge-row" id="badge-row"></div>
+    <div class="preview-box" id="preview">Preencha os campos acima...</div>
+  </div>
+
+  <!-- Ações -->
+  <button class="btn-copy" onclick="copyMessage()">Copiar mensagem</button>
+  <div class="feedback-msg hidden" id="feedback"></div>
+
+  <button class="btn-whatsapp" onclick="openWhatsApp()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+    Enviar pelo WhatsApp
+  </button>
+
+  <button class="btn-clear" onclick="clearForm()">Limpar tudo</button>
+
+  <script>
+    const state = {
+      criteria: { acordado: null, verbalizando: null, deambulando: null, semQueixas: null },
+      acompanhante: null
+    };
+
+    // Hora atual como padrão
+    (function() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('termino').value = h + ':' + m;
+    })();
+
+    // Criteria toggle: null -> true -> false -> true -> ...
+    function toggleCriteria(btn) {
+      const key = btn.dataset.key;
+      const icon = btn.querySelector('.icon');
+      const val = state.criteria[key];
+
+      if (val === null || val === false) {
+        state.criteria[key] = true;
+        btn.className = 'toggle-btn yes';
+        icon.textContent = '✅';
+      } else {
+        state.criteria[key] = false;
+        btn.className = 'toggle-btn no';
+        icon.textContent = '❌';
+      }
+      updatePreview();
+    }
+
+    // Companion
+    function setAcompanhante(val) {
+      state.acompanhante = val;
+      const btnSim = document.getElementById('btn-sim');
+      const btnNao = document.getElementById('btn-nao');
+      btnSim.className = 'radio-btn' + (val ? ' selected-yes' : '');
+      btnNao.className = 'radio-btn' + (!val ? ' selected-no' : '');
+      document.getElementById('campo-acomp').style.display = val ? 'block' : 'none';
+      updatePreview();
+    }
+
+    // Listen to all inputs
+    document.querySelectorAll('input, textarea').forEach(function(el) {
+      el.addEventListener('input', updatePreview);
+    });
+
+    function v(id) { return document.getElementById(id).value.trim(); }
+
+    function fPA(sys, dia) {
+      if (!sys && !dia) return '—';
+      return (sys || '—') + '/' + (dia || '—');
+    }
+    function fV(val) { return val || '—'; }
+
+    function criterioLine(key, label) {
+      const val = state.criteria[key];
+      if (val === null) return label + ': —';
+      return label + ': ' + (val ? '✅' : '❌');
+    }
+
+    function allCriteriaOk() {
+      const c = state.criteria;
+      return c.acordado === true && c.verbalizando === true &&
+             c.deambulando === true && c.semQueixas === true;
+    }
+
+    function hasAlert() {
+      const c = state.criteria;
+      return c.acordado === false || c.verbalizando === false ||
+             c.deambulando === false || c.semQueixas === false;
+    }
+
+    function generateMessage() {
+      const nome = v('nome').toUpperCase() || '[NOME DO PACIENTE]';
+      const sessao = v('sessao') || '—';
+      const dose = v('dose') ? v('dose').replace('.', ',') + ' mL' : '— mL';
+      const termino = v('termino') || '—';
+
+      const paSysI = v('pa-sys-i'), paDiaI = v('pa-dia-i');
+      const paSysA = v('pa-sys-a'), paDiaA = v('pa-dia-a');
+      const fcI = v('fc-i'), fcA = v('fc-a');
+      const spo2I = v('spo2-i'), spo2A = v('spo2-a');
+      const obs = v('obs');
+      const acompNome = v('acomp-nome');
+
+      let acompText = '—';
+      if (state.acompanhante === true) {
+        acompText = 'Sim ✅' + (acompNome ? ' (' + acompNome + ')' : '');
+      } else if (state.acompanhante === false) {
+        acompText = 'Não ❌';
+      }
+
+      let msg = '';
+      msg += '🔔 *PÓS-INFUSÃO — ' + nome + '*\n';
+      msg += 'Término: ' + termino + ' h  |  Dose: ' + dose + '  |  Sessão nº ' + sessao + '\n\n';
+
+      msg += '*Critérios de alta:*\n';
+      msg += criterioLine('acordado',    'Acordado/a')   + '\n';
+      msg += criterioLine('verbalizando','Verbalizando')  + '\n';
+      msg += criterioLine('deambulando', 'Deambulando')   + '\n';
+      msg += criterioLine('semQueixas',  'Sem queixas')   + '\n\n';
+
+      msg += '*Sinais vitais:*\n';
+      msg += 'PA:   ' + fPA(paSysI, paDiaI) + ' → ' + fPA(paSysA, paDiaA) + ' mmHg\n';
+      msg += 'FC:   ' + fV(fcI)   + ' → ' + fV(fcA)   + ' bpm\n';
+      msg += 'SpO₂: ' + (spo2I ? spo2I + '%' : '—') + ' → ' + (spo2A ? spo2A + '%' : '—') + '\n\n';
+
+      msg += '*Acompanhante:* ' + acompText;
+
+      if (obs) {
+        msg += '\n\n_Obs: ' + obs + '_';
+      }
+
+      msg += '\n\n⬆️ Alta autorizada ou senhor(a) desce para avaliar?';
+
+      return msg;
+    }
+
+    function updatePreview() {
+      document.getElementById('preview').textContent = generateMessage();
+
+      const badgeRow = document.getElementById('badge-row');
+      const allOk = allCriteriaOk();
+      const alert = hasAlert();
+      const noneSet = Object.values(state.criteria).every(function(v) { return v === null; });
+
+      if (noneSet) {
+        badgeRow.innerHTML = '';
+      } else if (allOk && state.acompanhante !== false) {
+        badgeRow.innerHTML = '<span class="ok-badge">✅ Critérios de alta preenchidos</span>';
+      } else if (alert) {
+        badgeRow.innerHTML = '<span class="alert-badge">⚠ Critério não preenchido — avaliação necessária</span>';
+      } else {
+        badgeRow.innerHTML = '';
+      }
+    }
+
+    function copyMessage() {
+      const msg = generateMessage();
+      const feedback = document.getElementById('feedback');
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(msg).then(function() {
+          showFeedback('Mensagem copiada!');
+        }).catch(function() {
+          fallbackCopy(msg);
+        });
+      } else {
+        fallbackCopy(msg);
+      }
+    }
+
+    function fallbackCopy(msg) {
+      const ta = document.createElement('textarea');
+      ta.value = msg;
+      ta.style.cssText = 'position:fixed;left:-9999px;top:-9999px;opacity:0;';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showFeedback('Mensagem copiada!');
+      } catch(e) {
+        showFeedback('Erro ao copiar — use o botão WhatsApp');
+      }
+      document.body.removeChild(ta);
+    }
+
+    function showFeedback(msg) {
+      const el = document.getElementById('feedback');
+      el.textContent = msg;
+      el.classList.remove('hidden');
+      setTimeout(function() { el.classList.add('hidden'); }, 2200);
+    }
+
+    function openWhatsApp() {
+      const msg = generateMessage();
+      const url = 'https://wa.me/?text=' + encodeURIComponent(msg);
+      window.open(url, '_blank');
+    }
+
+    function clearForm() {
+      if (!confirm('Limpar todos os campos?')) return;
+
+      document.getElementById('nome').value = '';
+      document.getElementById('sessao').value = '';
+      document.getElementById('dose').value = '';
+      const now = new Date();
+      document.getElementById('termino').value =
+        String(now.getHours()).padStart(2,'0') + ':' +
+        String(now.getMinutes()).padStart(2,'0');
+
+      ['pa-sys-i','pa-dia-i','pa-sys-a','pa-dia-a',
+       'fc-i','fc-a','spo2-i','spo2-a','obs','acomp-nome'].forEach(function(id) {
+        document.getElementById(id).value = '';
+      });
+
+      state.criteria = { acordado: null, verbalizando: null, deambulando: null, semQueixas: null };
+      document.querySelectorAll('.toggle-btn').forEach(function(btn) {
+        btn.className = 'toggle-btn';
+        btn.querySelector('.icon').textContent = '○';
+      });
+
+      state.acompanhante = null;
+      document.getElementById('btn-sim').className = 'radio-btn';
+      document.getElementById('btn-nao').className = 'radio-btn';
+      document.getElementById('campo-acomp').style.display = 'none';
+
+      document.getElementById('badge-row').innerHTML = '';
+      updatePreview();
+    }
+
+    updatePreview();
+  </script>
+</body>
+</html>
