@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custo dos disparos WhatsApp — Clínica Assis (jun/2026)</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%2307614A'/%3E%3Cellipse cx='50' cy='52' rx='34' ry='18' fill='none' stroke='white' stroke-width='4'/%3E%3Ccircle cx='50' cy='52' r='9' fill='white'/%3E%3Cpath d='M18 52 Q30 30 50 30' fill='none' stroke='white' stroke-width='4'/%3E%3Cpath d='M50 70 L44 84 M50 70 L50 86 M50 70 L58 82' stroke='white' stroke-width='3' fill='none'/%3E%3C/svg%3E">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+  :root{
+    --verde-escuro:#07614A; --verde-muito-escuro:#037031; --verde-medio:#03694F;
+    --verde-claro:#E9FCE2; --azul-claro:#DAF7F3; --cinza-escuro:#303B37;
+    --texto-medio:#4a4a4a; --texto-claro:#6b6f6d;
+    --bg-branco:#FFFFFF; --bg-cinza-claro:#F5F5F5;
+    --borda-clara:#DAF7F3; --borda-media:#03694F;
+    --erro:#DC3545; --sucesso:#037031; --aviso:#FFC107;
+    --marketing:#B03A2E; --utility:#03694F;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Roboto',sans-serif;
+    background:var(--verde-claro); color:var(--cinza-escuro); line-height:1.6;
+  }
+  .wrap{max-width:1080px; margin:0 auto; padding:0 20px 80px;}
+
+  header.hero{
+    background:linear-gradient(135deg,#07614A 0%,#03694F 100%);
+    color:white; padding:40px 20px 36px; text-align:center;
+    position:relative; overflow:hidden;
+  }
+  header.hero::after{
+    content:""; position:absolute; inset:0;
+    background:radial-gradient(circle at 80% 20%, rgba(255,255,255,0.08), transparent 60%);
+  }
+  header.hero .eyebrow{
+    font-size:0.8rem; letter-spacing:2px; text-transform:uppercase; opacity:0.85; font-weight:600;
+  }
+  header.hero h1{
+    font-family:Georgia,'Times New Roman',serif; font-size:2.1rem; margin:10px 0 8px;
+    letter-spacing:-0.3px;
+  }
+  header.hero p.sub{
+    max-width:680px; margin:0 auto; font-size:1rem; opacity:0.95;
+  }
+  header.hero .badge{
+    display:inline-block; margin-top:16px; background:rgba(255,255,255,0.16);
+    border:1px solid rgba(255,255,255,0.35); padding:6px 16px; border-radius:30px;
+    font-size:0.8rem; font-weight:600;
+  }
+
+  section{margin-top:56px;}
+  section:first-of-type{margin-top:48px;}
+  h2.section-title{
+    font-size:1.5rem; font-weight:600; color:var(--verde-escuro); margin-bottom:6px;
+    display:flex; align-items:center; gap:10px;
+  }
+  h2.section-title .num{
+    background:var(--verde-escuro); color:white; width:32px; height:32px; border-radius:8px;
+    display:inline-flex; align-items:center; justify-content:center; font-size:0.95rem; flex-shrink:0;
+  }
+  p.section-desc{color:var(--texto-medio); margin-bottom:24px; max-width:760px;}
+
+  .card{
+    background:white; border:2px solid var(--borda-clara); border-radius:12px; padding:28px;
+    box-shadow:0 4px 12px rgba(3,105,79,0.08), 0 0 0 1px rgba(3,105,79,0.05);
+    margin-bottom:20px;
+  }
+  .grid{display:grid; gap:20px;}
+  .grid-3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
+  .grid-2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr));}
+
+  .price-card{text-align:center; padding:26px 20px;}
+  .price-card .tag{
+    font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; font-weight:700;
+    padding:4px 12px; border-radius:20px; display:inline-block; margin-bottom:14px;
+  }
+  .price-card.gratis .tag{background:var(--verde-claro); color:var(--verde-escuro);}
+  .price-card.utility .tag{background:var(--azul-claro); color:var(--verde-medio);}
+  .price-card.marketing .tag{background:#FBE3E0; color:var(--marketing);}
+  .price-card .valor{font-size:2rem; font-weight:700; color:var(--cinza-escuro);}
+  .price-card .desc{font-size:0.9rem; color:var(--texto-medio); margin-top:8px;}
+
+  table{width:100%; border-collapse:collapse; font-size:0.92rem;}
+  th,td{padding:12px 14px; text-align:left; border-bottom:1px solid var(--borda-clara);}
+  thead th{
+    background:linear-gradient(to right,#E9FCE2 0%,#DAF7F3 100%); color:var(--verde-escuro);
+    font-weight:600; text-transform:uppercase; font-size:0.75rem; letter-spacing:0.5px;
+  }
+  tbody tr:hover{background:var(--bg-cinza-claro);}
+  .pill{
+    font-size:0.72rem; font-weight:700; padding:3px 10px; border-radius:20px; display:inline-block;
+  }
+  .pill.utility{background:var(--azul-claro); color:var(--verde-medio);}
+  .pill.marketing{background:#FBE3E0; color:var(--marketing);}
+  .table-wrap{overflow-x:auto;}
+
+  .compare-cards{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  @media(max-width:700px){.compare-cards{grid-template-columns:1fr;}}
+  .compare-card{border-radius:12px; padding:24px; color:white;}
+  .compare-card.incentivo{background:linear-gradient(135deg,#07614A,#03694F);}
+  .compare-card.reativacao{background:linear-gradient(135deg,#8a3225,#B03A2E);}
+  .compare-card h3{margin-top:0; font-size:1.05rem;}
+  .compare-card .stat{font-size:1.6rem; font-weight:700; margin:10px 0 4px;}
+  .compare-card .stat-label{font-size:0.8rem; opacity:0.95;}
+
+  .chart-box{background:white; border:2px solid var(--borda-clara); border-radius:12px; padding:24px; margin-bottom:20px;}
+  .chart-box h4{margin-top:0; color:var(--verde-escuro); font-size:1rem;}
+  canvas{max-width:100%;}
+
+  .kpi-strip{display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:16px; margin-bottom:24px;}
+  .kpi{background:white; border-radius:12px; padding:18px; text-align:center; border:2px solid var(--borda-clara);}
+  .kpi .n{font-size:1.5rem; font-weight:700; color:var(--verde-escuro);}
+  .kpi .l{font-size:0.78rem; color:var(--texto-medio); margin-top:4px;}
+
+  .quote-box{
+    background:var(--azul-claro); border-left:5px solid var(--verde-escuro); border-radius:8px;
+    padding:18px 22px; font-size:0.95rem; color:var(--cinza-escuro);
+  }
+
+  .decision-list{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:14px;}
+  .decision-list li{
+    background:white; border:2px solid var(--borda-clara); border-radius:10px; padding:16px 20px;
+    display:flex; gap:14px; align-items:flex-start;
+  }
+  .decision-list .qnum{
+    background:var(--verde-escuro); color:white; min-width:28px; height:28px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:700; flex-shrink:0;
+  }
+  .qgroup{
+    display:flex; align-items:center; gap:12px; margin:36px 0 16px; padding-bottom:10px;
+    border-bottom:2px solid var(--borda-clara);
+  }
+  .qgroup:first-of-type{margin-top:0;}
+  .qgroup .qgroup-icon{
+    width:34px; height:34px; border-radius:9px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center; font-size:1rem;
+  }
+  .qgroup .qgroup-text{
+    font-size:1rem; font-weight:700; color:var(--cinza-escuro);
+  }
+  .qgroup .qgroup-text small{
+    display:block; font-weight:500; font-size:0.8rem; color:var(--texto-medio); margin-top:2px;
+  }
+  .qgroup.tone-utility .qgroup-icon{background:var(--azul-claro); color:var(--verde-medio);}
+  .qgroup.tone-incentivo .qgroup-icon{background:var(--verde-claro); color:var(--verde-escuro);}
+  .qgroup.tone-reativacao .qgroup-icon{background:#FBE3E0; color:var(--marketing);}
+  .qgroup.tone-orcamento .qgroup-icon{background:var(--bg-cinza-claro); color:var(--cinza-escuro);}
+
+  .toggle-tabs{display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap;}
+  .toggle-tabs button{
+    border:2px solid var(--borda-media); background:white; color:var(--verde-escuro);
+    padding:8px 16px; border-radius:30px; font-weight:600; font-size:0.85rem; cursor:pointer;
+    transition:all .2s;
+  }
+  .toggle-tabs button.active{background:var(--verde-escuro); color:white;}
+
+  footer{
+    text-align:center; padding:40px 20px; color:var(--texto-claro); font-size:0.8rem;
+    border-top:1px solid var(--borda-clara); margin-top:60px;
+  }
+  .footnote{font-size:0.82rem; color:var(--texto-claro); margin-top:8px; line-height:1.5;}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="eyebrow">Clínica Médica Assis · Operação SendPulse</div>
+  <h1>Custo dos disparos automáticos de WhatsApp</h1>
+  <p class="sub">Base real de junho/2026 (SP + MC), medida direto no CliMed. Para o Gabriel decidir com a Meire quais fluxos ligar — e a que custo.</p>
+  <div class="badge">📅 Preparado em 23/jul/2026</div>
+</header>
+
+<div class="wrap">
+
+  <!-- KPIs -->
+  <div class="kpi-strip">
+    <div class="kpi"><div class="n">R$ 380</div><div class="l">Mensalidade fixa do plano</div></div>
+    <div class="kpi"><div class="n">R$ 1.000</div><div class="l">Total só com Utility/mês</div></div>
+    <div class="kpi"><div class="n">8×</div><div class="l">Marketing é mais caro que Utility</div></div>
+    <div class="kpi"><div class="n">67.243</div><div class="l">Pacientes represados p/ Reativação</div></div>
+  </div>
+
+  <!-- SEÇÃO 1 -->
+  <section>
+    <h2 class="section-title"><span class="num">1</span> Por que uns disparos custam 8× mais que outros</h2>
+    <p class="section-desc">A SendPulse cobra por mensagem entregue, e o preço depende da <strong>categoria</strong> que a Meta dá ao template — quem decide é a Meta, pelo conteúdo, não a gente.</p>
+
+    <div class="grid grid-3">
+      <div class="card price-card gratis">
+        <span class="tag">Serviço</span>
+        <div class="valor">Grátis</div>
+        <div class="desc">Resposta em texto livre. Paciente escreve primeiro, abre janela de 24h grátis.</div>
+      </div>
+      <div class="card price-card utility">
+        <span class="tag">Utility</span>
+        <div class="valor">R$ 0,051</div>
+        <div class="desc">Aviso operacional: confirmação, lembrete, pós-falta, pesquisa.</div>
+      </div>
+      <div class="card price-card marketing">
+        <span class="tag">Marketing</span>
+        <div class="valor">R$ 0,390</div>
+        <div class="desc">Convite/estímulo (voltar, reagendar, promover). ~8× mais cara.</div>
+      </div>
+    </div>
+
+    <div class="chart-box">
+      <h4>Preço por mensagem entregue, por categoria</h4>
+      <canvas id="chartPrecos" height="90"></canvas>
+    </div>
+
+    <div class="quote-box">
+      <strong>Duas regras que importam:</strong> quem decide a categoria é a Meta, pelo conteúdo do texto — não adianta declarar "Utility" se a mensagem convida ("volte", "agende de novo"), ela reclassifica pra Marketing. E além do preço por mensagem, existe a <strong>mensalidade fixa do plano: R$ 380/mês</strong> (plano messengers5K, 5.000 contatos) — ela entra em todo cenário, ligando pouco ou muito fluxo.
+    </div>
+  </section>
+
+  <!-- SEÇÃO 2 -->
+  <section>
+    <h2 class="section-title"><span class="num">2</span> Os fluxos automáticos, em português</h2>
+    <p class="section-desc">Quatro fluxos baratos (Utility) mantêm a operação girando. Dois fluxos de Marketing tentam trazer o paciente de volta — em momentos opostos da vida dele.</p>
+
+    <div class="card table-wrap">
+      <table>
+        <thead><tr><th>Fluxo</th><th>Quando dispara</th><th>Pra quê</th><th>Categoria</th><th>Preço/msg</th></tr></thead>
+        <tbody>
+          <tr><td>Confirmação D-2/D-1/D-0</td><td>2 dias, 1 dia e no dia</td><td>Reduzir falta</td><td><span class="pill utility">Utility</span></td><td>R$ 0,051</td></tr>
+          <tr><td>Pós-falta</td><td>1 dia após faltar</td><td>Oferecer remarcação</td><td><span class="pill utility">Utility</span></td><td>R$ 0,051</td></tr>
+          <tr><td>NPS</td><td>1 dia após atendimento</td><td>Medir satisfação</td><td><span class="pill utility">Utility</span></td><td>R$ 0,051</td></tr>
+          <tr><td>Pesquisa (1ª consulta)</td><td>2 dias após a 1ª consulta</td><td>Satisfação do paciente novo</td><td><span class="pill utility">Utility</span></td><td>R$ 0,051</td></tr>
+          <tr><td><strong>🅼 Incentivo ao Retorno</strong></td><td>3 dias após atendimento, sem retorno marcado</td><td>Cutucar pra remarcar logo</td><td><span class="pill marketing">Marketing</span></td><td><strong>R$ 0,390</strong></td></tr>
+          <tr><td><strong>🅼 Reativação</strong></td><td>3 meses sem vir</td><td>Trazer de volta quem sumiu</td><td><span class="pill marketing">Marketing</span></td><td><strong>R$ 0,390</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="section-desc" style="margin-top:28px;"><strong>Incentivo × Reativação</strong> — mesma meta (marcar consulta), momentos opostos:</p>
+    <div class="compare-cards">
+      <div class="compare-card incentivo">
+        <h3>🅼 Incentivo ao Retorno</h3>
+        <div class="quote-box" style="background:rgba(255,255,255,0.15); border-color:white; color:white;">"Não deixa esfriar" — o garçom perguntando "vai querer sobremesa?" enquanto você ainda está na mesa.</div>
+        <div class="stat">841 pessoas</div>
+        <div class="stat-label">acabaram de ser atendidas sem deixar retorno marcado (junho)</div>
+      </div>
+      <div class="compare-card reativacao">
+        <h3>🅼 Reativação</h3>
+        <div class="quote-box" style="background:rgba(255,255,255,0.15); border-color:white; color:white;">"Traz de volta quem já foi embora" — mensagem meses depois dizendo "faz tempo que você não aparece".</div>
+        <div class="stat">67.243 pessoas</div>
+        <div class="stat-label">represadas no banco (44.822 SP + 22.421 MC) — acúmulo de anos</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 3 -->
+  <section>
+    <h2 class="section-title"><span class="num">3</span> Volume real de junho/2026</h2>
+    <p class="section-desc">Medido direto no CliMed (agenda de junho, SP + MC), já com os filtros de status corrigidos. É a base de tudo que vem nas próximas seções: quanto maior o volume de um fluxo, mais ele pesa na conta — sobretudo se for Marketing.</p>
+
+    <div class="card table-wrap">
+      <table>
+        <thead><tr><th>Fluxo</th><th>Pessoas em junho</th><th>Categoria</th></tr></thead>
+        <tbody>
+          <tr><td>Confirmação (base)</td><td>3.933</td><td><span class="pill utility">Utility</span></td></tr>
+          <tr><td>Pós-falta</td><td>1.289</td><td><span class="pill utility">Utility</span></td></tr>
+          <tr><td>NPS (retorno)</td><td>2.692</td><td><span class="pill utility">Utility</span></td></tr>
+          <tr><td>Pesquisa (1ª consulta)</td><td>312</td><td><span class="pill utility">Utility</span></td></tr>
+          <tr><td><strong>Incentivo ao Retorno</strong></td><td><strong>841</strong></td><td><span class="pill marketing">Marketing</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="footnote">A Confirmação pode virar 1, 2 ou 3 mensagens por paciente: quem responde no D-2 não recebe o D-1 nem o D-0 — por isso o custo dela aparece em faixa na seção 4.</p>
+
+    <div class="chart-box">
+      <h4>Pessoas atingidas por fluxo, em junho</h4>
+      <canvas id="chartVolumes" height="110"></canvas>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 4 -->
+  <section>
+    <h2 class="section-title"><span class="num">4</span> Comparação de custo mensal</h2>
+    <p class="section-desc">A mensalidade e os fluxos Utility são iguais em qualquer cenário — a diferença é <strong>o que se liga por cima</strong>: Incentivo e/ou Reativação.</p>
+
+    <div class="chart-box">
+      <h4>Total mensal para a SendPulse, por combinação de fluxos ligados</h4>
+      <canvas id="chartCenarios" height="110"></canvas>
+      <p class="footnote">Cenário médio de confirmação (quem não responde no D-2 recebe D-1 e D-0). Cenários 3–6 incluem só a parcela <em>recorrente</em> da Reativação — a limpeza inicial do acúmulo está na seção 5.</p>
+    </div>
+
+    <div class="card">
+      <strong>O que o Incentivo acrescenta:</strong> ~R$ 328/mês fixos, não importa o cenário de resposta à confirmação.
+      A pergunta pra Meire: esse convite <em>"3 dias depois, volte a marcar"</em> traz retorno suficiente pra pagar os R$ 328/mês — ou o rebooking já acontece pela recepção e pela própria Reativação?
+    </div>
+  </section>
+
+  <!-- SEÇÃO 5 -->
+  <section>
+    <h2 class="section-title"><span class="num">5</span> ⚠️ Alerta — a Reativação e a "janela de atividade"</h2>
+    <p class="section-desc">O gatilho é fixo (inativo 3+ meses, sem consulta futura). O que muda o custo é <strong>quão para trás olhamos</strong> para considerar alguém "paciente de verdade".</p>
+
+    <p class="section-desc">Quatro cenários estratificados — três recortes de janela (1 toque) mais a alternativa de <strong>campanha escalonada</strong> (3 toques: 3, 9 e 12 meses de inatividade, depois desiste de vez):</p>
+
+    <div class="chart-box">
+      <h4>Pessoas alcançadas × custo de limpeza única, por cenário</h4>
+      <canvas id="chartJanelas" height="110"></canvas>
+      <p class="footnote">"Sem filtro" levaria ~67 dias disparando sem parar (limite Meta: 1.000 msgs/dia) — inviável na prática, fica só como teto de referência.</p>
+    </div>
+
+    <div class="card table-wrap">
+      <table>
+        <thead><tr><th>Cenário</th><th>Toques</th><th>Pessoas (rodada inicial)</th><th>Limpeza (única)</th><th>Total 1º mês</th><th>Total/mês depois</th></tr></thead>
+        <tbody>
+          <tr><td>Janela 6 meses</td><td>1</td><td>1.879</td><td>R$ 733</td><td>R$ 1.733</td><td>R$ 1.284</td></tr>
+          <tr><td>Janela 12 meses</td><td>1</td><td>4.648</td><td>R$ 1.813</td><td>R$ 2.813</td><td>R$ 1.284</td></tr>
+          <tr><td><strong>Escalonada 3/9/12 meses</strong></td><td>3</td><td>4.648</td><td>R$ 1.813</td><td>R$ 2.813</td><td><strong>R$ 1.617</strong> (caindo, ver projeção)</td></tr>
+          <tr><td>Sem filtro (todo o banco)</td><td>1</td><td>67.243</td><td>R$ 26.224 ❌</td><td>R$ 27.224 ❌</td><td>R$ 1.284</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="footnote">A escalonada usa a mesma base inicial da janela 12 meses (só quem faturou nos últimos 12 meses entra na campanha), mas depois soma 3 toques por pessoa (3, 9 e 12 meses de inatividade) — por isso o recorrente fica mais caro (~R$ 333/mês a mais), com o benefício de 3 chances de recuperar cada lead em vez de 1.</p>
+
+    <div class="chart-box">
+      <h4>Projeção — custo mensal ao longo do 1º ano (modelo ilustrativo, campanha escalonada)</h4>
+      <canvas id="chartProjecao" height="100"></canvas>
+      <p class="footnote">Premissas: entram 728 pessoas/mês nos 3 meses de inatividade; 20% voltam a cada toque; base Utility fixa em R$ 1.000/mês. Pico no mês 1 (limpeza do acúmulo), queda no mês 2 (entra em regime), depois descida suave estabilizando perto do mês 12.</p>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 6 -->
+  <section>
+    <h2 class="section-title"><span class="num">6</span> Resumo pra decidir</h2>
+    <div class="grid grid-2">
+      <div class="card" style="border-left:5px solid var(--verde-escuro);">
+        <strong>Só os Utility (arroz com feijão)</strong>
+        <div style="font-size:1.4rem; font-weight:700; color:var(--verde-escuro); margin:6px 0;">~R$ 1.000/mês</div>
+        Confirmação, Pós-falta, NPS, Pesquisa — provavelmente valem a pena.
+      </div>
+      <div class="card" style="border-left:5px solid var(--verde-medio);">
+        <strong>+ Incentivo ao Retorno</strong>
+        <div style="font-size:1.4rem; font-weight:700; color:var(--verde-medio); margin:6px 0;">~R$ 1.328/mês</div>
+        Decisão isolada — vale se traz retorno que a recepção não já cobre.
+      </div>
+      <div class="card" style="border-left:5px solid var(--marketing);">
+        <strong>+ Reativação</strong>
+        <div style="font-size:1.4rem; font-weight:700; color:var(--marketing); margin:6px 0;">~R$ 1.284 a R$ 1.617/mês</div>
+        Mais limpeza única no 1º mês (R$ 733 a R$ 1.813, conforme a janela).
+      </div>
+      <div class="card" style="border-left:5px solid var(--cinza-escuro);">
+        <strong>Tudo ligado</strong>
+        <div style="font-size:1.4rem; font-weight:700; color:var(--cinza-escuro); margin:6px 0;">~R$ 1.945/mês em regime</div>
+        Utility + Incentivo + Reativação escalonada, mais a limpeza inicial.
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 7 -->
+  <section>
+    <h2 class="section-title"><span class="num">7</span> Perguntas para a Meire e o Gabriel responderem</h2>
+
+    <div class="qgroup tone-utility">
+      <span class="qgroup-icon">💬</span>
+      <span class="qgroup-text">Fluxos Utility<small>Os baratos — Confirmação, Pós-falta, NPS, Pesquisa</small></span>
+    </div>
+    <ul class="decision-list">
+      <li><span class="qnum">1</span><span>Ligar os quatro (~R$ 1.000/mês total)? Ou algum deles não faz sentido pra clínica?</span></li>
+    </ul>
+
+    <div class="qgroup tone-incentivo">
+      <span class="qgroup-icon">🎯</span>
+      <span class="qgroup-text">Incentivo ao Retorno<small>Leva o total a ~R$ 1.328/mês</small></span>
+    </div>
+    <ul class="decision-list">
+      <li><span class="qnum">2</span><span>Vale o convite "3 dias depois, marque o retorno"? Ou a recepção já remarca a maioria na saída?</span></li>
+      <li><span class="qnum">3</span><span>Se ligar: manda pra todo atendido sem retorno, ou só pra um perfil (1ª consulta, certos convênios)?</span></li>
+    </ul>
+
+    <div class="qgroup tone-reativacao">
+      <span class="qgroup-icon">🔁</span>
+      <span class="qgroup-text">Reativação<small>Gatilho fixo: inativo 3+ meses, sem consulta futura</small></span>
+    </div>
+    <ul class="decision-list">
+      <li><span class="qnum">4</span><span><strong>Liga ou não a Reativação?</strong></span></li>
+      <li><span class="qnum">5</span><span>Se ligar, qual formato: 1 toque só (~R$ 1.284/mês) ou 3 toques escalonados (~R$ 1.617/mês caindo)?</span></li>
+      <li><span class="qnum">6</span><span>Além do tempo, filtrar por mais algo? (convênio, idade, 1ª consulta × paciente antigo)</span></li>
+      <li><span class="qnum">7</span><span>A cadência mensal proposta (1ª segunda útil após dia 10) está boa? E o acúmulo inicial — no limite de 1.000/dia direto, ou espalhar em semanas?</span></li>
+      <li><span class="qnum">8</span><span>Qual a meta pra dizer que valeu? (ex.: "reativar X% já paga o custo")</span></li>
+    </ul>
+  </section>
+
+</div>
+
+<footer>
+  Clínica Médica Assis · Operação SendPulse — números conferidos na base real em 23/jul/2026.
+</footer>
+
+<script>
+Chart.defaults.font.family = "-apple-system,BlinkMacSystemFont,'Segoe UI','Roboto',sans-serif";
+Chart.defaults.color = '#555';
+
+const verdeEscuro = '#07614A';
+const verdeMedio = '#03694F';
+const azulClaro = '#DAF7F3';
+const marketing = '#B03A2E';
+const cinza = '#303B37';
+
+// 1. Preços por categoria
+new Chart(document.getElementById('chartPrecos'), {
+  type: 'bar',
+  data: {
+    labels: ['Serviço', 'Utility', 'Marketing'],
+    datasets: [{
+      label: 'Preço por mensagem (R$)',
+      data: [0, 0.051, 0.39],
+      backgroundColor: [verdeEscuro, verdeMedio, marketing],
+      borderRadius: 8,
+      maxBarThickness: 90
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false },
+      tooltip: { callbacks: { label: (c) => 'R$ ' + c.parsed.y.toFixed(3).replace('.', ',') } } },
+    scales: { y: { ticks: { callback: v => 'R$ ' + v.toFixed(2).replace('.', ',') } } }
+  }
+});
+
+// 2. Volumes junho
+new Chart(document.getElementById('chartVolumes'), {
+  type: 'bar',
+  data: {
+    labels: ['Confirmação', 'Pós-falta', 'NPS', 'Pesquisa (1ª consulta)', 'Incentivo ao Retorno'],
+    datasets: [{
+      label: 'Pessoas em junho/2026',
+      data: [3933, 1289, 2692, 312, 841],
+      backgroundColor: [verdeMedio, verdeMedio, verdeMedio, verdeMedio, marketing],
+      borderRadius: 6
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    plugins: { legend: { display: false } },
+    scales: { x: { beginAtZero: true } }
+  }
+});
+
+// 3. Cenários 4.1
+new Chart(document.getElementById('chartCenarios'), {
+  type: 'bar',
+  data: {
+    labels: ['1. Só Utility', '2. + Incentivo', '3. + Reativ. 6m (recorrente)', '4. + Reativ. 12m (recorrente)', '6. + Reativ. escalonada (recorrente)'],
+    datasets: [{
+      label: 'Total mensal recorrente (R$)',
+      data: [1000, 1328, 1284, 1284, 1617],
+      backgroundColor: [verdeEscuro, verdeMedio, '#c98a30', '#c98a30', marketing],
+      borderRadius: 8
+    }]
+  },
+  options: {
+    plugins: { legend: { display: false },
+      tooltip: { callbacks: { label: (c) => 'R$ ' + c.parsed.y.toLocaleString('pt-BR') } } },
+    scales: { y: { ticks: { callback: v => 'R$ ' + v.toLocaleString('pt-BR') } } }
+  }
+});
+
+// 4. Janelas de reativação
+new Chart(document.getElementById('chartJanelas'), {
+  type: 'bar',
+  data: {
+    labels: ['Janela 6 meses', 'Janela 12 meses', 'Escalonada 3/9/12m', 'Sem filtro (todo o banco)'],
+    datasets: [
+      {
+        label: 'Pessoas alcançadas',
+        data: [1879, 4648, 4648, 67243],
+        backgroundColor: azulClaro,
+        yAxisID: 'y',
+        borderRadius: 6
+      },
+      {
+        label: 'Custo de limpeza única (R$)',
+        data: [733, 1813, 1813, 26224],
+        backgroundColor: marketing,
+        yAxisID: 'y1',
+        borderRadius: 6
+      }
+    ]
+  },
+  options: {
+    plugins: { tooltip: { callbacks: { label: (c) => c.dataset.label.includes('Custo') ? 'R$ ' + c.parsed.y.toLocaleString('pt-BR') : c.parsed.y.toLocaleString('pt-BR') + ' pessoas' } } },
+    scales: {
+      y: { type: 'logarithmic', position: 'left', title: { display: true, text: 'Pessoas (log)' } },
+      y1: { type: 'logarithmic', position: 'right', grid: { drawOnChartArea: false }, title: { display: true, text: 'Custo R$ (log)' } }
+    }
+  }
+});
+
+// 5. Projeção
+new Chart(document.getElementById('chartProjecao'), {
+  type: 'line',
+  data: {
+    labels: ['Mês 1', 'Mês 2', 'Mês 3', 'Mês 4', 'Mês 6', 'Mês 9', 'Mês 12', 'Mês 15+'],
+    datasets: [{
+      label: 'Total mensal (R$)',
+      data: [2813, 1617, 1599, 1585, 1565, 1550, 1543, 1540],
+      borderColor: marketing,
+      backgroundColor: 'rgba(176,58,46,0.12)',
+      fill: true,
+      tension: 0.35,
+      pointBackgroundColor: marketing,
+      pointRadius: 5
+    }]
+  },
+  options: {
+    plugins: { tooltip: { callbacks: { label: (c) => 'R$ ' + c.parsed.y.toLocaleString('pt-BR') } } },
+    scales: { y: { ticks: { callback: v => 'R$ ' + v.toLocaleString('pt-BR') } } }
+  }
+});
+</script>
+
+</body>
+</html>
