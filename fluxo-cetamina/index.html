@@ -480,12 +480,12 @@
           <div class="label">Template — <code>cetamina_confirmacao_sp</code><span class="tag-suggested">Sugestão</span></div>
           <div class="txt">Olá, {{nome_paciente}}!
 
-A Clínica Médica Assis aguarda sua presença para a aplicação de Cetamina:
+A *Clínica Médica Assis* aguarda sua presença para a *infusão de Cetamina*:
 
 📅 *{{data}}* às *{{hora}}*
 📍 {{endereco_unidade}}
 
-Instruções para o dia:
+*Instruções para o dia:*
 • Dieta leve antes e depois do procedimento
 • Roupa confortável, com acesso fácil à veia
 • Venha acompanhado(a)
@@ -523,7 +523,7 @@ Para remarcar, ligue: (11) 4723-6565.</div>
         </div>
         <div class="node node-msg">
           <div class="label">Mensagem de fechamento</div>
-          <div class="txt">"Aplicação confirmada! Até lá. 🏥"</div>
+          <div class="txt">"Infusão confirmada! Até lá. 🏥"</div>
         </div>
 
         <div class="branch-label">SE "NÃO"</div>
@@ -566,7 +566,7 @@ Para remarcar, ligue: (11) 4723-6565.</div>
 
         <div class="node node-msg">
           <div class="label">Template — <code>cetamina_lembrete_vespera_sp</code><span class="tag-suggested">Sugestão</span></div>
-          <div class="txt">Lembramos que *amanhã* é o dia da sua aplicação de Cetamina com {{nome_medico}} às *{{hora}}*.
+          <div class="txt">Lembramos que *amanhã* é o dia da sua *infusão de Cetamina* na *Clínica Médica Assis*, às *{{hora}}*.
 
 📍 {{endereco_unidade}}
 
@@ -595,12 +595,12 @@ Até amanhã! 🏥</div>
       </div>
       <div class="t-body">Olá, {{1}}!
 
-A Clínica Médica Assis aguarda sua presença para a aplicação de Cetamina:
+A *Clínica Médica Assis* aguarda sua presença para a *infusão de Cetamina*:
 
 📅 *{{2}}* às *{{3}}*
 📍 {{4}}
 
-Instruções para o dia:
+*Instruções para o dia:*
 • Dieta leve antes e depois do procedimento
 • Roupa confortável, com acesso fácil à veia
 • Venha acompanhado(a)
@@ -609,7 +609,7 @@ Responda *SIM* para confirmar ou *NÃO* para cancelar.
 
 Para remarcar, ligue: (11) 4723-6565.</div>
       <div class="t-vars"><code>{{1}}</code> nome do paciente · <code>{{2}}</code> data · <code>{{3}}</code> hora · <code>{{4}}</code> endereço da unidade</div>
-      <div class="t-vars">Negrito (WhatsApp <code>*texto*</code>) na <b>data</b>, <b>hora</b> e em <b>SIM</b>/<b>NÃO</b> — são os únicos pontos de decisão/ação da mensagem, o resto fica em texto normal pra não competir por atenção.</div>
+      <div class="t-vars">Negrito (WhatsApp <code>*texto*</code>) em <b>Clínica Médica Assis</b>, <b>infusão de Cetamina</b>, <b>data</b>, <b>hora</b>, <b>Instruções para o dia</b> e em <b>SIM</b>/<b>NÃO</b> — identidade da clínica, o que está sendo confirmado, quando e a ação esperada. O resto fica em texto normal.</div>
     </div>
 
     <div class="template-card">
@@ -617,15 +617,15 @@ Para remarcar, ligue: (11) 4723-6565.</div>
         <span class="t-name">cetamina_lembrete_vespera_sp</span>
         <span class="t-meta">Utility · pt_BR · disparo D-1 19h</span>
       </div>
-      <div class="t-body">Lembramos que *amanhã* é o dia da sua aplicação de Cetamina com {{1}} às *{{2}}*.
+      <div class="t-body">Lembramos que *amanhã* é o dia da sua *infusão de Cetamina* na *Clínica Médica Assis*, às *{{1}}*.
 
-📍 {{3}}
+📍 {{2}}
 
 Dúvidas? É só responder por aqui.
 
 Até amanhã! 🏥</div>
-      <div class="t-vars"><code>{{1}}</code> nome do médico · <code>{{2}}</code> hora · <code>{{3}}</code> endereço da unidade</div>
-      <div class="t-vars">Negrito em <b>amanhã</b> (urgência temporal) e na <b>hora</b> (dado de ação) — mensagem sem pergunta, não precisa negritar SIM/NÃO.</div>
+      <div class="t-vars"><code>{{1}}</code> hora · <code>{{2}}</code> endereço da unidade</div>
+      <div class="t-vars">Sem <code>nome_medico</code> — não precisa nesta mensagem. Negrito em <b>amanhã</b>, <b>infusão de Cetamina</b>, <b>Clínica Médica Assis</b> e <b>hora</b> — mensagem sem pergunta, não precisa negritar SIM/NÃO.</div>
     </div>
   </div>
 
