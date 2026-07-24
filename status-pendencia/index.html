@@ -176,6 +176,111 @@
     margin-bottom: 0;
   }
 
+  .estimativa {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 10px;
+  }
+
+  .estimativa .metric {
+    background: linear-gradient(135deg, #FFFFFF 0%, #E9FCE2 100%);
+    border: 2px solid var(--azul-claro);
+    border-radius: 12px;
+    padding: 18px 20px;
+    text-align: center;
+  }
+
+  .estimativa .metric .valor {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--verde-escuro);
+    display: block;
+  }
+
+  .estimativa .metric .rotulo {
+    font-size: 0.78rem;
+    color: var(--texto-medio);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-top: 4px;
+  }
+
+  .disclaimer {
+    font-size: 0.82rem;
+    color: var(--texto-claro);
+    font-style: italic;
+    margin-top: 4px;
+  }
+
+  .timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: 3px solid var(--azul-claro);
+  }
+
+  .timeline li {
+    position: relative;
+    padding: 0 0 22px 24px;
+  }
+
+  .timeline li::before {
+    content: "";
+    position: absolute;
+    left: -8px;
+    top: 4px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--verde-escuro);
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px var(--azul-claro);
+  }
+
+  .timeline .fase {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--verde-medio);
+  }
+
+  .timeline .fase-titulo {
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 2px 0 8px;
+    color: var(--cinza-escuro);
+  }
+
+  .timeline ul.itens {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .timeline ul.itens li {
+    padding: 0 0 4px 0;
+    font-size: 0.9rem;
+    color: var(--texto-medio);
+  }
+
+  .timeline ul.itens li::before {
+    display: none;
+  }
+
+  .timeline ul.itens li::marker { content: none; }
+
+  .timeline ul.itens li {
+    position: static;
+  }
+
+  .timeline ul.itens li span.check {
+    color: var(--sucesso);
+    font-weight: 700;
+    margin-right: 6px;
+  }
+
   .badge {
     display: inline-block;
     font-size: 0.7rem;
@@ -369,6 +474,67 @@
         <li>Dali em diante o número entra sozinho, sem trabalho manual — basta a recepção cadastrar o paciente pela busca do painel, que já preenche o telefone a partir do CliMed.</li>
       </ul>
     </div>
+  </section>
+
+  <section>
+    <h2>⏱️ Trajetória até aqui</h2>
+
+    <div class="estimativa">
+      <div class="metric">
+        <span class="valor">28/mai/2026</span>
+        <span class="rotulo">Início identificado</span>
+      </div>
+      <div class="metric">
+        <span class="valor">~58 dias</span>
+        <span class="rotulo">Do diagnóstico até hoje</span>
+      </div>
+      <div class="metric">
+        <span class="valor">~25–30h</span>
+        <span class="rotulo">Tempo ativo estimado</span>
+      </div>
+    </div>
+    <p class="disclaimer">Estimativa a partir das datas e horários registrados no <code>handoff.md</code>/<code>legacy.md</code> e da atividade de arquivos do projeto — não é um cronômetro exato, é uma aproximação. A maior parte do tempo (a maioria das ~25–30h) se concentrou no sprint de 21 a 24/jul/2026.</p>
+
+    <ul class="timeline">
+      <li>
+        <div class="fase">Mai–Jun/2026</div>
+        <div class="fase-titulo">Diagnóstico e planejamento</div>
+        <ul class="itens">
+          <li><span class="check">✓</span>Levantamento da operação atual de WhatsApp (28/mai)</li>
+          <li><span class="check">✓</span>Arquitetura de alto nível e regras de negócio fechadas (25/jun)</li>
+          <li><span class="check">✓</span>Pesquisa de satisfação (NPS) redigida e aprovada</li>
+        </ul>
+      </li>
+      <li>
+        <div class="fase">15–20/jul/2026</div>
+        <div class="fase-titulo">Virada técnica</div>
+        <ul class="itens">
+          <li><span class="check">✓</span>Migração de VPS resolvida (15/jul)</li>
+          <li><span class="check">✓</span>Mapeamento completo da API SendPulse (WhatsApp/Automation 360)</li>
+          <li><span class="check">✓</span>Spec técnica dos fluxos fechada com Gabriel (17/jul)</li>
+        </ul>
+      </li>
+      <li>
+        <div class="fase">21–24/jul/2026</div>
+        <div class="fase-titulo">Sprint de construção</div>
+        <ul class="itens">
+          <li><span class="check">✓</span>Mecanismo de disparo migrado para <code>sendTemplateByPhone</code></li>
+          <li><span class="check">✓</span>Fluxos A/B/C (Confirmação, Agendamento, NPS) montados e testados</li>
+          <li><span class="check">✓</span>Bloco D (Receita/Relatório): coleta em produção, painel e notificações construídos</li>
+          <li><span class="check">✓</span>Bloco E (Agenda de Cetamina): 10 workflows publicados, painel no ar</li>
+          <li><span class="check">✓</span>Bloco E2 (WhatsApp de Cetamina): construído e testado</li>
+          <li><span class="check">✓</span>Bloco G (números inválidos): armado em produção com kill-switch</li>
+          <li><span class="check">✓</span>Handoff bot→humano por API: roteamento, rodízio e fora de horário</li>
+          <li><span class="check">✓</span>Menu receptivo substituiu o Agente de IA — em produção</li>
+          <li><span class="check">✓</span>Login unificado dos painéis + widget de disponibilidade + favicon padrão</li>
+          <li><span class="check">✓</span>Filtros de status corrigidos em 7 de 8 workflows</li>
+          <li><span class="check">✓</span>Fuso horário varrido e corrigido em todos os sistemas</li>
+          <li><span class="check">✓</span>35 templates submetidos à Meta — 34 aprovados</li>
+          <li><span class="check">✓</span>Bloqueio do Google Safe Browsing resolvido</li>
+          <li><span class="check">✓</span>Teste real controlado dos 10 disparos — passou (24/jul), gargalo técnico caiu</li>
+        </ul>
+      </li>
+    </ul>
   </section>
 
 </main>
