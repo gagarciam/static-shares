@@ -147,6 +147,35 @@
     color: var(--texto-medio);
   }
 
+  .lista-obs {
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .lista-obs li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 8px;
+    font-size: 0.92rem;
+    color: var(--texto-medio);
+  }
+
+  .lista-obs li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--verde-medio);
+  }
+
+  .lista-obs li:last-child {
+    margin-bottom: 0;
+  }
+
   .badge {
     display: inline-block;
     font-size: 0.7rem;
@@ -322,8 +351,23 @@
 
   <section>
     <h2>Observações (não são pendência)</h2>
+
     <div class="card nota">
-      <div class="card-desc">Ajuste fino opcional de roteamento no painel admin-atendentes · telefones dos agendamentos de Cetamina (entram no go-live) · GRANT ALL na credencial MySQL <code>rec01</code> (sem solução, fica assim) · bloqueio do Google Safe Browsing em climed.tech (já resolvido).</div>
+      <div class="card-titulo">Ajuste fino de roteamento no painel admin-atendentes</div>
+      <ul class="lista-obs">
+        <li>Hoje o roteamento padrão já funciona: rodízio na recepção da unidade, com Cetamina caindo direto para a Meire.</li>
+        <li>Se Gabriel/Meire quiserem uma regra própria — por exemplo, um atendente fixo para receita/relatório ou por convênio — dá pra configurar direto no painel (<code>auth.climed.tech/webhook/admin-atendentes</code>).</li>
+        <li>É só clicar na tela, não depende do Claude Code nem trava nada em produção.</li>
+      </ul>
+    </div>
+
+    <div class="card nota">
+      <div class="card-titulo">Telefones nos agendamentos de Cetamina</div>
+      <ul class="lista-obs">
+        <li>Hoje nenhum dos 133 agendamentos de Cetamina tem telefone cadastrado — todos vieram da migração da planilha, que não tinha esse dado.</li>
+        <li>Isso não é bloqueio a resolver agora: esses agendamentos serão refeitos no go-live.</li>
+        <li>Dali em diante o número entra sozinho, sem trabalho manual — basta a recepção cadastrar o paciente pela busca do painel, que já preenche o telefone a partir do CliMed.</li>
+      </ul>
     </div>
   </section>
 
