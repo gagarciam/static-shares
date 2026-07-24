@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Status &amp; Pendências — Operação SendPulse</title>
+<style>
+  :root {
+    --verde-escuro: #07614A;
+    --verde-muito-escuro: #037031;
+    --verde-medio: #03694F;
+    --verde-claro: #E9FCE2;
+    --azul-claro: #DAF7F3;
+    --cinza-escuro: #303B37;
+    --texto-medio: #555;
+    --texto-claro: #999;
+    --bg-branco: #FFFFFF;
+    --erro: #DC3545;
+    --sucesso: #037031;
+    --aviso: #FFC107;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    background: var(--verde-claro);
+    color: var(--cinza-escuro);
+    line-height: 1.6;
+  }
+
+  header {
+    background: linear-gradient(135deg, #07614A 0%, #03694F 100%);
+    color: white;
+    padding: 40px 24px 32px;
+    text-align: center;
+  }
+
+  header .marca {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-size: 0.95rem;
+    opacity: 0.85;
+    margin-bottom: 6px;
+  }
+
+  header h1 {
+    margin: 0 0 6px;
+    font-size: 1.9rem;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+  }
+
+  header p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 0.95rem;
+  }
+
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 20px 60px;
+  }
+
+  .banner {
+    background: white;
+    border: 2px solid var(--azul-claro);
+    border-left: 5px solid var(--aviso);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 32px;
+    box-shadow: 0 4px 12px rgba(3, 105, 79, 0.08);
+  }
+
+  .banner h2 {
+    margin: 0 0 8px;
+    font-size: 1.1rem;
+    color: var(--verde-escuro);
+  }
+
+  .banner p {
+    margin: 0;
+    color: var(--texto-medio);
+    font-size: 0.95rem;
+  }
+
+  section {
+    margin-bottom: 40px;
+  }
+
+  section > h2 {
+    font-size: 1.35rem;
+    color: var(--verde-escuro);
+    margin: 0 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .grupo-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--verde-medio);
+    background: var(--azul-claro);
+    padding: 4px 12px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 14px;
+  }
+
+  .card {
+    background: white;
+    border: 2px solid var(--azul-claro);
+    border-radius: 12px;
+    padding: 18px 22px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 12px rgba(3, 105, 79, 0.08), 0 0 0 1px rgba(3, 105, 79, 0.05);
+  }
+
+  .card.bloqueio {
+    border-left: 5px solid var(--erro);
+  }
+
+  .card.pendente {
+    border-left: 5px solid var(--aviso);
+  }
+
+  .card.nota {
+    border-left: 5px solid var(--texto-claro);
+    background: #FAFAFA;
+  }
+
+  .card-titulo {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 6px;
+    color: var(--cinza-escuro);
+  }
+
+  .card-desc {
+    font-size: 0.92rem;
+    color: var(--texto-medio);
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  .badge.gabriel { background: var(--verde-claro); color: var(--verde-escuro); }
+  .badge.claude { background: var(--azul-claro); color: var(--verde-medio); }
+  .badge.cowork { background: #F5F5F5; color: var(--texto-medio); }
+
+  .tabela-wrap {
+    overflow-x: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(3, 105, 79, 0.08);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  th, td {
+    text-align: left;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--azul-claro);
+  }
+
+  th {
+    background: linear-gradient(to right, #E9FCE2 0%, #DAF7F3 100%);
+    color: var(--verde-escuro);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.4px;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  .status {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .status.on { color: var(--sucesso); }
+  .status.pausado { color: var(--aviso); }
+  .status.construido { color: var(--verde-medio); }
+
+  footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 0.8rem;
+    color: var(--texto-claro);
+  }
+
+  footer .atualizado {
+    font-weight: 600;
+    color: var(--texto-medio);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="marca">ASSIS · clínica médica</div>
+  <h1>Status &amp; Pendências — Operação SendPulse</h1>
+  <p>WhatsApp API (n8n + CliMed) · atualizado em 24/jul/2026</p>
+</header>
+
+<main>
+
+  <div class="banner">
+    <h2>🚧 O que trava o go-live</h2>
+    <p>O teste real controlado dos disparos já passou — não há mais bloqueio técnico. Falta só <strong>Gabriel resolver saldo/custo e autorizar ligar os workflows</strong> (ver primeiro item abaixo).</p>
+  </div>
+
+  <section>
+    <h2>Pendências — Gabriel</h2>
+
+    <div class="card bloqueio">
+      <span class="badge gabriel">Gabriel</span>
+      <div class="card-titulo">Autorizar ligar os 10 workflows originais + os 2 crons do Bloco E2 (Cetamina)</div>
+      <div class="card-desc">Antes: revisar com a Meire o custo do Incentivo (aprovado R$122/mês, ficaria ~R$391/mês com os filtros corretos) e resolver o saldo SendPulse (R$39,69, recarga automática desligada — dá erro 402 em 1–2 dias). Mesmo toggle, mesma decisão de saldo — é uma pendência só.</div>
+    </div>
+
+    <div class="card pendente">
+      <span class="badge gabriel">Gabriel</span>
+      <div class="card-titulo">Distribuir a senha temporária <code>Climed@2026</code></div>
+      <div class="card-desc">10 usuários restantes do Bloco E (Cetamina). Login destravado, sem bloqueio técnico conhecido.</div>
+    </div>
+
+    <div class="card pendente">
+      <span class="badge gabriel">Gabriel</span>
+      <div class="card-titulo">Decidir sobre o número usado nas notificações do Bloco D</div>
+      <div class="card-desc">Hoje disparam para o número digitado pelo paciente, não o que de fato enviou WhatsApp. Trocar para <code>COALESCE(phone_whatsapp, telefone)</code> evita mandar documento médico pro número errado.</div>
+    </div>
+
+    <div class="card pendente">
+      <span class="badge gabriel">Gabriel</span>
+      <div class="card-titulo">Conferir o campo oculto do Form de Pesquisa</div>
+      <div class="card-desc">Ao ativar, checar visualmente que o campo <code>token</code> fica oculto e chega certo no submit.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Pendências — Claude Code / VS Code</h2>
+
+    <div class="card">
+      <span class="badge claude">Claude Code</span>
+      <div class="card-titulo">Aplicar o <code>COALESCE(phone_whatsapp, telefone)</code></div>
+      <div class="card-desc">Assim que Gabriel autorizar a mudança de comportamento acima.</div>
+    </div>
+
+    <div class="card">
+      <span class="badge claude">Claude Code</span>
+      <div class="card-titulo">Faxina cosmética no painel SendPulse (opcional)</div>
+      <div class="card-desc">Apagar gatilho de palavra-chave órfão, 2 variáveis órfãs e o filtro pass-through do bloco 2 do Fluxo C (NPS).</div>
+    </div>
+
+    <div class="card">
+      <span class="badge claude">Claude Code</span>
+      <div class="card-titulo">Limpar resíduos de dados de teste</div>
+      <div class="card-desc"><code>confirmacoes_consulta</code> (3 linhas seed fake) e <code>nps_respostas</code> (1 linha seed) — aguardando confirmação para apagar.</div>
+    </div>
+
+    <div class="card">
+      <span class="badge claude">Claude Code</span>
+      <div class="card-titulo">Opcional, sem pressa</div>
+      <div class="card-desc">Repetir o teste real com os números da equipe; regenerar o menu receptivo em versão compacta (~80 → ~35 blocos).</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Cowork</h2>
+    <div class="card nota">
+      <span class="badge cowork">Cowork</span>
+      <div class="card-desc">Sem pendências abertas no momento. Papel segue sendo registrar spec/decisões no <code>handoff.md</code> — quem constrói/ativa é sempre o Claude Code.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Estado por bloco</h2>
+    <div class="tabela-wrap">
+      <table>
+        <thead>
+          <tr><th>Bloco</th><th>O que é</th><th>Situação</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>A — Confirmação D-2/D-1/D-0</td><td>Cron lê CliMed, dispara template, captura SIM/NÃO</td><td class="status pausado">Construído · pausado</td></tr>
+          <tr><td>B — NPS · Pesquisa · Incentivo</td><td>Cron + conversa no bot + formulário</td><td class="status pausado">Construído · pausado</td></tr>
+          <tr><td>C — Pós-falta</td><td>Cron + handoff</td><td class="status pausado">Construído · pausado</td></tr>
+          <tr><td>D — Receitas/Relatórios</td><td>Coleta no bot → painel → notificações</td><td class="status on">Coleta em produção</td></tr>
+          <tr><td>E — Agenda de Cetamina</td><td>Painel interno da equipe</td><td class="status on">No ar</td></tr>
+          <tr><td>E2 — WhatsApp de Cetamina</td><td>Confirmação D-2 + lembrete D-1</td><td class="status construido">Construído · crons pausados</td></tr>
+          <tr><td>G — Números inválidos</td><td>Detecta e limpa nº quebrado</td><td class="status on">Em produção (kill-switch)</td></tr>
+          <tr><td>Menu receptivo</td><td>Qualquer mensagem abre o menu</td><td class="status on">Em produção</td></tr>
+          <tr><td>Handoff bot→humano</td><td>Roteia por motivo × unidade</td><td class="status on">No ar</td></tr>
+          <tr><td>Painéis internos</td><td>Login unificado + widget</td><td class="status on">No ar</td></tr>
+          <tr><td>Bloqueio de disparos</td><td>Guarda por onde todo disparo passa</td><td class="status on">No ar</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Observações (não são pendência)</h2>
+    <div class="card nota">
+      <div class="card-desc">Ajuste fino opcional de roteamento no painel admin-atendentes · telefones dos agendamentos de Cetamina (entram no go-live) · GRANT ALL na credencial MySQL <code>rec01</code> (sem solução, fica assim) · bloqueio do Google Safe Browsing em climed.tech (já resolvido).</div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="atualizado">Clínica Médica Assis</div>
+  Gerado a partir de <code>to-do.md</code> / <code>handoff.md</code> — atualizar quando o estado mudar.
+</footer>
+
+</body>
+</html>
