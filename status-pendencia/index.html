@@ -417,13 +417,7 @@
     <div class="card pendente">
       <span class="badge gabriel">Gabriel</span>
       <div class="card-titulo">Distribuir a senha temporária de acesso</div>
-      <div class="card-desc">10 usuários restantes do Bloco E (Cetamina). Login destravado, sem bloqueio técnico conhecido.</div>
-    </div>
-
-    <div class="card pendente">
-      <span class="badge gabriel">Gabriel</span>
-      <div class="card-titulo">Decidir sobre o número usado nas notificações do Bloco D</div>
-      <div class="card-desc">Hoje disparam para o número digitado pelo paciente, não o que de fato enviou WhatsApp. Trocar para <code>COALESCE(phone_whatsapp, telefone)</code> evita mandar documento médico pro número errado.</div>
+      <div class="card-desc">11 usuários restantes do Bloco E (Cetamina) — subiu de 10 para 11 com a entrada de <code>ana</code> e <code>elizeu</code> (recepção de MC, 22/jul). Login destravado, sem bloqueio técnico conhecido.</div>
     </div>
 
     <div class="card pendente">
@@ -435,12 +429,6 @@
 
   <section>
     <h2>Pendências — Claude Code / VS Code</h2>
-
-    <div class="card">
-      <span class="badge claude">Claude Code</span>
-      <div class="card-titulo">Aplicar o <code>COALESCE(phone_whatsapp, telefone)</code></div>
-      <div class="card-desc">Assim que Gabriel autorizar a mudança de comportamento acima.</div>
-    </div>
 
     <div class="card">
       <span class="badge claude">Claude Code</span>
@@ -480,13 +468,14 @@
           <tr><td>A — Confirmação D-2/D-1/D-0</td><td>Cron lê CliMed, dispara template, captura SIM/NÃO</td><td class="status pausado">Construído · pausado</td></tr>
           <tr><td>B — NPS · Pesquisa · Incentivo</td><td>Cron + conversa no bot + formulário</td><td class="status pausado">Construído · pausado</td></tr>
           <tr><td>C — Pós-falta</td><td>Cron + handoff</td><td class="status pausado">Construído · pausado</td></tr>
-          <tr><td>D — Receitas/Relatórios</td><td>Coleta no bot → painel → notificações</td><td class="status on">Coleta em produção</td></tr>
-          <tr><td>E — Agenda de Cetamina</td><td>Painel interno da equipe</td><td class="status on">No ar</td></tr>
-          <tr><td>E2 — WhatsApp de Cetamina</td><td>Confirmação D-2 + lembrete D-1</td><td class="status construido">Construído · crons pausados</td></tr>
+          <tr><td>D — Receitas/Relatórios</td><td>Coleta no bot → painel → notificações</td><td class="status on">Coleta em produção · notificações corrigidas (24/jul)</td></tr>
+          <tr><td>E — Agenda de Cetamina</td><td>Painel interno da equipe</td><td class="status on">No ar · falta distribuir senha (11 usuários)</td></tr>
+          <tr><td>E2 — WhatsApp de Cetamina</td><td>Confirmação D-2 + lembrete D-1</td><td class="status construido">Construído (24/jul) · crons pausados</td></tr>
           <tr><td>G — Números inválidos</td><td>Detecta e limpa nº quebrado</td><td class="status on">Em produção (kill-switch)</td></tr>
           <tr><td>Menu receptivo</td><td>Qualquer mensagem abre o menu</td><td class="status on">Em produção</td></tr>
-          <tr><td>Handoff bot→humano</td><td>Roteia por motivo × unidade</td><td class="status on">No ar</td></tr>
+          <tr><td>Handoff bot→humano</td><td>Roteia por motivo × unidade</td><td class="status on">No ar · 100% dos pontos de transferência</td></tr>
           <tr><td>Painéis internos</td><td>Login unificado + widget</td><td class="status on">No ar</td></tr>
+          <tr><td>Painel de Agenda (leitura)</td><td>Cruza CliMed + status WhatsApp numa tela só</td><td class="status on">No ar em agenda.climed.tech</td></tr>
           <tr><td>Bloqueio de disparos</td><td>Guarda por onde todo disparo passa</td><td class="status on">No ar</td></tr>
         </tbody>
       </table>
@@ -562,6 +551,12 @@
             <li><span class="check">✓</span>35 templates submetidos à Meta — 34 aprovados</li>
             <li><span class="check">✓</span>Bloqueio do Google Safe Browsing resolvido</li>
             <li><span class="check">✓</span>Teste real controlado dos 10 disparos — passou (24/jul), gargalo técnico caiu</li>
+            <li><span class="check">✓</span>Filtro do Incentivo fechado (janela D-10/D-3 + limite 1x/30 dias)</li>
+            <li><span class="check">✓</span>Notificações do Bloco D corrigidas — vão para quem enviou (COALESCE) e bug de reenvio infinito eliminado</li>
+            <li><span class="check">✓</span>2 bugs graves do NPS corrigidos (perda de resposta com <code>#</code> e pergunta do driver pulada)</li>
+            <li><span class="check">✓</span>Janela de 5 min dos gatilhos zerada + 2 colisões de palavra-chave corrigidas</li>
+            <li><span class="check">✓</span>2 últimos <code>open_chat</code> nativos trocados pelo roteador — 100% do handoff por API</li>
+            <li><span class="check">✓</span>Painel de Agenda (leitura) publicado em agenda.climed.tech</li>
           </ul>
         </div>
       </li>
