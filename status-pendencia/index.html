@@ -393,11 +393,11 @@
         <span class="rotulo">Do diagnóstico até hoje</span>
       </div>
       <div class="hmetric">
-        <span class="valor">~25–30h</span>
+        <span class="valor">~27–33h</span>
         <span class="rotulo">Tempo ativo estimado</span>
       </div>
     </div>
-    <p class="header-disclaimer">Estimativa aproximada — ver metodologia na seção "Trajetória até aqui"</p>
+    <p class="header-disclaimer">Estimativa aproximada, revisada em 24/jul — ver metodologia na seção "Trajetória até aqui"</p>
   </div>
 
   <div class="banner">
@@ -419,29 +419,14 @@
       <div class="card-titulo">Distribuir a senha temporária de acesso</div>
       <div class="card-desc">11 usuários restantes do Bloco E (Cetamina) — subiu de 10 para 11 com a entrada de <code>ana</code> e <code>elizeu</code> (recepção de MC, 22/jul). Login destravado, sem bloqueio técnico conhecido.</div>
     </div>
-
-    <div class="card pendente">
-      <span class="badge gabriel">Gabriel</span>
-      <div class="card-titulo">Conferir o campo oculto do Form de Pesquisa</div>
-      <div class="card-desc">Ao ativar, checar visualmente que o campo <code>token</code> fica oculto e chega certo no submit.</div>
-    </div>
   </section>
 
   <section>
     <h2>Pendências — Claude Code / VS Code</h2>
-
-    <div class="card">
+    <div class="card nota">
       <span class="badge claude">Claude Code</span>
-      <div class="card-titulo">Faxina cosmética no painel SendPulse (opcional)</div>
-      <div class="card-desc">Apagar gatilho de palavra-chave órfão, 2 variáveis órfãs e o filtro pass-through do bloco 2 do Fluxo C (NPS).</div>
+      <div class="card-desc">Sem pendências abertas — a faxina cosmética e a limpeza de resíduos de teste foram concluídas e confirmadas em 24/jul. O único detalhe técnico que resta (ler <code>cetamina_agendamentos</code> direto no cron) só entra quando o Bloco E2 sair do stand-by, junto da autorização do Gabriel.</div>
     </div>
-
-    <div class="card">
-      <span class="badge claude">Claude Code</span>
-      <div class="card-titulo">Limpar resíduos de dados de teste</div>
-      <div class="card-desc"><code>confirmacoes_consulta</code> (3 linhas seed fake) e <code>nps_respostas</code> (1 linha seed) — aguardando confirmação para apagar.</div>
-    </div>
-
   </section>
 
   <section>
@@ -561,6 +546,9 @@
             <li><span class="check">✓</span>Janela de 5 min dos gatilhos zerada + 2 colisões de palavra-chave corrigidas</li>
             <li><span class="check">✓</span>2 últimos <code>open_chat</code> nativos trocados pelo roteador — 100% do handoff por API</li>
             <li><span class="check">✓</span>Painel de Agenda (leitura) publicado em agenda.climed.tech</li>
+            <li><span class="check">✓</span>Campo <code>token</code> do Form de Pesquisa corrigido (virou Hidden Field nativo) + link movido para pesquisa.climed.tech</li>
+            <li><span class="check">✓</span>Faxina do painel fechada e reconfirmada — gatilho órfão, 11 variáveis órfãs e filtro pass-through do NPS removidos, motor testado 100% normal depois</li>
+            <li><span class="check">✓</span>Resíduos de dados de teste apagados (<code>confirmacoes_consulta</code>, <code>nps_respostas</code>)</li>
           </ul>
         </div>
       </li>
