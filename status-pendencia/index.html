@@ -393,7 +393,7 @@
         <span class="rotulo">Do diagnóstico até hoje</span>
       </div>
       <div class="hmetric">
-        <span class="valor">~27–33h</span>
+        <span class="valor">~32–38h</span>
         <span class="rotulo">Tempo ativo estimado</span>
       </div>
     </div>
@@ -417,7 +417,13 @@
     <div class="card pendente">
       <span class="badge gabriel">Gabriel</span>
       <div class="card-titulo">Distribuir a senha temporária de acesso</div>
-      <div class="card-desc">11 usuários restantes do Bloco E (Cetamina) — subiu de 10 para 11 com a entrada de <code>ana</code> e <code>elizeu</code> (recepção de MC, 22/jul). Login destravado, sem bloqueio técnico conhecido.</div>
+      <div class="card-desc">10 dos 11 usuários do Bloco E (Cetamina) — só o Gabriel já trocou a própria. Login destravado, sem bloqueio técnico conhecido.</div>
+    </div>
+
+    <div class="card pendente">
+      <span class="badge gabriel">Gabriel</span>
+      <div class="card-titulo">Rotacionar credenciais expostas (segurança, não urgente)</div>
+      <div class="card-desc">O código e a documentação da operação foram para um repositório privado no GitHub (24/jul), com segredos removidos do código e arquivos sensíveis mantidos fora do versionamento. Mas as credenciais que estavam expostas em texto puro em planilhas/docs locais antes disso continuam válidas — recomendado trocar a <code>SP_CLIENT_SECRET</code> da SendPulse e as senhas da equipe.</div>
     </div>
   </section>
 
@@ -449,13 +455,15 @@
           <tr><td>B — NPS · Pesquisa · Incentivo</td><td>Cron + conversa no bot + formulário</td><td class="status pausado">Construído · pausado</td></tr>
           <tr><td>C — Pós-falta</td><td>Cron + handoff</td><td class="status pausado">Construído · pausado</td></tr>
           <tr><td>D — Receitas/Relatórios</td><td>Coleta no bot → painel → notificações</td><td class="status on">Coleta em produção · notificações corrigidas (24/jul)</td></tr>
-          <tr><td>E — Agenda de Cetamina</td><td>Painel interno da equipe</td><td class="status on">No ar · falta distribuir senha (11 usuários)</td></tr>
+          <tr><td>E — Agenda de Cetamina</td><td>Painel interno da equipe</td><td class="status on">No ar · falta distribuir senha (10 de 11 usuários)</td></tr>
           <tr><td>E2 — WhatsApp de Cetamina</td><td>Confirmação D-2 + lembrete D-1</td><td class="status construido">Construído (24/jul) · crons pausados</td></tr>
           <tr><td>G — Números inválidos</td><td>Detecta e limpa nº quebrado</td><td class="status on">Em produção (kill-switch)</td></tr>
-          <tr><td>Menu receptivo</td><td>Qualquer mensagem abre o menu</td><td class="status on">Em produção</td></tr>
+          <tr><td>Menu receptivo</td><td>Qualquer mensagem abre o menu, agora com CPF + enriquecimento de contato</td><td class="status on">Em produção</td></tr>
           <tr><td>Handoff bot→humano</td><td>Roteia por motivo × unidade</td><td class="status on">No ar · 100% dos pontos de transferência</td></tr>
-          <tr><td>Painéis internos</td><td>Login unificado + widget</td><td class="status on">No ar</td></tr>
+          <tr><td>Painéis internos</td><td>Login unificado + widget, 7 subdomínios</td><td class="status on">No ar</td></tr>
           <tr><td>Painel de Agenda (leitura)</td><td>Cruza CliMed + status WhatsApp numa tela só</td><td class="status on">No ar em agenda.climed.tech</td></tr>
+          <tr><td>Portal / Intranet</td><td>Porta de entrada única: cards por painel + notas pessoais</td><td class="status on">No ar em intranet.climed.tech (24/jul) · destino padrão pós-login</td></tr>
+          <tr><td>Enriquecimento de contato</td><td>Cruza telefone/CPF com o CliMed e preenche dados na conversa</td><td class="status on">Construído e ativo (24/jul), sem cron</td></tr>
           <tr><td>Bloqueio de disparos</td><td>Guarda por onde todo disparo passa</td><td class="status on">No ar</td></tr>
         </tbody>
       </table>
@@ -549,6 +557,9 @@
             <li><span class="check">✓</span>Campo <code>token</code> do Form de Pesquisa corrigido (virou Hidden Field nativo) + link movido para pesquisa.climed.tech</li>
             <li><span class="check">✓</span>Faxina do painel fechada e reconfirmada — gatilho órfão, 11 variáveis órfãs e filtro pass-through do NPS removidos, motor testado 100% normal depois</li>
             <li><span class="check">✓</span>Resíduos de dados de teste apagados (<code>confirmacoes_consulta</code>, <code>nps_respostas</code>)</li>
+            <li><span class="check">✓</span>Enriquecimento de contato (SendPulse × CliMed) + CPF obrigatório no menu — construído e testado</li>
+            <li><span class="check">✓</span>Portal/Intranet publicado — porta de entrada única, virou destino padrão pós-login</li>
+            <li><span class="check">✓</span>Código e docs versionados em repositório privado no GitHub, com segredos retirados do código</li>
           </ul>
         </div>
       </li>
