@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulação de Capacidade — Cetamina</title>
+<style>
+  :root {
+    --verde-escuro: #07614A;
+    --verde-medio: #03694F;
+    --verde-claro: #E9FCE2;
+    --azul-claro: #DAF7F3;
+    --cinza-escuro: #303B37;
+    --texto-medio: #555;
+    --texto-claro: #999;
+    --aviso-texto: #8A6100;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    background: var(--verde-claro);
+    color: var(--cinza-escuro);
+    line-height: 1.6;
+  }
+  header {
+    background: linear-gradient(135deg, #07614A 0%, #03694F 100%);
+    color: white;
+    padding: 36px 24px 28px;
+    text-align: center;
+  }
+  header .marca {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-bottom: 6px;
+  }
+  header h1 { margin: 0 0 6px; font-size: 1.7rem; font-weight: 600; }
+  header p { margin: 0; opacity: 0.95; font-size: 0.92rem; max-width: 640px; margin: 0 auto; }
+  main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 60px; }
+  .banner {
+    background: white; border: 2px solid var(--azul-claro); border-left: 5px solid var(--verde-medio);
+    border-radius: 12px; padding: 20px 24px; margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(3,105,79,0.08); font-size: 0.92rem; color: var(--texto-medio);
+  }
+  .banner strong { color: var(--verde-escuro); }
+  .tabs { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+  .tab {
+    font-family: inherit; font-size: 0.88rem; font-weight: 600; padding: 9px 18px;
+    border-radius: 20px; border: 2px solid var(--azul-claro); background: white; color: var(--texto-medio);
+    cursor: pointer;
+  }
+  .tab.ativo { background: var(--verde-escuro); border-color: var(--verde-escuro); color: white; }
+  .resumo { display: grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap: 14px; margin-bottom: 18px; }
+  .resumo-item {
+    background: linear-gradient(135deg,#fff 0%,var(--verde-claro) 100%); border: 2px solid var(--azul-claro);
+    border-radius: 12px; padding: 14px 16px; text-align: center;
+  }
+  .resumo-item .valor { display:block; font-size: 1.4rem; font-weight: 700; color: var(--verde-escuro); }
+  .resumo-item .rotulo { display:block; font-size: 0.72rem; color: var(--texto-medio); text-transform: uppercase; margin-top: 2px; }
+  .gantt-wrap { background: white; border: 2px solid var(--azul-claro); border-radius: 12px; padding: 16px; overflow-x: auto; box-shadow: 0 4px 12px rgba(3,105,79,0.08); }
+  .gantt { display: inline-block; min-width: 100%; }
+  .cabecalho { display: flex; align-items: flex-end; border-bottom: 2px solid var(--azul-claro); padding-bottom: 6px; margin-bottom: 4px; }
+  .rotulo { width: 130px; flex: none; font-size: 0.82rem; font-weight: 600; color: var(--cinza-escuro); display:flex; align-items:center; gap:6px; }
+  .cab-rotulo { align-self: flex-end; padding-bottom: 6px; }
+  .lane-cab { position: relative; height: 34px; flex: none; }
+  .turno-nome { font-size: 0.75rem; font-weight: 700; color: var(--verde-escuro); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 4px; }
+  .ruler { position: relative; height: 14px; }
+  .tick { position: absolute; top:0; font-size: 0.65rem; color: var(--texto-claro); transform: translateX(-50%); white-space: nowrap; }
+  .lane-gap-cab { width: 26px; flex: none; text-align:center; font-size: 0.6rem; color: var(--texto-claro); align-self: center; writing-mode: vertical-rl; }
+  .lane-gap { width: 26px; flex: none; background: repeating-linear-gradient(45deg, #F5F5F5, #F5F5F5 4px, #EDEDED 4px, #EDEDED 8px); border-radius: 4px; }
+  .linha { display: flex; align-items: center; height: 46px; border-bottom: 1px solid #F0F0F0; }
+  .badge-tipo { display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; border-radius:5px; font-size:0.68rem; font-weight:700; flex:none; }
+  .badge-tipo.pol { background: var(--azul-claro); color: var(--verde-medio); }
+  .badge-tipo.mac { background: #FBEAF0; color: #993556; }
+  .lane { position: relative; height: 32px; flex: none; background: repeating-linear-gradient(to right, transparent, transparent 51.9px, #FAFAFA 51.9px, #FAFAFA 52px); }
+  .seg { position: absolute; top: 4px; height: 24px; border-radius: 3px; }
+  .seg.recepcao { background: #E1E1DC; }
+  .seg.preparo { background: #F0997B; }
+  .seg.infusao { background: #5DCAA5; }
+  .seg.higiene { background: repeating-linear-gradient(45deg, #DAF7F3, #DAF7F3 3px, #C6EFE9 3px, #C6EFE9 6px); }
+  .pac-label { position:absolute; top: -14px; font-size: 0.62rem; color: var(--texto-medio); white-space: nowrap; font-weight: 600; }
+  .legenda { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px; font-size: 0.78rem; color: var(--texto-medio); }
+  .legenda .item { display:flex; align-items:center; gap:6px; }
+  .legenda .sw { width: 14px; height: 14px; border-radius: 3px; flex:none; }
+  .sw.recepcao { background:#E1E1DC; }
+  .sw.preparo { background:#F0997B; }
+  .sw.infusao { background:#5DCAA5; }
+  .sw.higiene { background: repeating-linear-gradient(45deg, #DAF7F3, #DAF7F3 3px, #C6EFE9 3px, #C6EFE9 6px); }
+  .nota {
+    background: #FAFAFA; border-left: 5px solid var(--texto-claro); border-radius: 12px; padding: 16px 20px;
+    margin-top: 20px; font-size: 0.9rem; color: var(--texto-medio);
+  }
+  .nota strong { color: var(--cinza-escuro); }
+  footer { text-align:center; padding: 22px; font-size: 0.8rem; color: var(--texto-medio); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="marca">ASSIS · clínica médica</div>
+  <h1>Simulação de capacidade máxima — Agenda de Cetamina</h1>
+  <p>Cenário 100% simulado, com pacientes fictícios — para validar o modelo de capacidade corrigido (10 min recepção + 20 min preparo da equipe + 120 min infusão + 10 min higiene), não são dados reais de pacientes.</p>
+</header>
+
+<main>
+  <div class="banner">
+    <strong>Como ler:</strong> cada linha é uma poltrona ou maca. As barras mostram, para cada paciente, a recepção (cinza), o preparo da equipe (laranja), a infusão (verde) e a higiene após a saída (hachurado). A agenda foi preenchida no limite — um novo paciente a cada 20 minutos, que é o ritmo máximo que a equipe de preparo sustenta (só 1 paciente em preparo por vez). Note como a mesma poltrona atende mais de um paciente ao longo do dia — de manhã e de tarde.
+  </div>
+
+  <div class="tabs"><button class="tab ativo" data-target="terca">Terça-feira</button><button class="tab" data-target="quarta">Quarta-feira</button><button class="tab" data-target="quinta">Quinta-feira</button></div>
+
+  
+    <div class="dia-painel" data-dia="terca" style="display:block">
+      <div class="resumo">
+        <div class="resumo-item"><span class="valor">11</span><span class="rotulo">pacientes no dia</span></div>
+        <div class="resumo-item"><span class="valor">9</span><span class="rotulo">em poltrona</span></div>
+        <div class="resumo-item"><span class="valor">2</span><span class="rotulo">em maca</span></div>
+        <div class="resumo-item"><span class="valor">6+1</span><span class="rotulo">poltronas + maca disponíveis</span></div>
+      </div>
+      <div class="gantt-wrap">
+        <div class="gantt">
+          <div class="cabecalho">
+            <div class="rotulo cab-rotulo">Recurso</div>
+            <div class="lane-cab" style="width:676px">
+              <div class="turno-nome">Manhã · 08:00–12:20</div>
+              <div class="ruler"><div class="tick" style="left:0px">08:00</div><div class="tick" style="left:52px">08:20</div><div class="tick" style="left:104px">08:40</div><div class="tick" style="left:156px">09:00</div><div class="tick" style="left:208px">09:20</div><div class="tick" style="left:260px">09:40</div><div class="tick" style="left:312px">10:00</div><div class="tick" style="left:364px">10:20</div><div class="tick" style="left:416px">10:40</div><div class="tick" style="left:468px">11:00</div><div class="tick" style="left:520px">11:20</div><div class="tick" style="left:572px">11:40</div><div class="tick" style="left:624px">12:00</div><div class="tick" style="left:676px">12:20</div></div>
+            </div>
+            <div class="lane-gap-cab">almoço</div>
+            <div class="lane-cab" style="width:624px">
+              <div class="turno-nome">Tarde · 13:20–17:20</div>
+              <div class="ruler"><div class="tick" style="left:0px">13:20</div><div class="tick" style="left:52px">13:40</div><div class="tick" style="left:104px">14:00</div><div class="tick" style="left:156px">14:20</div><div class="tick" style="left:208px">14:40</div><div class="tick" style="left:260px">15:00</div><div class="tick" style="left:312px">15:20</div><div class="tick" style="left:364px">15:40</div><div class="tick" style="left:416px">16:00</div><div class="tick" style="left:468px">16:20</div><div class="tick" style="left:520px">16:40</div><div class="tick" style="left:572px">17:00</div><div class="tick" style="left:624px">17:20</div></div>
+            </div>
+          </div>
+          
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo pol">P</span>Poltrona 1</div>
+          <div class="lane" style="width:676px"><div class="seg recepcao" style="left:0px;width:26px" title="Ana Ferreira — recepcao 08:00-08:10"></div><div class="seg preparo" style="left:26px;width:52px" title="Ana Ferreira — preparo 08:10-08:30"></div><div class="seg infusao" style="left:78px;width:312px" title="Ana Ferreira — infusao 08:30-10:30"></div><div class="seg higiene" style="left:390px;width:26px" title="Ana Ferreira — higiene 10:30-10:40"></div><div class="pac-label" style="left:0px">Ana</div></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"><div class="seg recepcao" style="left:0px;width:26px" title="Giovana Reis — recepcao 13:20-13:30"></div><div class="seg preparo" style="left:26px;width:52px" title="Giovana Reis — preparo 13:30-13:50"></div><div class="seg infusao" style="left:78px;width:312px" title="Giovana Reis — infusao 13:50-15:50"></div><div class="seg higiene" style="left:390px;width:26px" title="Giovana Reis — higiene 15:50-16:00"></div><div class="pac-label" style="left:0px">Giovana</div></div>
+        </div>
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo pol">P</span>Poltrona 2</div>
+          <div class="lane" style="width:676px"><div class="seg recepcao" style="left:52px;width:26px" title="Bruno Alves — recepcao 08:20-08:30"></div><div class="seg preparo" style="left:78px;width:52px" title="Bruno Alves — preparo 08:30-08:50"></div><div class="seg infusao" style="left:130px;width:312px" title="Bruno Alves — infusao 08:50-10:50"></div><div class="seg higiene" style="left:442px;width:26px" title="Bruno Alves — higiene 10:50-11:00"></div><div class="pac-label" style="left:52px">Bruno</div></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"><div class="seg recepcao" style="left:104px;width:26px" title="Isabela Cruz — recepcao 14:00-14:10"></div><div class="seg preparo" style="left:130px;width:52px" title="Isabela Cruz — preparo 14:10-14:30"></div><div class="seg infusao" style="left:182px;width:312px" title="Isabela Cruz — infusao 14:30-16:30"></div><div class="seg higiene" style="left:494px;width:26px" title="Isabela Cruz — higiene 16:30-16:40"></div><div class="pac-label" style="left:104px">Isabela</div></div>
+        </div>
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo pol">P</span>Poltrona 3</div>
+          <div class="lane" style="width:676px"><div class="seg recepcao" style="left:104px;width:26px" title="Carla Nunes — recepcao 08:40-08:50"></div><div class="seg preparo" style="left:130px;width:52px" title="Carla Nunes — preparo 08:50-09:10"></div><div class="seg infusao" style="left:182px;width:312px" title="Carla Nunes — infusao 09:10-11:10"></div><div class="seg higiene" style="left:494px;width:26px" title="Carla Nunes — higiene 11:10-11:20"></div><div class="pac-label" style="left:104px">Carla</div></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"><div class="seg recepcao" style="left:156px;width:26px" title="João Pedro — recepcao 14:20-14:30"></div><div class="seg preparo" style="left:182px;width:52px" title="João Pedro — preparo 14:30-14:50"></div><div class="seg infusao" style="left:234px;width:312px" title="João Pedro — infusao 14:50-16:50"></div><div class="seg higiene" style="left:546px;width:26px" title="João Pedro — higiene 16:50-17:00"></div><div class="pac-label" style="left:156px">João</div></div>
+        </div>
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo pol">P</span>Poltrona 4</div>
+          <div class="lane" style="width:676px"><div class="seg recepcao" style="left:208px;width:26px" title="Elaine Rocha — recepcao 09:20-09:30"></div><div class="seg preparo" style="left:234px;width:52px" title="Elaine Rocha — preparo 09:30-09:50"></div><div class="seg infusao" style="left:286px;width:312px" title="Elaine Rocha — infusao 09:50-11:50"></div><div class="seg higiene" style="left:598px;width:26px" title="Elaine Rocha — higiene 11:50-12:00"></div><div class="pac-label" style="left:208px">Elaine</div></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"><div class="seg recepcao" style="left:208px;width:26px" title="Karina Dias — recepcao 14:40-14:50"></div><div class="seg preparo" style="left:234px;width:52px" title="Karina Dias — preparo 14:50-15:10"></div><div class="seg infusao" style="left:286px;width:312px" title="Karina Dias — infusao 15:10-17:10"></div><div class="seg higiene" style="left:598px;width:26px" title="Karina Dias — higiene 17:10-17:20"></div><div class="pac-label" style="left:208px">Karina</div></div>
+        </div>
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo pol">P</span>Poltrona 5</div>
+          <div class="lane" style="width:676px"><div class="seg recepcao" style="left:260px;width:26px" title="Fábio Lima — recepcao 09:40-09:50"></div><div class="seg preparo" style="left:286px;width:52px" title="Fábio Lima — preparo 09:50-10:10"></div><div class="seg infusao" style="left:338px;width:312px" title="Fábio Lima — infusao 10:10-12:10"></div><div class="seg higiene" style="left:650px;width:26px" title="Fábio Lima — higiene 12:10-12:20"></div><div class="pac-label" style="left:260px">Fábio</div></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"></div>
+        </div>
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo pol">P</span>Poltrona 6</div>
+          <div class="lane" style="width:676px"></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"></div>
+        </div>
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo mac">M</span>Maca 1</div>
+          <div class="lane" style="width:676px"><div class="seg recepcao" style="left:156px;width:26px" title="Diego Souza — recepcao 09:00-09:10"></div><div class="seg preparo" style="left:182px;width:52px" title="Diego Souza — preparo 09:10-09:30"></div><div class="seg infusao" style="left:234px;width:312px" title="Diego Souza — infusao 09:30-11:30"></div><div class="seg higiene" style="left:546px;width:26px" title="Diego Souza — higiene 11:30-11:40"></div><div class="pac-label" style="left:156px">Diego</div></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"><div class="seg recepcao" style="left:52px;width:26px" title="Hugo Martins — recepcao 13:40-13:50"></div><div class="seg preparo" style="left:78px;width:52px" title="Hugo Martins — preparo 13:50-14:10"></div><div class="seg infusao" style="left:130px;width:312px" title="Hugo Martins — infusao 14:10-16:10"></div><div class="seg higiene" style="left:442px;width:26px" title="Hugo Martins — higiene 16:10-16:20"></div><div class="pac-label" style="left:52px">Hugo</div></div>
+        </div>
+        </div>
+      </div>
+    </div>
+    <div class="dia-painel" data-dia="quarta" style="display:none">
+      <div class="resumo">
+        <div class="resumo-item"><span class="valor">11</span><span class="rotulo">pacientes no dia</span></div>
+        <div class="resumo-item"><span class="valor">9</span><span class="rotulo">em poltrona</span></div>
+        <div class="resumo-item"><span class="valor">2</span><span class="rotulo">em maca</span></div>
+        <div class="resumo-item"><span class="valor">7+1</span><span class="rotulo">poltronas + maca disponíveis</span></div>
+      </div>
+      <div class="gantt-wrap">
+        <div class="gantt">
+          <div class="cabecalho">
+            <div class="rotulo cab-rotulo">Recurso</div>
+            <div class="lane-cab" style="width:676px">
+              <div class="turno-nome">Manhã · 08:00–12:20</div>
+              <div class="ruler"><div class="tick" style="left:0px">08:00</div><div class="tick" style="left:52px">08:20</div><div class="tick" style="left:104px">08:40</div><div class="tick" style="left:156px">09:00</div><div class="tick" style="left:208px">09:20</div><div class="tick" style="left:260px">09:40</div><div class="tick" style="left:312px">10:00</div><div class="tick" style="left:364px">10:20</div><div class="tick" style="left:416px">10:40</div><div class="tick" style="left:468px">11:00</div><div class="tick" style="left:520px">11:20</div><div class="tick" style="left:572px">11:40</div><div class="tick" style="left:624px">12:00</div><div class="tick" style="left:676px">12:20</div></div>
+            </div>
+            <div class="lane-gap-cab">almoço</div>
+            <div class="lane-cab" style="width:624px">
+              <div class="turno-nome">Tarde · 13:20–17:20</div>
+              <div class="ruler"><div class="tick" style="left:0px">13:20</div><div class="tick" style="left:52px">13:40</div><div class="tick" style="left:104px">14:00</div><div class="tick" style="left:156px">14:20</div><div class="tick" style="left:208px">14:40</div><div class="tick" style="left:260px">15:00</div><div class="tick" style="left:312px">15:20</div><div class="tick" style="left:364px">15:40</div><div class="tick" style="left:416px">16:00</div><div class="tick" style="left:468px">16:20</div><div class="tick" style="left:520px">16:40</div><div class="tick" style="left:572px">17:00</div><div class="tick" style="left:624px">17:20</div></div>
+            </div>
+          </div>
+          
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo pol">P</span>Poltrona 1</div>
+          <div class="lane" style="width:676px"><div class="seg recepcao" style="left:0px;width:26px" title="Marina Costa — recepcao 08:00-08:10"></div><div class="seg preparo" style="left:26px;width:52px" title="Marina Costa — preparo 08:10-08:30"></div><div class="seg infusao" style="left:78px;width:312px" title="Marina Costa — infusao 08:30-10:30"></div><div class="seg higiene" style="left:390px;width:26px" title="Marina Costa — higiene 10:30-10:40"></div><div class="pac-label" style="left:0px">Marina</div></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"><div class="seg recepcao" style="left:0px;width:26px" title="Sabrina Pinto — recepcao 13:20-13:30"></div><div class="seg preparo" style="left:26px;width:52px" title="Sabrina Pinto — preparo 13:30-13:50"></div><div class="seg infusao" style="left:78px;width:312px" title="Sabrina Pinto — infusao 13:50-15:50"></div><div class="seg higiene" style="left:390px;width:26px" title="Sabrina Pinto — higiene 15:50-16:00"></div><div class="pac-label" style="left:0px">Sabrina</div></div>
+        </div>
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo pol">P</span>Poltrona 2</div>
+          <div class="lane" style="width:676px"><div class="seg recepcao" style="left:52px;width:26px" title="Nicolas Melo — recepcao 08:20-08:30"></div><div class="seg preparo" style="left:78px;width:52px" title="Nicolas Melo — preparo 08:30-08:50"></div><div class="seg infusao" style="left:130px;width:312px" title="Nicolas Melo — infusao 08:50-10:50"></div><div class="seg higiene" style="left:442px;width:26px" title="Nicolas Melo — higiene 10:50-11:00"></div><div class="pac-label" style="left:52px">Nicolas</div></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"><div class="seg recepcao" style="left:104px;width:26px" title="Vitória Gomes — recepcao 14:00-14:10"></div><div class="seg preparo" style="left:130px;width:52px" title="Vitória Gomes — preparo 14:10-14:30"></div><div class="seg infusao" style="left:182px;width:312px" title="Vitória Gomes — infusao 14:30-16:30"></div><div class="seg higiene" style="left:494px;width:26px" title="Vitória Gomes — higiene 16:30-16:40"></div><div class="pac-label" style="left:104px">Vitória</div></div>
+        </div>
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo pol">P</span>Poltrona 3</div>
+          <div class="lane" style="width:676px"><div class="seg recepcao" style="left:104px;width:26px" title="Otávio Faria — recepcao 08:40-08:50"></div><div class="seg preparo" style="left:130px;width:52px" title="Otávio Faria — preparo 08:50-09:10"></div><div class="seg infusao" style="left:182px;width:312px" title="Otávio Faria — infusao 09:10-11:10"></div><div class="seg higiene" style="left:494px;width:26px" title="Otávio Faria — higiene 11:10-11:20"></div><div class="pac-label" style="left:104px">Otávio</div></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"><div class="seg recepcao" style="left:156px;width:26px" title="Wesley Duarte — recepcao 14:20-14:30"></div><div class="seg preparo" style="left:182px;width:52px" title="Wesley Duarte — preparo 14:30-14:50"></div><div class="seg infusao" style="left:234px;width:312px" title="Wesley Duarte — infusao 14:50-16:50"></div><div class="seg higiene" style="left:546px;width:26px" title="Wesley Duarte — higiene 16:50-17:00"></div><div class="pac-label" style="left:156px">Wesley</div></div>
+        </div>
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo pol">P</span>Poltrona 4</div>
+          <div class="lane" style="width:676px"><div class="seg recepcao" style="left:208px;width:26px" title="Quenia Santos — recepcao 09:20-09:30"></div><div class="seg preparo" style="left:234px;width:52px" title="Quenia Santos — preparo 09:30-09:50"></div><div class="seg infusao" style="left:286px;width:312px" title="Quenia Santos — infusao 09:50-11:50"></div><div class="seg higiene" style="left:598px;width:26px" title="Quenia Santos — higiene 11:50-12:00"></div><div class="pac-label" style="left:208px">Quenia</div></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"><div class="seg recepcao" style="left:208px;width:26px" title="Yara Campos — recepcao 14:40-14:50"></div><div class="seg preparo" style="left:234px;width:52px" title="Yara Campos — preparo 14:50-15:10"></div><div class="seg infusao" style="left:286px;width:312px" title="Yara Campos — infusao 15:10-17:10"></div><div class="seg higiene" style="left:598px;width:26px" title="Yara Campos — higiene 17:10-17:20"></div><div class="pac-label" style="left:208px">Yara</div></div>
+        </div>
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo pol">P</span>Poltrona 5</div>
+          <div class="lane" style="width:676px"><div class="seg recepcao" style="left:260px;width:26px" title="Rafael Teixeira — recepcao 09:40-09:50"></div><div class="seg preparo" style="left:286px;width:52px" title="Rafael Teixeira — preparo 09:50-10:10"></div><div class="seg infusao" style="left:338px;width:312px" title="Rafael Teixeira — infusao 10:10-12:10"></div><div class="seg higiene" style="left:650px;width:26px" title="Rafael Teixeira — higiene 12:10-12:20"></div><div class="pac-label" style="left:260px">Rafael</div></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"></div>
+        </div>
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo pol">P</span>Poltrona 6</div>
+          <div class="lane" style="width:676px"></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"></div>
+        </div>
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo pol">P</span>Poltrona 7</div>
+          <div class="lane" style="width:676px"></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"></div>
+        </div>
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo mac">M</span>Maca 1</div>
+          <div class="lane" style="width:676px"><div class="seg recepcao" style="left:156px;width:26px" title="Paula Vieira — recepcao 09:00-09:10"></div><div class="seg preparo" style="left:182px;width:52px" title="Paula Vieira — preparo 09:10-09:30"></div><div class="seg infusao" style="left:234px;width:312px" title="Paula Vieira — infusao 09:30-11:30"></div><div class="seg higiene" style="left:546px;width:26px" title="Paula Vieira — higiene 11:30-11:40"></div><div class="pac-label" style="left:156px">Paula</div></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"><div class="seg recepcao" style="left:52px;width:26px" title="Thiago Moreira — recepcao 13:40-13:50"></div><div class="seg preparo" style="left:78px;width:52px" title="Thiago Moreira — preparo 13:50-14:10"></div><div class="seg infusao" style="left:130px;width:312px" title="Thiago Moreira — infusao 14:10-16:10"></div><div class="seg higiene" style="left:442px;width:26px" title="Thiago Moreira — higiene 16:10-16:20"></div><div class="pac-label" style="left:52px">Thiago</div></div>
+        </div>
+        </div>
+      </div>
+    </div>
+    <div class="dia-painel" data-dia="quinta" style="display:none">
+      <div class="resumo">
+        <div class="resumo-item"><span class="valor">11</span><span class="rotulo">pacientes no dia</span></div>
+        <div class="resumo-item"><span class="valor">9</span><span class="rotulo">em poltrona</span></div>
+        <div class="resumo-item"><span class="valor">2</span><span class="rotulo">em maca</span></div>
+        <div class="resumo-item"><span class="valor">6+1</span><span class="rotulo">poltronas + maca disponíveis</span></div>
+      </div>
+      <div class="gantt-wrap">
+        <div class="gantt">
+          <div class="cabecalho">
+            <div class="rotulo cab-rotulo">Recurso</div>
+            <div class="lane-cab" style="width:676px">
+              <div class="turno-nome">Manhã · 08:00–12:20</div>
+              <div class="ruler"><div class="tick" style="left:0px">08:00</div><div class="tick" style="left:52px">08:20</div><div class="tick" style="left:104px">08:40</div><div class="tick" style="left:156px">09:00</div><div class="tick" style="left:208px">09:20</div><div class="tick" style="left:260px">09:40</div><div class="tick" style="left:312px">10:00</div><div class="tick" style="left:364px">10:20</div><div class="tick" style="left:416px">10:40</div><div class="tick" style="left:468px">11:00</div><div class="tick" style="left:520px">11:20</div><div class="tick" style="left:572px">11:40</div><div class="tick" style="left:624px">12:00</div><div class="tick" style="left:676px">12:20</div></div>
+            </div>
+            <div class="lane-gap-cab">almoço</div>
+            <div class="lane-cab" style="width:624px">
+              <div class="turno-nome">Tarde · 13:20–17:20</div>
+              <div class="ruler"><div class="tick" style="left:0px">13:20</div><div class="tick" style="left:52px">13:40</div><div class="tick" style="left:104px">14:00</div><div class="tick" style="left:156px">14:20</div><div class="tick" style="left:208px">14:40</div><div class="tick" style="left:260px">15:00</div><div class="tick" style="left:312px">15:20</div><div class="tick" style="left:364px">15:40</div><div class="tick" style="left:416px">16:00</div><div class="tick" style="left:468px">16:20</div><div class="tick" style="left:520px">16:40</div><div class="tick" style="left:572px">17:00</div><div class="tick" style="left:624px">17:20</div></div>
+            </div>
+          </div>
+          
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo pol">P</span>Poltrona 1</div>
+          <div class="lane" style="width:676px"><div class="seg recepcao" style="left:0px;width:26px" title="Amanda Freitas — recepcao 08:00-08:10"></div><div class="seg preparo" style="left:26px;width:52px" title="Amanda Freitas — preparo 08:10-08:30"></div><div class="seg infusao" style="left:78px;width:312px" title="Amanda Freitas — infusao 08:30-10:30"></div><div class="seg higiene" style="left:390px;width:26px" title="Amanda Freitas — higiene 10:30-10:40"></div><div class="pac-label" style="left:0px">Amanda</div></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"><div class="seg recepcao" style="left:0px;width:26px" title="Gabriela Nogueira — recepcao 13:20-13:30"></div><div class="seg preparo" style="left:26px;width:52px" title="Gabriela Nogueira — preparo 13:30-13:50"></div><div class="seg infusao" style="left:78px;width:312px" title="Gabriela Nogueira — infusao 13:50-15:50"></div><div class="seg higiene" style="left:390px;width:26px" title="Gabriela Nogueira — higiene 15:50-16:00"></div><div class="pac-label" style="left:0px">Gabriela</div></div>
+        </div>
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo pol">P</span>Poltrona 2</div>
+          <div class="lane" style="width:676px"><div class="seg recepcao" style="left:52px;width:26px" title="Bento Cardoso — recepcao 08:20-08:30"></div><div class="seg preparo" style="left:78px;width:52px" title="Bento Cardoso — preparo 08:30-08:50"></div><div class="seg infusao" style="left:130px;width:312px" title="Bento Cardoso — infusao 08:50-10:50"></div><div class="seg higiene" style="left:442px;width:26px" title="Bento Cardoso — higiene 10:50-11:00"></div><div class="pac-label" style="left:52px">Bento</div></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"><div class="seg recepcao" style="left:104px;width:26px" title="Iris Batista — recepcao 14:00-14:10"></div><div class="seg preparo" style="left:130px;width:52px" title="Iris Batista — preparo 14:10-14:30"></div><div class="seg infusao" style="left:182px;width:312px" title="Iris Batista — infusao 14:30-16:30"></div><div class="seg higiene" style="left:494px;width:26px" title="Iris Batista — higiene 16:30-16:40"></div><div class="pac-label" style="left:104px">Iris</div></div>
+        </div>
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo pol">P</span>Poltrona 3</div>
+          <div class="lane" style="width:676px"><div class="seg recepcao" style="left:104px;width:26px" title="Camila Prado — recepcao 08:40-08:50"></div><div class="seg preparo" style="left:130px;width:52px" title="Camila Prado — preparo 08:50-09:10"></div><div class="seg infusao" style="left:182px;width:312px" title="Camila Prado — infusao 09:10-11:10"></div><div class="seg higiene" style="left:494px;width:26px" title="Camila Prado — higiene 11:10-11:20"></div><div class="pac-label" style="left:104px">Camila</div></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"><div class="seg recepcao" style="left:156px;width:26px" title="Josué Peixoto — recepcao 14:20-14:30"></div><div class="seg preparo" style="left:182px;width:52px" title="Josué Peixoto — preparo 14:30-14:50"></div><div class="seg infusao" style="left:234px;width:312px" title="Josué Peixoto — infusao 14:50-16:50"></div><div class="seg higiene" style="left:546px;width:26px" title="Josué Peixoto — higiene 16:50-17:00"></div><div class="pac-label" style="left:156px">Josué</div></div>
+        </div>
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo pol">P</span>Poltrona 4</div>
+          <div class="lane" style="width:676px"><div class="seg recepcao" style="left:208px;width:26px" title="Eduarda Lopes — recepcao 09:20-09:30"></div><div class="seg preparo" style="left:234px;width:52px" title="Eduarda Lopes — preparo 09:30-09:50"></div><div class="seg infusao" style="left:286px;width:312px" title="Eduarda Lopes — infusao 09:50-11:50"></div><div class="seg higiene" style="left:598px;width:26px" title="Eduarda Lopes — higiene 11:50-12:00"></div><div class="pac-label" style="left:208px">Eduarda</div></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"><div class="seg recepcao" style="left:208px;width:26px" title="Kelly Andrade — recepcao 14:40-14:50"></div><div class="seg preparo" style="left:234px;width:52px" title="Kelly Andrade — preparo 14:50-15:10"></div><div class="seg infusao" style="left:286px;width:312px" title="Kelly Andrade — infusao 15:10-17:10"></div><div class="seg higiene" style="left:598px;width:26px" title="Kelly Andrade — higiene 17:10-17:20"></div><div class="pac-label" style="left:208px">Kelly</div></div>
+        </div>
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo pol">P</span>Poltrona 5</div>
+          <div class="lane" style="width:676px"><div class="seg recepcao" style="left:260px;width:26px" title="Fernando Assis — recepcao 09:40-09:50"></div><div class="seg preparo" style="left:286px;width:52px" title="Fernando Assis — preparo 09:50-10:10"></div><div class="seg infusao" style="left:338px;width:312px" title="Fernando Assis — infusao 10:10-12:10"></div><div class="seg higiene" style="left:650px;width:26px" title="Fernando Assis — higiene 12:10-12:20"></div><div class="pac-label" style="left:260px">Fernando</div></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"></div>
+        </div>
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo pol">P</span>Poltrona 6</div>
+          <div class="lane" style="width:676px"></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"></div>
+        </div>
+        <div class="linha">
+          <div class="rotulo"><span class="badge-tipo mac">M</span>Maca 1</div>
+          <div class="lane" style="width:676px"><div class="seg recepcao" style="left:156px;width:26px" title="Daniel Xavier — recepcao 09:00-09:10"></div><div class="seg preparo" style="left:182px;width:52px" title="Daniel Xavier — preparo 09:10-09:30"></div><div class="seg infusao" style="left:234px;width:312px" title="Daniel Xavier — infusao 09:30-11:30"></div><div class="seg higiene" style="left:546px;width:26px" title="Daniel Xavier — higiene 11:30-11:40"></div><div class="pac-label" style="left:156px">Daniel</div></div>
+          <div class="lane-gap"></div>
+          <div class="lane" style="width:624px"><div class="seg recepcao" style="left:52px;width:26px" title="Heitor Farias — recepcao 13:40-13:50"></div><div class="seg preparo" style="left:78px;width:52px" title="Heitor Farias — preparo 13:50-14:10"></div><div class="seg infusao" style="left:130px;width:312px" title="Heitor Farias — infusao 14:10-16:10"></div><div class="seg higiene" style="left:442px;width:26px" title="Heitor Farias — higiene 16:10-16:20"></div><div class="pac-label" style="left:52px">Heitor</div></div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+  <div class="legenda">
+    <div class="item"><span class="sw recepcao"></span>Recepção (10 min, não ocupa a poltrona/maca)</div>
+    <div class="item"><span class="sw preparo"></span>Preparo da equipe (20 min, equipe ocupada)</div>
+    <div class="item"><span class="sw infusao"></span>Infusão (120 min)</div>
+    <div class="item"><span class="sw higiene"></span>Higiene (10 min, poltrona/maca indisponível)</div>
+  </div>
+
+  <div class="nota">
+    <strong>Achado da simulação:</strong> mesmo lotando a agenda no limite absoluto, o pico de uso simultâneo nunca passa de 6 poltronas — a 7ª poltrona da quarta-feira nunca chega a ser necessária, porque quem trava o ritmo é sempre a equipe de preparo (1 paciente por vez a cada 20 min), não o número de cadeiras. Com esse ritmo, cabem até 11 pacientes por dia (6 de manhã + 5 à tarde) somando poltrona e maca juntas — usar a maca não reduz a capacidade da poltrona, só substitui uma vaga por outra dentro do mesmo ritmo da equipe.
+  </div>
+</main>
+
+<footer>
+  Clínica Médica Assis · simulação gerada para validar o modelo de capacidade antes do ajuste no código
+</footer>
+
+<script>
+document.querySelectorAll('.tab').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tab').forEach(function(b) { b.classList.remove('ativo'); });
+    btn.classList.add('ativo');
+    var alvo = btn.getAttribute('data-target');
+    document.querySelectorAll('.dia-painel').forEach(function(p) {
+      p.style.display = (p.getAttribute('data-dia') === alvo) ? 'block' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>
