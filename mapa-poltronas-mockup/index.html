@@ -72,6 +72,28 @@
   .turno-bloco { margin-bottom: 16px; }
   .turno-bloco:last-child { margin-bottom: 0; }
   .turno-titulo { font-size: 0.72rem; font-weight: 700; color: var(--verde-medio); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 8px; }
+
+  .input-horario-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .input-horario-row input[type="time"] {
+    font-family: inherit; font-size: 1.1rem; font-weight: 700; color: var(--verde-escuro);
+    border: 2px solid var(--azul-claro); border-radius: 10px; padding: 9px 12px; background: #FBFEFD;
+  }
+  .input-horario-row input[type="time"]:focus { outline: none; border-color: var(--verde-medio); }
+  .btn-verificar {
+    font-family: inherit; font-size: 0.82rem; font-weight: 700; color: white;
+    background: var(--verde-escuro); border: none; border-radius: 10px; padding: 10px 18px; cursor: pointer;
+  }
+  .btn-verificar:hover { background: var(--verde-medio); }
+  .expediente-hint { font-size: 0.72rem; color: var(--texto-claro); margin-top: 8px; }
+
+  .erro-horario {
+    display: none; background: var(--vermelho-bg); border: 2px solid #EFC9C9; border-radius: 10px;
+    padding: 10px 14px; font-size: 0.8rem; color: var(--vermelho-texto); margin-top: 12px; font-weight: 600;
+  }
+  .erro-horario.mostrar { display: block; }
+
+  .sugestoes { margin-top: 14px; }
+  .sugestoes-titulo { font-size: 0.7rem; font-weight: 700; color: var(--texto-claro); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 8px; }
   .chips { display: flex; flex-wrap: wrap; gap: 8px; }
   .chip {
     position: relative; font-family: inherit; font-size: 0.78rem; font-weight: 600;
@@ -81,8 +103,6 @@
   .chip .qtd { display:block; font-size: 0.62rem; font-weight: 700; margin-top: 2px; }
   .chip.livre .qtd { color: var(--verde-medio); }
   .chip.zero .qtd { color: var(--vermelho-texto); }
-  .chip.invalido { color: var(--texto-claro); border-color: #EDEDED; background: #FAFAFA; cursor: not-allowed; }
-  .chip.invalido .qtd { color: var(--texto-claro); }
   .chip.selecionado { background: var(--verde-escuro); border-color: var(--verde-escuro); color: white; }
   .chip.selecionado .qtd { color: #CFEFE3; }
 
@@ -172,7 +192,7 @@
 
 <main>
   <div class="banner">
-    <strong>Como funciona este protótipo:</strong> ao clicar num horário, o mapa abaixo recalcula, em tempo real, quais poltronas (ou a maca) estão disponíveis naquele instante — juntando três regras ao mesmo tempo:
+    <strong>Como funciona este protótipo:</strong> digite qualquer horário de chegada — sem grade fixa — e o mapa abaixo recalcula, em tempo real, quais poltronas (ou a maca) estão disponíveis naquele instante, juntando três regras ao mesmo tempo:
     <ul>
       <li><strong>Equipe:</strong> só prepara 1 paciente por vez (10 min recepção + 20 min preparo). Se a equipe já estiver ocupada nesse horário, <em>nenhuma</em> poltrona fica disponível, mesmo que fisicamente vazia.</li>
       <li><strong>Unidade (poltrona/maca):</strong> cada uma atende 1 paciente por vez, do início da recepção até 10 min de higiene após a infusão.</li>
@@ -187,15 +207,17 @@
   </div>
 
   <div class="card">
-    <h2>1. Escolha o horário de chegada</h2>
-    <p class="sub">O número abaixo de cada horário mostra quantas poltronas/maca ficariam disponíveis se você escolher esse horário agora.</p>
-    <div class="turno-bloco">
-      <div class="turno-titulo">Manhã · 08:00–12:20</div>
-      <div class="chips" id="chips-manha"></div>
+    <h2>1. Digite o horário de chegada</h2>
+    <p class="sub">Sem grade fixa — digite qualquer horário. O sistema calcula a disponibilidade na hora.</p>
+    <div class="input-horario-row">
+      <input type="time" id="input-horario" step="60">
+      <button class="btn-verificar" id="btn-verificar" type="button">Verificar disponibilidade</button>
     </div>
-    <div class="turno-bloco">
-      <div class="turno-titulo">Tarde · 13:20–17:20</div>
-      <div class="chips" id="chips-tarde"></div>
+    <div class="expediente-hint">Expediente: 08:00–12:20 (manhã) e 13:20–17:20 (tarde).</div>
+    <div class="erro-horario" id="erro-horario"></div>
+    <div class="sugestoes" id="sugestoes" style="display:none">
+      <div class="sugestoes-titulo">Horários próximos</div>
+      <div class="chips" id="chips-sugestoes"></div>
     </div>
   </div>
 
@@ -254,6 +276,33 @@ function turnoDe(C){
   if(C+TOTAL<=TARDE[1]) return {nome:'tarde', ini:TARDE[0], fim:TARDE[1]};
   return null;
 }
+// versão com motivo do erro, pro campo de digitação — espelha turnoDe() do common.py
+function turnoDeComErro(C){
+  if(C < MANHA[0]) return {erro: "Antes do início do expediente (08:00)."};
+  if(C + TOTAL <= MANHA[1]) return {ok:true, nome:'manha', ini:MANHA[0], fim:MANHA[1]};
+  if(C < TARDE[0]){
+    if(C < MANHA[1]) return {erro: "Esse horário não cabe antes do almoço — a ocupação passaria das 12:20."};
+    return {erro: "Esse horário cai no intervalo de almoço (12:20–13:20)."};
+  }
+  if(C + TOTAL <= TARDE[1]) return {ok:true, nome:'tarde', ini:TARDE[0], fim:TARDE[1]};
+  return {erro: "Esse horário ultrapassa o fim do expediente (17:20)."};
+}
+function parseHorario(str){
+  if(!str) return null;
+  const m = str.match(/^(\d{1,2}):(\d{2})$/);
+  if(!m) return null;
+  const h = parseInt(m[1],10), mi = parseInt(m[2],10);
+  if(h<0||h>23||mi<0||mi>59) return null;
+  return h*60+mi;
+}
+function horariosValidosProximos(base, max){
+  const out = [];
+  for(let t=MANHA[0]; t<=TARDE[1]; t+=5){
+    if(turnoDeComErro(t).ok) out.push(t);
+  }
+  out.sort((a,b) => Math.abs(a-base) - Math.abs(b-base));
+  return out.slice(0, max).sort((a,b) => a-b);
+}
 function equipeLivre(C, existentes){
   return !existentes.some(e => overlap(C+OCUP_OFFSET, C+OCUP_OFFSET+ENFERM, e.chegada+OCUP_OFFSET, e.chegada+OCUP_OFFSET+ENFERM));
 }
@@ -303,6 +352,8 @@ const DIAS = {
 
 let diaAtual = "terca";
 let horarioSelecionado = null;
+let baseSugestoes = 540; // 09:00 — só usado pra centralizar as sugestões
+let sugestoesAtivas = false;
 
 function unidadesDoDia(dia){
   const d = DIAS[dia];
@@ -312,35 +363,49 @@ function unidadesDoDia(dia){
   return us;
 }
 
-function renderChips(){
+function verificarHorario(t){
+  const erroBox = document.getElementById("erro-horario");
+  baseSugestoes = t;
+  sugestoesAtivas = true;
+
+  const turno = turnoDeComErro(t);
+  if(!turno.ok){
+    erroBox.classList.add("mostrar");
+    erroBox.textContent = "⚠ " + turno.erro;
+    horarioSelecionado = null;
+  } else {
+    erroBox.classList.remove("mostrar");
+    horarioSelecionado = t;
+  }
+  document.getElementById("confirmacao").classList.remove("mostrar");
+  renderTudo();
+}
+
+function renderSugestoes(){
+  const box = document.getElementById("sugestoes");
+  const cont = document.getElementById("chips-sugestoes");
+  if(!sugestoesAtivas){ box.style.display = "none"; return; }
+  box.style.display = "block";
+
   const d = DIAS[diaAtual];
   const ex = d.agendamentos;
   const unidades = unidadesDoDia(diaAtual);
+  const candidatos = horariosValidosProximos(baseSugestoes, 6);
 
-  function bloco(container, grid){
-    container.innerHTML = "";
-    for(let t=grid[0]; t<grid[1]; t+=20){
-      const turno = turnoDe(t);
-      const chip = document.createElement("button");
-      chip.className = "chip";
-      chip.type = "button";
-      if(!turno){
-        chip.classList.add("invalido");
-        chip.disabled = true;
-        chip.innerHTML = toHM(t) + '<span class="qtd">não cabe</span>';
-      } else {
-        const eqLivre = equipeLivre(t, ex);
-        const livres = eqLivre ? unidades.filter(u => unidadeLivre(u.id, t, ex)).length : 0;
-        chip.classList.add(livres>0 ? "livre" : "zero");
-        if(t === horarioSelecionado) chip.classList.add("selecionado");
-        chip.innerHTML = toHM(t) + '<span class="qtd">' + livres + ' livre' + (livres===1?'':'s') + '</span>';
-        chip.addEventListener("click", () => { horarioSelecionado = t; renderTudo(); });
-      }
-      container.appendChild(chip);
-    }
-  }
-  bloco(document.getElementById("chips-manha"), GRID_MANHA);
-  bloco(document.getElementById("chips-tarde"), GRID_TARDE);
+  cont.innerHTML = "";
+  candidatos.forEach(t => {
+    const eqLivre = equipeLivre(t, ex);
+    const livres = eqLivre ? unidades.filter(u => unidadeLivre(u.id, t, ex)).length : 0;
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "chip " + (livres>0 ? "livre" : "zero") + (t===horarioSelecionado ? " selecionado" : "");
+    chip.innerHTML = toHM(t) + '<span class="qtd">' + livres + ' livre' + (livres===1?'':'s') + '</span>';
+    chip.addEventListener("click", () => {
+      document.getElementById("input-horario").value = toHM(t);
+      verificarHorario(t);
+    });
+    cont.appendChild(chip);
+  });
 }
 
 function renderMapa(){
@@ -469,7 +534,7 @@ function renderGantt(){
 }
 
 function renderTudo(){
-  renderChips();
+  renderSugestoes();
   renderMapa();
   renderGantt();
 }
@@ -480,6 +545,9 @@ document.querySelectorAll(".tab").forEach(btn => {
     btn.classList.add("ativo");
     diaAtual = btn.getAttribute("data-dia");
     horarioSelecionado = null;
+    sugestoesAtivas = false;
+    document.getElementById("input-horario").value = "";
+    document.getElementById("erro-horario").classList.remove("mostrar");
     document.getElementById("confirmacao").classList.remove("mostrar");
     renderTudo();
   });
@@ -489,6 +557,21 @@ document.getElementById("gantt-toggle").addEventListener("click", () => {
   const area = document.getElementById("gantt-area");
   const mostrando = area.classList.toggle("mostrar");
   document.getElementById("gantt-toggle").textContent = mostrando ? "ocultar" : "mostrar";
+});
+
+const inputHorario = document.getElementById("input-horario");
+document.getElementById("btn-verificar").addEventListener("click", () => {
+  const t = parseHorario(inputHorario.value);
+  if(t == null){
+    const erroBox = document.getElementById("erro-horario");
+    erroBox.classList.add("mostrar");
+    erroBox.textContent = "⚠ Informe um horário válido.";
+    return;
+  }
+  verificarHorario(t);
+});
+inputHorario.addEventListener("keydown", (e) => {
+  if(e.key === "Enter") document.getElementById("btn-verificar").click();
 });
 
 renderTudo();
