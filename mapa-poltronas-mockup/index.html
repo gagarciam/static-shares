@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup — Mapa de Poltronas | Agenda Cetamina ASSIS</title>
+<style>
+  :root {
+    --verde-escuro: #07614A;
+    --verde-medio: #03694F;
+    --verde-claro: #E9FCE2;
+    --azul-claro: #DAF7F3;
+    --cinza-escuro: #303B37;
+    --texto-medio: #555;
+    --texto-claro: #999;
+    --aviso-texto: #8A6100;
+    --aviso-bg: #FFF6E0;
+    --vermelho-texto: #9B3B3B;
+    --vermelho-bg: #FBEAEA;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    color: var(--cinza-escuro);
+    background: var(--verde-claro);
+    line-height: 1.6;
+  }
+  header {
+    background: linear-gradient(135deg, #07614A 0%, #03694F 100%);
+    color: white;
+    padding: 34px 20px 26px;
+    text-align: center;
+  }
+  header .marca {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin-bottom: 8px;
+  }
+  header h1 { margin: 0 0 8px; font-size: 1.6rem; font-weight: 600; }
+  header p { margin: 0 auto; opacity: 0.95; font-size: 0.9rem; max-width: 620px; }
+  .tag-mockup {
+    display: inline-block; margin-top: 12px; background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.4); border-radius: 20px; padding: 4px 14px;
+    font-size: 0.72rem; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 600;
+  }
+  main { max-width: 980px; margin: 0 auto; padding: 24px 16px 60px; }
+  .banner {
+    background: white; border: 2px solid var(--azul-claro); border-left: 5px solid var(--verde-medio);
+    border-radius: 12px; padding: 18px 22px; margin-bottom: 22px;
+    font-size: 0.87rem; color: var(--texto-medio);
+  }
+  .banner strong { color: var(--verde-escuro); }
+  .banner ul { margin: 8px 0 0; padding-left: 20px; }
+  .banner li { margin-bottom: 4px; }
+
+  .tabs { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+  .tab {
+    font-family: inherit; font-size: 0.85rem; font-weight: 600; padding: 9px 18px;
+    border-radius: 20px; border: 2px solid var(--azul-claro); background: white; color: var(--texto-medio);
+    cursor: pointer;
+  }
+  .tab.ativo { background: var(--verde-escuro); border-color: var(--verde-escuro); color: white; }
+
+  .card { background: white; border: 2px solid var(--azul-claro); border-radius: 14px; padding: 20px; margin-bottom: 20px; }
+  .card h2 { margin: 0 0 4px; font-size: 1.02rem; color: var(--verde-escuro); }
+  .card .sub { margin: 0 0 16px; font-size: 0.78rem; color: var(--texto-claro); }
+
+  .turno-bloco { margin-bottom: 16px; }
+  .turno-bloco:last-child { margin-bottom: 0; }
+  .turno-titulo { font-size: 0.72rem; font-weight: 700; color: var(--verde-medio); text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 8px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    position: relative; font-family: inherit; font-size: 0.78rem; font-weight: 600;
+    padding: 9px 10px 9px 12px; border-radius: 10px; border: 2px solid var(--azul-claro);
+    background: #FBFEFD; color: var(--cinza-escuro); cursor: pointer; min-width: 66px; text-align: center;
+  }
+  .chip .qtd { display:block; font-size: 0.62rem; font-weight: 700; margin-top: 2px; }
+  .chip.livre .qtd { color: var(--verde-medio); }
+  .chip.zero .qtd { color: var(--vermelho-texto); }
+  .chip.invalido { color: var(--texto-claro); border-color: #EDEDED; background: #FAFAFA; cursor: not-allowed; }
+  .chip.invalido .qtd { color: var(--texto-claro); }
+  .chip.selecionado { background: var(--verde-escuro); border-color: var(--verde-escuro); color: white; }
+  .chip.selecionado .qtd { color: #CFEFE3; }
+
+  .aviso-equipe {
+    display: none; background: var(--aviso-bg); border: 2px solid #F0DFA8; border-radius: 10px;
+    padding: 10px 14px; font-size: 0.8rem; color: var(--aviso-texto); margin-bottom: 16px; font-weight: 600;
+  }
+  .aviso-equipe.mostrar { display: block; }
+
+  .mapa-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(126px, 1fr)); gap: 10px; }
+  .unidade-card {
+    border-radius: 12px; padding: 12px 12px 10px; border: 2px solid var(--azul-claro);
+    background: #FBFEFD; text-align: left; position: relative; min-height: 92px;
+  }
+  .unidade-card .rotulo { display:flex; align-items:center; gap:6px; font-size: 0.82rem; font-weight: 700; color: var(--cinza-escuro); }
+  .badge-tipo { display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; border-radius:5px; font-size:0.62rem; font-weight:700; flex:none; }
+  .badge-tipo.pol { background: var(--azul-claro); color: var(--verde-medio); }
+  .badge-tipo.mac { background: #FBEAF0; color: #993556; }
+  .unidade-status { margin-top: 8px; font-size: 0.72rem; font-weight: 600; }
+  .unidade-detalhe { margin-top: 3px; font-size: 0.68rem; color: var(--texto-claro); line-height: 1.4; }
+
+  .unidade-card.neutro { opacity: 0.55; }
+  .unidade-card.disponivel { border-color: #B9E8C9; background: #F2FBF5; cursor: pointer; }
+  .unidade-card.disponivel .unidade-status { color: var(--verde-medio); }
+  .unidade-card.disponivel:hover { border-color: var(--verde-medio); box-shadow: 0 2px 8px rgba(3,105,79,0.12); }
+  .unidade-card.ocupada { background: var(--vermelho-bg); border-color: #EFC9C9; }
+  .unidade-card.ocupada .unidade-status { color: var(--vermelho-texto); }
+  .unidade-card.bloqueada-equipe { background: var(--aviso-bg); border-color: #F0DFA8; }
+  .unidade-card.bloqueada-equipe .unidade-status { color: var(--aviso-texto); }
+
+  .confirmacao {
+    display: none; margin-top: 18px; padding: 16px 18px; border-radius: 12px;
+    background: var(--verde-claro); border: 2px solid #B9E8C9;
+  }
+  .confirmacao.mostrar { display: block; }
+  .confirmacao h3 { margin: 0 0 4px; font-size: 0.92rem; color: var(--verde-escuro); }
+  .confirmacao .sub { margin: 0 0 12px; font-size: 0.76rem; color: var(--texto-medio); }
+  .fase-barra { display: flex; height: 26px; border-radius: 6px; overflow: hidden; margin-bottom: 8px; }
+  .fase-seg { display:flex; align-items:center; justify-content:center; font-size: 0.62rem; font-weight: 700; color: white; }
+  .fase-seg.recepcao { background: #9A9A93; }
+  .fase-seg.preparo { background: #E4844F; }
+  .fase-seg.infusao { background: #279C74; }
+  .fase-seg.higiene { background: #4FADA4; }
+  .fase-legenda { display: flex; flex-wrap: wrap; gap: 12px; font-size: 0.7rem; color: var(--texto-medio); }
+  .fase-legenda .item { display:flex; align-items:center; gap:5px; }
+  .fase-legenda .sw { width: 11px; height: 11px; border-radius: 3px; }
+
+  .gantt-toggle {
+    font-family: inherit; font-size: 0.8rem; font-weight: 600; color: var(--verde-medio);
+    background: none; border: none; cursor: pointer; padding: 0; text-decoration: underline;
+  }
+  .gantt-area { display: none; margin-top: 16px; }
+  .gantt-area.mostrar { display: block; }
+  .gantt-wrap { overflow-x: auto; }
+  .g-linha { display: flex; align-items: center; height: 36px; border-bottom: 1px solid #F0F0F0; }
+  .g-rotulo { width: 76px; flex: none; font-size: 0.72rem; font-weight: 600; display:flex; align-items:center; gap:5px; }
+  .g-lane { position: relative; height: 24px; flex: none; background: #FAFAFA; border-radius: 4px; }
+  .g-seg { position: absolute; top: 0; height: 24px; border-radius: 3px; }
+  .g-seg.recepcao { background: #D8D8D2; }
+  .g-seg.preparo { background: #F0997B; }
+  .g-seg.infusao { background: #5DCAA5; }
+  .g-seg.higiene { background: repeating-linear-gradient(45deg, #DAF7F3, #DAF7F3 3px, #C6EFE9 3px, #C6EFE9 6px); }
+  .g-cab { display: flex; margin-bottom: 4px; }
+  .g-cab-rotulo { width: 76px; flex: none; }
+  .g-cab-lane { position: relative; height: 14px; font-size: 0.58rem; color: var(--texto-claro); }
+  .g-cab-lane span { position: absolute; transform: translateX(-50%); }
+  .g-almoco { width: 16px; flex: none; }
+
+  .legenda-geral { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 16px; font-size: 0.76rem; color: var(--texto-medio); }
+  .legenda-geral .item { display:flex; align-items:center; gap:6px; }
+  .legenda-geral .dot { width: 12px; height: 12px; border-radius: 4px; flex: none; }
+  .dot.disp { background: #F2FBF5; border: 2px solid #B9E8C9; }
+  .dot.ocup { background: var(--vermelho-bg); border: 2px solid #EFC9C9; }
+  .dot.eq { background: var(--aviso-bg); border: 2px solid #F0DFA8; }
+
+  footer { text-align: center; padding: 22px; font-size: 0.75rem; color: var(--texto-medio); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="marca">ASSIS · clínica médica</div>
+  <h1>Mapa de Poltronas — nova forma de agendar Cetamina</h1>
+  <p>Protótipo interativo: escolha um horário, veja na hora quais poltronas e a maca estão livres — já considerando recepção, preparo da equipe e higiene — e reserve clicando na unidade.</p>
+  <div class="tag-mockup">Mockup · dados 100% simulados · não conectado ao sistema real</div>
+</header>
+
+<main>
+  <div class="banner">
+    <strong>Como funciona este protótipo:</strong> ao clicar num horário, o mapa abaixo recalcula, em tempo real, quais poltronas (ou a maca) estão disponíveis naquele instante — juntando três regras ao mesmo tempo:
+    <ul>
+      <li><strong>Equipe:</strong> só prepara 1 paciente por vez (10 min recepção + 20 min preparo). Se a equipe já estiver ocupada nesse horário, <em>nenhuma</em> poltrona fica disponível, mesmo que fisicamente vazia.</li>
+      <li><strong>Unidade (poltrona/maca):</strong> cada uma atende 1 paciente por vez, do início da recepção até 10 min de higiene após a infusão.</li>
+      <li><strong>Turno:</strong> o horário só é oferecido se o paciente conseguir sair a tempo do fim do turno (12h20 ou 17h20).</li>
+    </ul>
+  </div>
+
+  <div class="tabs">
+    <button class="tab ativo" data-dia="terca">Terça-feira</button>
+    <button class="tab" data-dia="quarta">Quarta-feira</button>
+    <button class="tab" data-dia="quinta">Quinta-feira</button>
+  </div>
+
+  <div class="card">
+    <h2>1. Escolha o horário de chegada</h2>
+    <p class="sub">O número abaixo de cada horário mostra quantas poltronas/maca ficariam disponíveis se você escolher esse horário agora.</p>
+    <div class="turno-bloco">
+      <div class="turno-titulo">Manhã · 08:00–12:20</div>
+      <div class="chips" id="chips-manha"></div>
+    </div>
+    <div class="turno-bloco">
+      <div class="turno-titulo">Tarde · 13:20–17:20</div>
+      <div class="chips" id="chips-tarde"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>2. Mapa de poltronas e maca</h2>
+    <p class="sub" id="mapa-sub">Selecione um horário acima para ver a disponibilidade.</p>
+    <div class="aviso-equipe" id="aviso-equipe">⚠ A equipe de preparo já está com outro paciente nesse horário — nenhuma unidade pode ser aberta, mesmo com poltrona física livre.</div>
+    <div class="mapa-grid" id="mapa-grid"></div>
+
+    <div class="confirmacao" id="confirmacao">
+      <h3 id="conf-titulo">Reserva confirmada</h3>
+      <p class="sub" id="conf-sub"></p>
+      <div class="fase-barra" id="conf-barra"></div>
+      <div class="fase-legenda">
+        <div class="item"><span class="sw" style="background:#9A9A93"></span>Recepção</div>
+        <div class="item"><span class="sw" style="background:#E4844F"></span>Preparo</div>
+        <div class="item"><span class="sw" style="background:#279C74"></span>Infusão</div>
+        <div class="item"><span class="sw" style="background:#4FADA4"></span>Higiene</div>
+      </div>
+    </div>
+
+    <div class="legenda-geral">
+      <div class="item"><span class="dot disp"></span>Disponível</div>
+      <div class="item"><span class="dot ocup"></span>Ocupada nesse horário</div>
+      <div class="item"><span class="dot eq"></span>Bloqueada — equipe ocupada</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>3. Agenda completa do dia <button class="gantt-toggle" id="gantt-toggle">mostrar</button></h2>
+    <p class="sub">Todas as reservas do dia (incluindo as que você acabou de simular), lado a lado por poltrona/maca.</p>
+    <div class="gantt-area" id="gantt-area">
+      <div class="gantt-wrap" id="gantt-wrap"></div>
+    </div>
+  </div>
+</main>
+
+<footer>ASSIS · clínica médica — protótipo de UX, dados simulados, julho/2026</footer>
+
+<script>
+const RECEP=10, ENFERM=20, INFUSAO=120, HIGIENE=10;
+const OCUP_OFFSET=RECEP;
+const TOTAL=OCUP_OFFSET+ENFERM+INFUSAO;      // 150 — fim da ocupação "própria" do paciente
+const TOTAL_HIG=TOTAL+HIGIENE;               // 160 — até quando a unidade fica indisponível p/ outro
+const MANHA=[480,740], TARDE=[800,1040];
+const GRID_MANHA=[480,720], GRID_TARDE=[800,1040];
+
+function toHM(m){const h=Math.floor(m/60),mi=m%60;return String(h).padStart(2,'0')+':'+String(mi).padStart(2,'0');}
+function overlap(a1,a2,b1,b2){return a1<b2 && b1<a2;}
+
+function turnoDe(C){
+  if(C==null) return null;
+  if(C<MANHA[0]) return null;
+  if(C+TOTAL<=MANHA[1]) return {nome:'manha', ini:MANHA[0], fim:MANHA[1]};
+  if(C<TARDE[0]) return null;
+  if(C+TOTAL<=TARDE[1]) return {nome:'tarde', ini:TARDE[0], fim:TARDE[1]};
+  return null;
+}
+function equipeLivre(C, existentes){
+  return !existentes.some(e => overlap(C+OCUP_OFFSET, C+OCUP_OFFSET+ENFERM, e.chegada+OCUP_OFFSET, e.chegada+OCUP_OFFSET+ENFERM));
+}
+function conflitoEquipe(C, existentes){
+  return existentes.find(e => overlap(C+OCUP_OFFSET, C+OCUP_OFFSET+ENFERM, e.chegada+OCUP_OFFSET, e.chegada+OCUP_OFFSET+ENFERM));
+}
+function unidadeLivre(unidade, C, existentes){
+  return !existentes.some(e => e.unidade===unidade && overlap(C+OCUP_OFFSET, C+TOTAL_HIG, e.chegada+OCUP_OFFSET, e.chegada+TOTAL_HIG));
+}
+function conflitoUnidade(unidade, C, existentes){
+  return existentes.find(e => e.unidade===unidade && overlap(C+OCUP_OFFSET, C+TOTAL_HIG, e.chegada+OCUP_OFFSET, e.chegada+TOTAL_HIG));
+}
+
+const NOMES_RESERVA = ["Renata Cardoso","Vinícius Tavares","Beatriz Monteiro","Gustavo Pires","Larissa Andrade","Caio Ribeiro","Débora Nascimento","Matheus Correia","Priscila Barros","Rodrigo Vasconcelos"];
+let nomeIdx = 0;
+function proximoNomeFake(){ const n = NOMES_RESERVA[nomeIdx % NOMES_RESERVA.length]; nomeIdx++; return n; }
+
+const DIAS = {
+  terca: {
+    label: "Terça-feira", poltronas: 6, macas: 1,
+    agendamentos: [
+      {unidade:"P1", chegada: 480, paciente: "Simone Ferraz"},
+      {unidade:"P2", chegada: 500, paciente: "André Bittencourt"},
+      {unidade:"P3", chegada: 520, paciente: "Cláudia Rezende"},
+      {unidade:"M1", chegada: 540, paciente: "Otávio Chaves"},
+    ]
+  },
+  quarta: {
+    label: "Quarta-feira", poltronas: 7, macas: 1,
+    agendamentos: [
+      {unidade:"P1", chegada: 480, paciente: "Helena Siqueira"},
+      {unidade:"P2", chegada: 500, paciente: "Felipe Aragão"},
+      {unidade:"P4", chegada: 520, paciente: "Juliana Marques"},
+      {unidade:"P5", chegada: 540, paciente: "Tiago Feitosa"},
+      {unidade:"M1", chegada: 560, paciente: "Patrícia Loureiro"},
+    ]
+  },
+  quinta: {
+    label: "Quinta-feira", poltronas: 6, macas: 1,
+    agendamentos: [
+      {unidade:"P2", chegada: 480, paciente: "Ricardo Salgado"},
+      {unidade:"P3", chegada: 500, paciente: "Amanda Vilela"},
+      {unidade:"P6", chegada: 540, paciente: "Marcelo Quintão"},
+    ]
+  }
+};
+
+let diaAtual = "terca";
+let horarioSelecionado = null;
+
+function unidadesDoDia(dia){
+  const d = DIAS[dia];
+  const us = [];
+  for(let i=1;i<=d.poltronas;i++) us.push({id:"P"+i, tipo:"pol", label:"Poltrona "+i});
+  for(let i=1;i<=d.macas;i++) us.push({id:"M"+i, tipo:"mac", label:"Maca "+i});
+  return us;
+}
+
+function renderChips(){
+  const d = DIAS[diaAtual];
+  const ex = d.agendamentos;
+  const unidades = unidadesDoDia(diaAtual);
+
+  function bloco(container, grid){
+    container.innerHTML = "";
+    for(let t=grid[0]; t<grid[1]; t+=20){
+      const turno = turnoDe(t);
+      const chip = document.createElement("button");
+      chip.className = "chip";
+      chip.type = "button";
+      if(!turno){
+        chip.classList.add("invalido");
+        chip.disabled = true;
+        chip.innerHTML = toHM(t) + '<span class="qtd">não cabe</span>';
+      } else {
+        const eqLivre = equipeLivre(t, ex);
+        const livres = eqLivre ? unidades.filter(u => unidadeLivre(u.id, t, ex)).length : 0;
+        chip.classList.add(livres>0 ? "livre" : "zero");
+        if(t === horarioSelecionado) chip.classList.add("selecionado");
+        chip.innerHTML = toHM(t) + '<span class="qtd">' + livres + ' livre' + (livres===1?'':'s') + '</span>';
+        chip.addEventListener("click", () => { horarioSelecionado = t; renderTudo(); });
+      }
+      container.appendChild(chip);
+    }
+  }
+  bloco(document.getElementById("chips-manha"), GRID_MANHA);
+  bloco(document.getElementById("chips-tarde"), GRID_TARDE);
+}
+
+function renderMapa(){
+  const d = DIAS[diaAtual];
+  const ex = d.agendamentos;
+  const unidades = unidadesDoDia(diaAtual);
+  const grid = document.getElementById("mapa-grid");
+  const sub = document.getElementById("mapa-sub");
+  const avisoEq = document.getElementById("aviso-equipe");
+  grid.innerHTML = "";
+
+  if(horarioSelecionado == null){
+    sub.textContent = "Selecione um horário acima para ver a disponibilidade.";
+    avisoEq.classList.remove("mostrar");
+    unidades.forEach(u => {
+      const card = document.createElement("div");
+      card.className = "unidade-card neutro";
+      card.innerHTML = '<div class="rotulo"><span class="badge-tipo ' + u.tipo + '">' + (u.tipo==='pol'?'P':'M') + '</span>' + u.label + '</div><div class="unidade-status">—</div>';
+      grid.appendChild(card);
+    });
+    return;
+  }
+
+  const C = horarioSelecionado;
+  sub.textContent = "Disponibilidade para chegada às " + toHM(C) + ":";
+  const eqLivre = equipeLivre(C, ex);
+  const eqConf = conflitoEquipe(C, ex);
+
+  if(!eqLivre){
+    avisoEq.classList.add("mostrar");
+    avisoEq.textContent = "⚠ A equipe de preparo já está com " + eqConf.paciente + " nesse horário (livre às " + toHM(eqConf.chegada + OCUP_OFFSET + ENFERM) + ") — nenhuma unidade pode ser aberta, mesmo com poltrona física livre.";
+  } else {
+    avisoEq.classList.remove("mostrar");
+  }
+
+  unidades.forEach(u => {
+    const card = document.createElement("div");
+    const uLivre = unidadeLivre(u.id, C, ex);
+    let statusHtml = "";
+    if(!eqLivre){
+      card.className = "unidade-card bloqueada-equipe";
+      statusHtml = '<div class="unidade-status">Bloqueada</div><div class="unidade-detalhe">equipe ocupada até ' + toHM(eqConf.chegada + OCUP_OFFSET + ENFERM) + '</div>';
+    } else if(!uLivre){
+      const conf = conflitoUnidade(u.id, C, ex);
+      card.className = "unidade-card ocupada";
+      statusHtml = '<div class="unidade-status">Ocupada</div><div class="unidade-detalhe">' + conf.paciente + '<br>livre a partir de ' + toHM(conf.chegada + TOTAL_HIG) + '</div>';
+    } else {
+      card.className = "unidade-card disponivel";
+      statusHtml = '<div class="unidade-status">Disponível</div><div class="unidade-detalhe">clique para reservar</div>';
+      card.addEventListener("click", () => reservar(u.id));
+    }
+    card.innerHTML = '<div class="rotulo"><span class="badge-tipo ' + u.tipo + '">' + (u.tipo==='pol'?'P':'M') + '</span>' + u.label + '</div>' + statusHtml;
+    grid.appendChild(card);
+  });
+}
+
+function reservar(unidadeId){
+  const d = DIAS[diaAtual];
+  const C = horarioSelecionado;
+  const nome = proximoNomeFake();
+  d.agendamentos.push({unidade: unidadeId, chegada: C, paciente: nome});
+
+  const confBox = document.getElementById("confirmacao");
+  confBox.classList.add("mostrar");
+  document.getElementById("conf-titulo").textContent = "Reserva confirmada — " + unidadeId + " · " + nome;
+  document.getElementById("conf-sub").textContent = "Chegada " + toHM(C) + " · recepção → preparo → infusão → higiene, liberando a unidade às " + toHM(C+TOTAL_HIG) + ".";
+
+  const barra = document.getElementById("conf-barra");
+  const dur = TOTAL_HIG;
+  const segs = [
+    {cls:"recepcao", w: RECEP, label: toHM(C)+"–"+toHM(C+RECEP)},
+    {cls:"preparo", w: ENFERM, label: toHM(C+RECEP)+"–"+toHM(C+RECEP+ENFERM)},
+    {cls:"infusao", w: INFUSAO, label: toHM(C+RECEP+ENFERM)+"–"+toHM(C+TOTAL)},
+    {cls:"higiene", w: HIGIENE, label: toHM(C+TOTAL)+"–"+toHM(C+TOTAL_HIG)},
+  ];
+  barra.innerHTML = segs.map(s => '<div class="fase-seg ' + s.cls + '" style="width:' + (s.w/dur*100) + '%" title="' + s.label + '"></div>').join("");
+
+  renderTudo();
+}
+
+function renderGantt(){
+  const d = DIAS[diaAtual];
+  const ex = d.agendamentos;
+  const unidades = unidadesDoDia(diaAtual);
+  const wrap = document.getElementById("gantt-wrap");
+
+  const SCALE = 2.2; // px por minuto
+  const wManha = (MANHA[1]-MANHA[0])*SCALE;
+  const wTarde = (TARDE[1]-TARDE[0])*SCALE;
+
+  function ticks(win, w){
+    let html = '<div class="g-cab-lane" style="width:' + w + 'px">';
+    for(let t=win[0]; t<=win[1]; t+=40){
+      html += '<span style="left:' + ((t-win[0])*SCALE) + 'px">' + toHM(t) + '</span>';
+    }
+    return html + '</div>';
+  }
+
+  let html = '<div class="g-cab"><div class="g-cab-rotulo"></div>' + ticks(MANHA, wManha) + '<div class="g-almoco"></div>' + ticks(TARDE, wTarde) + '</div>';
+
+  function segsFor(unidadeId, win, w){
+    let html = '<div class="g-lane" style="width:' + w + 'px">';
+    ex.filter(e => e.unidade===unidadeId && e.chegada>=win[0] && e.chegada<win[1]).forEach(e => {
+      const c = e.chegada;
+      const parts = [
+        ["recepcao", c, c+RECEP],
+        ["preparo", c+RECEP, c+RECEP+ENFERM],
+        ["infusao", c+RECEP+ENFERM, c+TOTAL],
+        ["higiene", c+TOTAL, c+TOTAL_HIG],
+      ];
+      parts.forEach(([cls,ini,fim]) => {
+        const left = (ini-win[0])*SCALE;
+        const width = (fim-ini)*SCALE;
+        html += '<div class="g-seg ' + cls + '" style="left:' + left + 'px;width:' + width + 'px" title="' + e.paciente + ' — ' + cls + '"></div>';
+      });
+    });
+    return html + '</div>';
+  }
+
+  unidades.forEach(u => {
+    html += '<div class="g-linha"><div class="g-rotulo"><span class="badge-tipo ' + u.tipo + '">' + (u.tipo==='pol'?'P':'M') + '</span>' + u.label + '</div>'
+      + segsFor(u.id, MANHA, wManha) + '<div class="g-almoco"></div>' + segsFor(u.id, TARDE, wTarde) + '</div>';
+  });
+
+  wrap.innerHTML = html;
+}
+
+function renderTudo(){
+  renderChips();
+  renderMapa();
+  renderGantt();
+}
+
+document.querySelectorAll(".tab").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(b => b.classList.remove("ativo"));
+    btn.classList.add("ativo");
+    diaAtual = btn.getAttribute("data-dia");
+    horarioSelecionado = null;
+    document.getElementById("confirmacao").classList.remove("mostrar");
+    renderTudo();
+  });
+});
+
+document.getElementById("gantt-toggle").addEventListener("click", () => {
+  const area = document.getElementById("gantt-area");
+  const mostrando = area.classList.toggle("mostrar");
+  document.getElementById("gantt-toggle").textContent = mostrando ? "ocultar" : "mostrar";
+});
+
+renderTudo();
+</script>
+
+</body>
+</html>
