@@ -41,7 +41,7 @@
     margin-bottom: 8px;
   }
   header h1 { margin: 0 0 8px; font-size: 1.6rem; font-weight: 600; }
-  header p { margin: 0 auto; opacity: 0.95; font-size: 0.9rem; max-width: 620px; }
+  header p { margin: 0 auto; opacity: 0.95; font-size: 0.9rem; max-width: 640px; }
   .tag-mockup {
     display: inline-block; margin-top: 12px; background: rgba(255,255,255,0.15);
     border: 1px solid rgba(255,255,255,0.4); border-radius: 20px; padding: 4px 14px;
@@ -64,10 +64,73 @@
     cursor: pointer;
   }
   .tab.ativo { background: var(--verde-escuro); border-color: var(--verde-escuro); color: white; }
+  .tab.desabilitado { opacity: 0.5; cursor: not-allowed; }
 
   .card { background: white; border: 2px solid var(--azul-claro); border-radius: 14px; padding: 20px; margin-bottom: 20px; }
   .card h2 { margin: 0 0 4px; font-size: 1.02rem; color: var(--verde-escuro); }
   .card .sub { margin: 0 0 16px; font-size: 0.78rem; color: var(--texto-claro); }
+
+  .data-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .data-row input[type="date"] {
+    font-family: inherit; font-size: 1rem; font-weight: 700; color: var(--verde-escuro);
+    border: 2px solid var(--azul-claro); border-radius: 10px; padding: 9px 12px; background: #FBFEFD;
+  }
+  .data-row input[type="date"]:focus { outline: none; border-color: var(--verde-medio); }
+  .expediente-hint { font-size: 0.72rem; color: var(--texto-claro); margin-top: 8px; }
+
+  /* semana */
+  .semana-nav { display:flex; align-items:center; justify-content: space-between; margin-bottom: 14px; }
+  .semana-nav .rotulo-semana { font-size: 0.85rem; font-weight: 700; color: var(--verde-escuro); }
+  .semana-nav .setas { display:flex; gap: 6px; }
+  .semana-nav button {
+    font-family: inherit; font-size: 0.85rem; font-weight: 700; color: var(--verde-medio);
+    background: var(--azul-claro); border: none; border-radius: 8px; padding: 6px 12px; cursor: pointer;
+  }
+  .semana-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+  .semana-card {
+    border-radius: 12px; padding: 12px; border: 2px solid var(--azul-claro); background: #FBFEFD;
+    text-align: left; min-height: 108px;
+  }
+  .semana-card .dia-nome { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; color: var(--texto-claro); }
+  .semana-card .dia-data { font-size: 0.95rem; font-weight: 700; color: var(--cinza-escuro); margin: 2px 0 8px; }
+  .semana-card.ativo { border-color: #B9E8C9; background: #F2FBF5; cursor: pointer; }
+  .semana-card.ativo:hover { border-color: var(--verde-medio); box-shadow: 0 2px 8px rgba(3,105,79,0.12); }
+  .semana-card.ativo .dia-data { color: var(--verde-escuro); }
+  .semana-card.inativo { opacity: 0.5; }
+  .semana-card.feriado { background: var(--aviso-bg); border-color: #F0DFA8; opacity: 1; }
+  .semana-card .stat { font-size: 0.72rem; color: var(--texto-medio); margin-bottom: 2px; }
+  .semana-card .status-txt { font-size: 0.72rem; color: var(--texto-claro); font-style: italic; }
+  .semana-card .ver-btn { margin-top: 8px; font-size: 0.7rem; font-weight: 700; color: var(--verde-medio); text-decoration: underline; }
+
+  .dia-cabecalho { display:flex; align-items:center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+  .dia-cabecalho .titulo { font-size: 1.05rem; font-weight: 700; color: var(--verde-escuro); }
+  .dia-cabecalho .voltar { font-size: 0.78rem; font-weight: 600; color: var(--verde-medio); background: none; border: none; cursor: pointer; text-decoration: underline; font-family: inherit; }
+
+  .aviso-bloqueado {
+    background: var(--aviso-bg); border: 2px solid #F0DFA8; border-radius: 12px; padding: 16px 20px;
+    font-size: 0.85rem; color: var(--aviso-texto); font-weight: 600;
+  }
+
+  .resumo-dia { display: grid; grid-template-columns: repeat(auto-fit,minmax(120px,1fr)); gap: 12px; margin-bottom: 16px; }
+  .resumo-item { background: var(--verde-claro); border: 2px solid var(--azul-claro); border-radius: 12px; padding: 10px 14px; text-align: center; }
+  .resumo-item .valor { display:block; font-size: 1.1rem; font-weight: 700; color: var(--verde-escuro); }
+  .resumo-item .rotulo { display:block; font-size: 0.62rem; color: var(--texto-medio); text-transform: uppercase; margin-top: 2px; }
+
+  /* melhores horários */
+  .melhores-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+  .melhor-card {
+    border-radius: 12px; padding: 12px 14px; border: 2px solid var(--azul-claro); background: #FBFEFD;
+    cursor: pointer; position: relative;
+  }
+  .melhor-card:hover { border-color: var(--verde-medio); box-shadow: 0 2px 8px rgba(3,105,79,0.12); }
+  .melhor-card .badge-rec {
+    position: absolute; top: -9px; right: 10px; background: var(--verde-escuro); color: white;
+    font-size: 0.58rem; font-weight: 700; padding: 2px 8px; border-radius: 10px; text-transform: uppercase;
+  }
+  .melhor-card .hora { font-size: 1.15rem; font-weight: 700; color: var(--cinza-escuro); }
+  .melhor-card .vagas { font-size: 0.72rem; color: var(--verde-medio); font-weight: 700; margin-top: 2px; }
+  .melhor-card .turno-lbl { font-size: 0.66rem; color: var(--texto-claro); margin-top: 2px; text-transform: uppercase; }
+  .sem-opcoes { font-size: 0.82rem; color: var(--texto-claro); font-style: italic; }
 
   .turno-bloco { margin-bottom: 16px; }
   .turno-bloco:last-child { margin-bottom: 0; }
@@ -84,7 +147,6 @@
     background: var(--verde-escuro); border: none; border-radius: 10px; padding: 10px 18px; cursor: pointer;
   }
   .btn-verificar:hover { background: var(--verde-medio); }
-  .expediente-hint { font-size: 0.72rem; color: var(--texto-claro); margin-top: 8px; }
 
   .erro-horario {
     display: none; background: var(--vermelho-bg); border: 2px solid #EFC9C9; border-radius: 10px;
@@ -150,12 +212,6 @@
   .fase-legenda .item { display:flex; align-items:center; gap:5px; }
   .fase-legenda .sw { width: 11px; height: 11px; border-radius: 3px; }
 
-  .gantt-toggle {
-    font-family: inherit; font-size: 0.8rem; font-weight: 600; color: var(--verde-medio);
-    background: none; border: none; cursor: pointer; padding: 0; text-decoration: underline;
-  }
-  .gantt-area { display: none; margin-top: 16px; }
-  .gantt-area.mostrar { display: block; }
   .gantt-wrap { overflow-x: auto; }
   .g-linha { display: flex; align-items: center; height: 36px; border-bottom: 1px solid #F0F0F0; }
   .g-rotulo { width: 76px; flex: none; font-size: 0.72rem; font-weight: 600; display:flex; align-items:center; gap:5px; }
@@ -179,6 +235,7 @@
   .dot.eq { background: var(--aviso-bg); border: 2px solid #F0DFA8; }
 
   footer { text-align: center; padding: 22px; font-size: 0.75rem; color: var(--texto-medio); }
+  .oculto { display: none !important; }
 </style>
 </head>
 <body>
@@ -186,13 +243,13 @@
 <header>
   <div class="marca">ASSIS · clínica médica</div>
   <h1>Mapa de Poltronas — nova forma de agendar Cetamina</h1>
-  <p>Protótipo interativo: escolha um horário, veja na hora quais poltronas e a maca estão livres — já considerando recepção, preparo da equipe e higiene — e reserve clicando na unidade.</p>
+  <p>Protótipo interativo: escolha a data, veja o panorama do dia e os melhores horários, depois reserve a poltrona ou maca certa — já considerando recepção, preparo da equipe e higiene.</p>
   <div class="tag-mockup">Mockup · dados 100% simulados · não conectado ao sistema real</div>
 </header>
 
 <main>
   <div class="banner">
-    <strong>Como funciona este protótipo:</strong> digite qualquer horário de chegada — sem grade fixa — e o mapa abaixo recalcula, em tempo real, quais poltronas (ou a maca) estão disponíveis naquele instante, juntando três regras ao mesmo tempo:
+    <strong>Como funciona este protótipo:</strong> primeiro escolha a data (ou clique num dia na visão semanal). O sistema mostra o panorama do dia inteiro e sugere os melhores horários antes mesmo de você digitar algo. Ao escolher um horário, o mapa recalcula quem está disponível, juntando três regras:
     <ul>
       <li><strong>Equipe:</strong> só prepara 1 paciente por vez (10 min recepção + 20 min preparo). Se a equipe já estiver ocupada nesse horário, <em>nenhuma</em> poltrona fica disponível, mesmo que fisicamente vazia.</li>
       <li><strong>Unidade (poltrona/maca):</strong> cada uma atende 1 paciente por vez, do início da recepção até 10 min de higiene após a infusão.</li>
@@ -201,56 +258,97 @@
   </div>
 
   <div class="tabs">
-    <button class="tab ativo" data-dia="terca">Terça-feira</button>
-    <button class="tab" data-dia="quarta">Quarta-feira</button>
-    <button class="tab" data-dia="quinta">Quinta-feira</button>
+    <button class="tab ativo" id="tab-semana">Visão semanal</button>
+    <button class="tab" id="tab-dia">Visão diária</button>
   </div>
 
   <div class="card">
-    <h2>1. Digite o horário de chegada</h2>
-    <p class="sub">Sem grade fixa — digite qualquer horário. O sistema calcula a disponibilidade na hora.</p>
-    <div class="input-horario-row">
-      <input type="time" id="input-horario" step="60">
-      <button class="btn-verificar" id="btn-verificar" type="button">Verificar disponibilidade</button>
+    <h2>1. Escolha a data</h2>
+    <p class="sub">Atende terça, quarta e quinta. Digite a data ou clique num dia abaixo.</p>
+    <div class="data-row">
+      <input type="date" id="input-data">
     </div>
     <div class="expediente-hint">Expediente: 08:00–12:20 (manhã) e 13:20–17:20 (tarde).</div>
-    <div class="erro-horario" id="erro-horario"></div>
-    <div class="sugestoes" id="sugestoes" style="display:none">
-      <div class="sugestoes-titulo">Horários próximos</div>
-      <div class="chips" id="chips-sugestoes"></div>
-    </div>
   </div>
 
-  <div class="card">
-    <h2>2. Mapa de poltronas e maca</h2>
-    <p class="sub" id="mapa-sub">Selecione um horário acima para ver a disponibilidade.</p>
-    <div class="aviso-equipe" id="aviso-equipe">⚠ A equipe de preparo já está com outro paciente nesse horário — nenhuma unidade pode ser aberta, mesmo com poltrona física livre.</div>
-    <div class="mapa-grid" id="mapa-grid"></div>
-
-    <div class="confirmacao" id="confirmacao">
-      <h3 id="conf-titulo">Reserva confirmada</h3>
-      <p class="sub" id="conf-sub"></p>
-      <div class="fase-barra" id="conf-barra"></div>
-      <div class="fase-legenda">
-        <div class="item"><span class="sw" style="background:#9A9A93"></span>Recepção</div>
-        <div class="item"><span class="sw" style="background:#E4844F"></span>Preparo</div>
-        <div class="item"><span class="sw" style="background:#279C74"></span>Infusão</div>
-        <div class="item"><span class="sw" style="background:#4FADA4"></span>Higiene</div>
+  <div id="view-semana">
+    <div class="card">
+      <div class="semana-nav">
+        <div class="rotulo-semana" id="semana-rotulo"></div>
+        <div class="setas">
+          <button id="semana-prev">‹ anterior</button>
+          <button id="semana-next">próxima ›</button>
+        </div>
       </div>
-    </div>
-
-    <div class="legenda-geral">
-      <div class="item"><span class="dot disp"></span>Disponível</div>
-      <div class="item"><span class="dot ocup"></span>Ocupada nesse horário</div>
-      <div class="item"><span class="dot eq"></span>Bloqueada — equipe ocupada</div>
+      <div class="semana-grid" id="semana-grid"></div>
     </div>
   </div>
 
-  <div class="card">
-    <h2>3. Agenda completa do dia <button class="gantt-toggle" id="gantt-toggle">mostrar</button></h2>
-    <p class="sub">Todas as reservas do dia (incluindo as que você acabou de simular), lado a lado por poltrona/maca.</p>
-    <div class="gantt-area" id="gantt-area">
-      <div class="gantt-wrap" id="gantt-wrap"></div>
+  <div id="view-dia" class="oculto">
+
+    <div id="dia-vazio" class="card oculto">
+      <p class="sub" style="margin-bottom:0">Escolha uma data acima ou clique num dia na visão semanal.</p>
+    </div>
+
+    <div id="dia-conteudo" class="oculto">
+      <div class="card">
+        <div class="dia-cabecalho">
+          <div class="titulo" id="dia-titulo"></div>
+          <button class="voltar" id="dia-voltar">‹ voltar à semana</button>
+        </div>
+        <div id="dia-bloqueado" class="aviso-bloqueado oculto"></div>
+
+        <div id="dia-liberado">
+          <div class="resumo-dia" id="resumo-dia"></div>
+
+          <h2 style="margin-top:20px">Panorama do dia</h2>
+          <p class="sub">Todas as reservas já confirmadas, lado a lado por poltrona/maca.</p>
+          <div class="gantt-wrap" id="gantt-wrap"></div>
+
+          <h2 style="margin-top:24px">Melhores horários</h2>
+          <p class="sub">Sugestões calculadas a partir da ocupação atual — antes de você escolher qualquer horário.</p>
+          <div class="melhores-grid" id="melhores-grid"></div>
+        </div>
+      </div>
+
+      <div id="card-horario" class="card oculto">
+        <h2>2. Digite o horário de chegada</h2>
+        <p class="sub">Sem grade fixa — digite qualquer horário. O sistema calcula a disponibilidade na hora.</p>
+        <div class="input-horario-row">
+          <input type="time" id="input-horario" step="60">
+          <button class="btn-verificar" id="btn-verificar" type="button">Verificar disponibilidade</button>
+        </div>
+        <div class="erro-horario" id="erro-horario"></div>
+        <div class="sugestoes" id="sugestoes" style="display:none">
+          <div class="sugestoes-titulo">Horários próximos ao que você digitou</div>
+          <div class="chips" id="chips-sugestoes"></div>
+        </div>
+      </div>
+
+      <div id="card-mapa" class="card oculto">
+        <h2>3. Mapa de poltronas e maca</h2>
+        <p class="sub" id="mapa-sub">Selecione um horário acima para ver a disponibilidade.</p>
+        <div class="aviso-equipe" id="aviso-equipe"></div>
+        <div class="mapa-grid" id="mapa-grid"></div>
+
+        <div class="confirmacao" id="confirmacao">
+          <h3 id="conf-titulo">Reserva confirmada</h3>
+          <p class="sub" id="conf-sub"></p>
+          <div class="fase-barra" id="conf-barra"></div>
+          <div class="fase-legenda">
+            <div class="item"><span class="sw" style="background:#9A9A93"></span>Recepção</div>
+            <div class="item"><span class="sw" style="background:#E4844F"></span>Preparo</div>
+            <div class="item"><span class="sw" style="background:#279C74"></span>Infusão</div>
+            <div class="item"><span class="sw" style="background:#4FADA4"></span>Higiene</div>
+          </div>
+        </div>
+
+        <div class="legenda-geral">
+          <div class="item"><span class="dot disp"></span>Disponível</div>
+          <div class="item"><span class="dot ocup"></span>Ocupada nesse horário</div>
+          <div class="item"><span class="dot eq"></span>Bloqueada — equipe ocupada</div>
+        </div>
+      </div>
     </div>
   </div>
 </main>
@@ -263,20 +361,11 @@ const OCUP_OFFSET=RECEP;
 const TOTAL=OCUP_OFFSET+ENFERM+INFUSAO;      // 150 — fim da ocupação "própria" do paciente
 const TOTAL_HIG=TOTAL+HIGIENE;               // 160 — até quando a unidade fica indisponível p/ outro
 const MANHA=[480,740], TARDE=[800,1040];
-const GRID_MANHA=[480,720], GRID_TARDE=[800,1040];
 
 function toHM(m){const h=Math.floor(m/60),mi=m%60;return String(h).padStart(2,'0')+':'+String(mi).padStart(2,'0');}
+function pad2(n){return String(n).padStart(2,'0');}
 function overlap(a1,a2,b1,b2){return a1<b2 && b1<a2;}
 
-function turnoDe(C){
-  if(C==null) return null;
-  if(C<MANHA[0]) return null;
-  if(C+TOTAL<=MANHA[1]) return {nome:'manha', ini:MANHA[0], fim:MANHA[1]};
-  if(C<TARDE[0]) return null;
-  if(C+TOTAL<=TARDE[1]) return {nome:'tarde', ini:TARDE[0], fim:TARDE[1]};
-  return null;
-}
-// versão com motivo do erro, pro campo de digitação — espelha turnoDe() do common.py
 function turnoDeComErro(C){
   if(C < MANHA[0]) return {erro: "Antes do início do expediente (08:00)."};
   if(C + TOTAL <= MANHA[1]) return {ok:true, nome:'manha', ini:MANHA[0], fim:MANHA[1]};
@@ -295,14 +384,6 @@ function parseHorario(str){
   if(h<0||h>23||mi<0||mi>59) return null;
   return h*60+mi;
 }
-function horariosValidosProximos(base, max){
-  const out = [];
-  for(let t=MANHA[0]; t<=TARDE[1]; t+=5){
-    if(turnoDeComErro(t).ok) out.push(t);
-  }
-  out.sort((a,b) => Math.abs(a-base) - Math.abs(b-base));
-  return out.slice(0, max).sort((a,b) => a-b);
-}
 function equipeLivre(C, existentes){
   return !existentes.some(e => overlap(C+OCUP_OFFSET, C+OCUP_OFFSET+ENFERM, e.chegada+OCUP_OFFSET, e.chegada+OCUP_OFFSET+ENFERM));
 }
@@ -315,15 +396,38 @@ function unidadeLivre(unidade, C, existentes){
 function conflitoUnidade(unidade, C, existentes){
   return existentes.find(e => e.unidade===unidade && overlap(C+OCUP_OFFSET, C+TOTAL_HIG, e.chegada+OCUP_OFFSET, e.chegada+TOTAL_HIG));
 }
+function horariosValidos(){
+  const out = [];
+  for(let t=MANHA[0]; t<=TARDE[1]; t+=5){
+    if(turnoDeComErro(t).ok) out.push(t);
+  }
+  return out;
+}
+function horariosValidosProximos(base, max){
+  const out = horariosValidos();
+  out.sort((a,b) => Math.abs(a-base) - Math.abs(b-base));
+  return out.slice(0, max).sort((a,b) => a-b);
+}
+
+/* ---------- datas ---------- */
+function parseISODateLocal(str){ const [y,m,d] = str.split('-').map(Number); return new Date(y, m-1, d); }
+function toISO(dt){ return dt.getFullYear()+'-'+pad2(dt.getMonth()+1)+'-'+pad2(dt.getDate()); }
+function formatDateBR(dt){ return pad2(dt.getDate())+'/'+pad2(dt.getMonth()+1)+'/'+dt.getFullYear(); }
+const DIA_NOMES = ["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
+const DIA_NOMES_CURTO = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+function weekdayKeyFor(dt){ const wd = dt.getDay(); if(wd===2) return 'terca'; if(wd===3) return 'quarta'; if(wd===4) return 'quinta'; return null; }
+function segundaDaSemana(dt){ const day=dt.getDay(); const diff=(day===0?-6:1-day); const seg=new Date(dt); seg.setDate(dt.getDate()+diff); return seg; }
+
+const FERIADOS = { "2026-08-04": "Feriado nacional (exemplo)" };
 
 const NOMES_RESERVA = ["Renata Cardoso","Vinícius Tavares","Beatriz Monteiro","Gustavo Pires","Larissa Andrade","Caio Ribeiro","Débora Nascimento","Matheus Correia","Priscila Barros","Rodrigo Vasconcelos"];
 let nomeIdx = 0;
 function proximoNomeFake(){ const n = NOMES_RESERVA[nomeIdx % NOMES_RESERVA.length]; nomeIdx++; return n; }
 
-const DIAS = {
+const TEMPLATES = {
   terca: {
-    label: "Terça-feira", poltronas: 6, macas: 1,
-    agendamentos: [
+    poltronas: 6, macas: 1,
+    base: [
       {unidade:"P1", chegada: 480, paciente: "Simone Ferraz"},
       {unidade:"P2", chegada: 500, paciente: "André Bittencourt"},
       {unidade:"P3", chegada: 520, paciente: "Cláudia Rezende"},
@@ -331,8 +435,8 @@ const DIAS = {
     ]
   },
   quarta: {
-    label: "Quarta-feira", poltronas: 7, macas: 1,
-    agendamentos: [
+    poltronas: 7, macas: 1,
+    base: [
       {unidade:"P1", chegada: 480, paciente: "Helena Siqueira"},
       {unidade:"P2", chegada: 500, paciente: "Felipe Aragão"},
       {unidade:"P4", chegada: 520, paciente: "Juliana Marques"},
@@ -341,8 +445,8 @@ const DIAS = {
     ]
   },
   quinta: {
-    label: "Quinta-feira", poltronas: 6, macas: 1,
-    agendamentos: [
+    poltronas: 6, macas: 1,
+    base: [
       {unidade:"P2", chegada: 480, paciente: "Ricardo Salgado"},
       {unidade:"P3", chegada: 500, paciente: "Amanda Vilela"},
       {unidade:"P6", chegada: 540, paciente: "Marcelo Quintão"},
@@ -350,19 +454,249 @@ const DIAS = {
   }
 };
 
-let diaAtual = "terca";
-let horarioSelecionado = null;
-let baseSugestoes = 540; // 09:00 — só usado pra centralizar as sugestões
-let sugestoesAtivas = false;
-
-function unidadesDoDia(dia){
-  const d = DIAS[dia];
+const estadoPorData = {};
+function estadoDoDia(iso){
+  if(estadoPorData[iso]) return estadoPorData[iso];
+  const dt = parseISODateLocal(iso);
+  const wk = weekdayKeyFor(dt);
+  if(!wk) return null;
+  const tpl = TEMPLATES[wk];
+  const estado = { poltronas: tpl.poltronas, macas: tpl.macas, agendamentos: tpl.base.map(a => ({...a})) };
+  estadoPorData[iso] = estado;
+  return estado;
+}
+function unidadesDoDia(estado){
   const us = [];
-  for(let i=1;i<=d.poltronas;i++) us.push({id:"P"+i, tipo:"pol", label:"Poltrona "+i});
-  for(let i=1;i<=d.macas;i++) us.push({id:"M"+i, tipo:"mac", label:"Maca "+i});
+  for(let i=1;i<=estado.poltronas;i++) us.push({id:"P"+i, tipo:"pol", label:"Poltrona "+i});
+  for(let i=1;i<=estado.macas;i++) us.push({id:"M"+i, tipo:"mac", label:"Maca "+i});
   return us;
 }
 
+/* ---------- estado de UI ---------- */
+let semanaRef = parseISODateLocal("2026-07-28"); // semana padrão de demonstração
+let dataAtual = null;   // ISO da data escolhida
+let viewMode = "semana";
+let horarioSelecionado = null;
+let baseSugestoes = null;
+let sugestoesAtivas = false;
+
+/* ---------- visão semanal ---------- */
+function renderSemana(){
+  const seg = segundaDaSemana(semanaRef);
+  const fim = new Date(seg); fim.setDate(seg.getDate()+6);
+  document.getElementById("semana-rotulo").textContent = "Semana de " + formatDateBR(seg) + " a " + formatDateBR(fim);
+
+  const grid = document.getElementById("semana-grid");
+  grid.innerHTML = "";
+  for(let i=0;i<7;i++){
+    const dt = new Date(seg); dt.setDate(seg.getDate()+i);
+    const iso = toISO(dt);
+    const wk = weekdayKeyFor(dt);
+    const feriado = FERIADOS[iso];
+    const card = document.createElement("div");
+
+    let html = '<div class="dia-nome">' + DIA_NOMES_CURTO[dt.getDay()] + '</div><div class="dia-data">' + formatDateBR(dt) + '</div>';
+
+    if(feriado){
+      card.className = "semana-card feriado";
+      html += '<div class="status-txt">' + feriado + '</div>';
+    } else if(!wk){
+      card.className = "semana-card inativo";
+      html += '<div class="status-txt">Sem atendimento</div>';
+    } else {
+      const estado = estadoDoDia(iso);
+      card.className = "semana-card ativo";
+      html += '<div class="stat">' + estado.agendamentos.length + ' paciente' + (estado.agendamentos.length===1?'':'s') + ' agendado' + (estado.agendamentos.length===1?'':'s') + '</div>';
+      html += '<div class="stat">' + estado.poltronas + ' poltronas + ' + estado.macas + ' maca</div>';
+      html += '<div class="ver-btn">ver este dia ›</div>';
+      card.addEventListener("click", () => { document.getElementById("input-data").value = iso; abrirData(iso); });
+    }
+    card.innerHTML = html;
+    grid.appendChild(card);
+  }
+}
+document.getElementById("semana-prev").addEventListener("click", () => { const d=new Date(semanaRef); d.setDate(d.getDate()-7); semanaRef=d; renderSemana(); });
+document.getElementById("semana-next").addEventListener("click", () => { const d=new Date(semanaRef); d.setDate(d.getDate()+7); semanaRef=d; renderSemana(); });
+
+/* ---------- alternância de visão ---------- */
+function setView(v){
+  viewMode = v;
+  document.getElementById("tab-semana").classList.toggle("ativo", v==="semana");
+  document.getElementById("tab-dia").classList.toggle("ativo", v==="dia");
+  document.getElementById("view-semana").classList.toggle("oculto", v!=="semana");
+  document.getElementById("view-dia").classList.toggle("oculto", v!=="dia");
+  if(v==="dia"){
+    document.getElementById("dia-vazio").classList.toggle("oculto", !!dataAtual);
+    document.getElementById("dia-conteudo").classList.toggle("oculto", !dataAtual);
+  }
+}
+document.getElementById("tab-semana").addEventListener("click", () => setView("semana"));
+document.getElementById("tab-dia").addEventListener("click", () => setView("dia"));
+document.getElementById("dia-voltar").addEventListener("click", () => setView("semana"));
+
+/* ---------- abrir um dia ---------- */
+function abrirData(iso){
+  dataAtual = iso;
+  semanaRef = parseISODateLocal(iso);
+  horarioSelecionado = null;
+  sugestoesAtivas = false;
+  setView("dia");
+
+  const dt = parseISODateLocal(iso);
+  document.getElementById("dia-titulo").textContent = DIA_NOMES[dt.getDay()] + "-feira, " + formatDateBR(dt);
+
+  const feriado = FERIADOS[iso];
+  const wk = weekdayKeyFor(dt);
+  const bloqueadoBox = document.getElementById("dia-bloqueado");
+  const liberadoBox = document.getElementById("dia-liberado");
+  const cardHorario = document.getElementById("card-horario");
+  const cardMapa = document.getElementById("card-mapa");
+
+  if(feriado){
+    bloqueadoBox.textContent = "⚠ Feriado — " + feriado + ". Sem atendimento de Cetamina nesse dia.";
+    bloqueadoBox.classList.remove("oculto");
+    liberadoBox.classList.add("oculto");
+    cardHorario.classList.add("oculto");
+    cardMapa.classList.add("oculto");
+    return;
+  }
+  if(!wk){
+    bloqueadoBox.textContent = "⚠ Cetamina não atende nesse dia da semana — atende terça, quarta e quinta.";
+    bloqueadoBox.classList.remove("oculto");
+    liberadoBox.classList.add("oculto");
+    cardHorario.classList.add("oculto");
+    cardMapa.classList.add("oculto");
+    return;
+  }
+
+  bloqueadoBox.classList.add("oculto");
+  liberadoBox.classList.remove("oculto");
+  cardHorario.classList.remove("oculto");
+  cardMapa.classList.remove("oculto");
+
+  document.getElementById("input-horario").value = "";
+  document.getElementById("erro-horario").classList.remove("mostrar");
+  document.getElementById("confirmacao").classList.remove("mostrar");
+
+  renderResumoDia();
+  renderGantt();
+  renderMelhoresHorarios();
+  renderSugestoes();
+  renderMapa();
+}
+
+document.getElementById("input-data").addEventListener("change", (e) => {
+  const v = e.target.value;
+  if(!v) return;
+  abrirData(v);
+});
+
+/* ---------- resumo + panorama ---------- */
+function renderResumoDia(){
+  const estado = estadoDoDia(dataAtual);
+  const unidades = unidadesDoDia(estado);
+  const box = document.getElementById("resumo-dia");
+  const totalPac = estado.agendamentos.length;
+  const emPoltrona = estado.agendamentos.filter(a => a.unidade.startsWith("P")).length;
+  const emMaca = estado.agendamentos.filter(a => a.unidade.startsWith("M")).length;
+  box.innerHTML =
+    '<div class="resumo-item"><span class="valor">' + totalPac + '</span><span class="rotulo">pacientes agendados</span></div>' +
+    '<div class="resumo-item"><span class="valor">' + emPoltrona + '</span><span class="rotulo">em poltrona</span></div>' +
+    '<div class="resumo-item"><span class="valor">' + emMaca + '</span><span class="rotulo">em maca</span></div>' +
+    '<div class="resumo-item"><span class="valor">' + estado.poltronas + '+' + estado.macas + '</span><span class="rotulo">poltronas + maca</span></div>';
+}
+
+function renderGantt(){
+  const estado = estadoDoDia(dataAtual);
+  const ex = estado.agendamentos;
+  const unidades = unidadesDoDia(estado);
+  const wrap = document.getElementById("gantt-wrap");
+
+  const SCALE = 2.2;
+  const wManha = (MANHA[1]-MANHA[0])*SCALE;
+  const wTarde = (TARDE[1]-TARDE[0])*SCALE;
+
+  function ticks(win, w){
+    let html = '<div class="g-cab-lane" style="width:' + w + 'px">';
+    for(let t=win[0]; t<=win[1]; t+=40){
+      html += '<span style="left:' + ((t-win[0])*SCALE) + 'px">' + toHM(t) + '</span>';
+    }
+    return html + '</div>';
+  }
+  let html = '<div class="g-cab"><div class="g-cab-rotulo"></div>' + ticks(MANHA, wManha) + '<div class="g-almoco"></div>' + ticks(TARDE, wTarde) + '</div>';
+
+  function segsFor(unidadeId, win, w){
+    let html = '<div class="g-lane" style="width:' + w + 'px">';
+    ex.filter(e => e.unidade===unidadeId && e.chegada>=win[0] && e.chegada<win[1]).forEach(e => {
+      const c = e.chegada;
+      const parts = [
+        ["recepcao", c, c+RECEP],
+        ["preparo", c+RECEP, c+RECEP+ENFERM],
+        ["infusao", c+RECEP+ENFERM, c+TOTAL],
+        ["higiene", c+TOTAL, c+TOTAL_HIG],
+      ];
+      parts.forEach(([cls,ini,fim]) => {
+        const left = (ini-win[0])*SCALE;
+        const width = (fim-ini)*SCALE;
+        html += '<div class="g-seg ' + cls + '" style="left:' + left + 'px;width:' + width + 'px" title="' + e.paciente + ' — ' + cls + '"></div>';
+      });
+    });
+    return html + '</div>';
+  }
+
+  unidades.forEach(u => {
+    html += '<div class="g-linha"><div class="g-rotulo"><span class="badge-tipo ' + u.tipo + '">' + (u.tipo==='pol'?'P':'M') + '</span>' + u.label + '</div>'
+      + segsFor(u.id, MANHA, wManha) + '<div class="g-almoco"></div>' + segsFor(u.id, TARDE, wTarde) + '</div>';
+  });
+  wrap.innerHTML = html;
+}
+
+/* ---------- melhores horários (antes de digitar) ---------- */
+function renderMelhoresHorarios(){
+  const estado = estadoDoDia(dataAtual);
+  const ex = estado.agendamentos;
+  const unidades = unidadesDoDia(estado);
+  const box = document.getElementById("melhores-grid");
+
+  const candidatos = horariosValidos().map(t => {
+    const eqLivre = equipeLivre(t, ex);
+    const livres = eqLivre ? unidades.filter(u => unidadeLivre(u.id, t, ex)).length : 0;
+    return {t, livres};
+  }).filter(c => c.livres > 0);
+
+  candidatos.sort((a,b) => b.livres - a.livres || a.t - b.t);
+
+  const escolhidos = [];
+  const vistos = new Set();
+  for(const c of candidatos){
+    if(vistos.has(c.t)) continue;
+    vistos.add(c.t);
+    escolhidos.push(c);
+    if(escolhidos.length >= 4) break;
+  }
+
+  box.innerHTML = "";
+  if(escolhidos.length === 0){
+    box.innerHTML = '<div class="sem-opcoes">Nenhum horário livre neste dia — agenda no limite.</div>';
+    return;
+  }
+  escolhidos.forEach((c, i) => {
+    const card = document.createElement("div");
+    card.className = "melhor-card";
+    const turno = c.t < MANHA[1] ? "Manhã" : "Tarde";
+    card.innerHTML = (i===0 ? '<div class="badge-rec">recomendado</div>' : '') +
+      '<div class="hora">' + toHM(c.t) + '</div>' +
+      '<div class="vagas">' + c.livres + ' vaga' + (c.livres===1?'':'s') + ' livre' + (c.livres===1?'':'s') + '</div>' +
+      '<div class="turno-lbl">' + turno + '</div>';
+    card.addEventListener("click", () => {
+      document.getElementById("input-horario").value = toHM(c.t);
+      verificarHorario(c.t);
+    });
+    box.appendChild(card);
+  });
+}
+
+/* ---------- horário digitado + sugestões próximas ---------- */
 function verificarHorario(t){
   const erroBox = document.getElementById("erro-horario");
   baseSugestoes = t;
@@ -378,18 +712,19 @@ function verificarHorario(t){
     horarioSelecionado = t;
   }
   document.getElementById("confirmacao").classList.remove("mostrar");
-  renderTudo();
+  renderSugestoes();
+  renderMapa();
 }
 
 function renderSugestoes(){
   const box = document.getElementById("sugestoes");
   const cont = document.getElementById("chips-sugestoes");
-  if(!sugestoesAtivas){ box.style.display = "none"; return; }
+  if(!sugestoesAtivas || !dataAtual){ box.style.display = "none"; return; }
   box.style.display = "block";
 
-  const d = DIAS[diaAtual];
-  const ex = d.agendamentos;
-  const unidades = unidadesDoDia(diaAtual);
+  const estado = estadoDoDia(dataAtual);
+  const ex = estado.agendamentos;
+  const unidades = unidadesDoDia(estado);
   const candidatos = horariosValidosProximos(baseSugestoes, 6);
 
   cont.innerHTML = "";
@@ -408,17 +743,19 @@ function renderSugestoes(){
   });
 }
 
+/* ---------- mapa de poltronas ---------- */
 function renderMapa(){
-  const d = DIAS[diaAtual];
-  const ex = d.agendamentos;
-  const unidades = unidadesDoDia(diaAtual);
+  if(!dataAtual) return;
+  const estado = estadoDoDia(dataAtual);
+  const ex = estado.agendamentos;
+  const unidades = unidadesDoDia(estado);
   const grid = document.getElementById("mapa-grid");
   const sub = document.getElementById("mapa-sub");
   const avisoEq = document.getElementById("aviso-equipe");
   grid.innerHTML = "";
 
   if(horarioSelecionado == null){
-    sub.textContent = "Selecione um horário acima para ver a disponibilidade.";
+    sub.textContent = "Selecione um horário acima (ou clique numa sugestão) para ver a disponibilidade.";
     avisoEq.classList.remove("mostrar");
     unidades.forEach(u => {
       const card = document.createElement("div");
@@ -463,10 +800,10 @@ function renderMapa(){
 }
 
 function reservar(unidadeId){
-  const d = DIAS[diaAtual];
+  const estado = estadoDoDia(dataAtual);
   const C = horarioSelecionado;
   const nome = proximoNomeFake();
-  d.agendamentos.push({unidade: unidadeId, chegada: C, paciente: nome});
+  estado.agendamentos.push({unidade: unidadeId, chegada: C, paciente: nome});
 
   const confBox = document.getElementById("confirmacao");
   confBox.classList.add("mostrar");
@@ -483,85 +820,18 @@ function reservar(unidadeId){
   ];
   barra.innerHTML = segs.map(s => '<div class="fase-seg ' + s.cls + '" style="width:' + (s.w/dur*100) + '%" title="' + s.label + '"></div>').join("");
 
-  renderTudo();
-}
-
-function renderGantt(){
-  const d = DIAS[diaAtual];
-  const ex = d.agendamentos;
-  const unidades = unidadesDoDia(diaAtual);
-  const wrap = document.getElementById("gantt-wrap");
-
-  const SCALE = 2.2; // px por minuto
-  const wManha = (MANHA[1]-MANHA[0])*SCALE;
-  const wTarde = (TARDE[1]-TARDE[0])*SCALE;
-
-  function ticks(win, w){
-    let html = '<div class="g-cab-lane" style="width:' + w + 'px">';
-    for(let t=win[0]; t<=win[1]; t+=40){
-      html += '<span style="left:' + ((t-win[0])*SCALE) + 'px">' + toHM(t) + '</span>';
-    }
-    return html + '</div>';
-  }
-
-  let html = '<div class="g-cab"><div class="g-cab-rotulo"></div>' + ticks(MANHA, wManha) + '<div class="g-almoco"></div>' + ticks(TARDE, wTarde) + '</div>';
-
-  function segsFor(unidadeId, win, w){
-    let html = '<div class="g-lane" style="width:' + w + 'px">';
-    ex.filter(e => e.unidade===unidadeId && e.chegada>=win[0] && e.chegada<win[1]).forEach(e => {
-      const c = e.chegada;
-      const parts = [
-        ["recepcao", c, c+RECEP],
-        ["preparo", c+RECEP, c+RECEP+ENFERM],
-        ["infusao", c+RECEP+ENFERM, c+TOTAL],
-        ["higiene", c+TOTAL, c+TOTAL_HIG],
-      ];
-      parts.forEach(([cls,ini,fim]) => {
-        const left = (ini-win[0])*SCALE;
-        const width = (fim-ini)*SCALE;
-        html += '<div class="g-seg ' + cls + '" style="left:' + left + 'px;width:' + width + 'px" title="' + e.paciente + ' — ' + cls + '"></div>';
-      });
-    });
-    return html + '</div>';
-  }
-
-  unidades.forEach(u => {
-    html += '<div class="g-linha"><div class="g-rotulo"><span class="badge-tipo ' + u.tipo + '">' + (u.tipo==='pol'?'P':'M') + '</span>' + u.label + '</div>'
-      + segsFor(u.id, MANHA, wManha) + '<div class="g-almoco"></div>' + segsFor(u.id, TARDE, wTarde) + '</div>';
-  });
-
-  wrap.innerHTML = html;
-}
-
-function renderTudo(){
+  renderResumoDia();
+  renderGantt();
+  renderMelhoresHorarios();
   renderSugestoes();
   renderMapa();
-  renderGantt();
 }
 
-document.querySelectorAll(".tab").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach(b => b.classList.remove("ativo"));
-    btn.classList.add("ativo");
-    diaAtual = btn.getAttribute("data-dia");
-    horarioSelecionado = null;
-    sugestoesAtivas = false;
-    document.getElementById("input-horario").value = "";
-    document.getElementById("erro-horario").classList.remove("mostrar");
-    document.getElementById("confirmacao").classList.remove("mostrar");
-    renderTudo();
-  });
+document.getElementById("input-horario").addEventListener("keydown", (e) => {
+  if(e.key === "Enter") document.getElementById("btn-verificar").click();
 });
-
-document.getElementById("gantt-toggle").addEventListener("click", () => {
-  const area = document.getElementById("gantt-area");
-  const mostrando = area.classList.toggle("mostrar");
-  document.getElementById("gantt-toggle").textContent = mostrando ? "ocultar" : "mostrar";
-});
-
-const inputHorario = document.getElementById("input-horario");
 document.getElementById("btn-verificar").addEventListener("click", () => {
-  const t = parseHorario(inputHorario.value);
+  const t = parseHorario(document.getElementById("input-horario").value);
   if(t == null){
     const erroBox = document.getElementById("erro-horario");
     erroBox.classList.add("mostrar");
@@ -570,11 +840,8 @@ document.getElementById("btn-verificar").addEventListener("click", () => {
   }
   verificarHorario(t);
 });
-inputHorario.addEventListener("keydown", (e) => {
-  if(e.key === "Enter") document.getElementById("btn-verificar").click();
-});
 
-renderTudo();
+renderSemana();
 </script>
 
 </body>
