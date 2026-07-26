@@ -377,7 +377,7 @@
 <header>
   <div class="marca">ASSIS · clínica médica</div>
   <h1>Status &amp; Pendências — Operação SendPulse</h1>
-  <p>WhatsApp API (n8n + CliMed) · atualizado em 25/jul/2026</p>
+  <p>WhatsApp API (n8n + CliMed) · atualizado em 26/jul/2026</p>
 </header>
 
 <main>
@@ -389,15 +389,15 @@
         <span class="rotulo">Início identificado</span>
       </div>
       <div class="hmetric">
-        <span class="valor">~58 dias</span>
+        <span class="valor">~59 dias</span>
         <span class="rotulo">Do diagnóstico até hoje</span>
       </div>
       <div class="hmetric">
-        <span class="valor">~37–43h</span>
+        <span class="valor">~41–47h</span>
         <span class="rotulo">Tempo ativo estimado</span>
       </div>
     </div>
-    <p class="header-disclaimer">Estimativa aproximada, revisada em 25/jul — ver metodologia na seção "Trajetória até aqui"</p>
+    <p class="header-disclaimer">Estimativa aproximada, revisada em 26/jul — ver metodologia na seção "Trajetória até aqui"</p>
   </div>
 
   <div class="banner">
@@ -435,7 +435,7 @@
     <div class="card pendente">
       <span class="badge gabriel">Gabriel</span>
       <div class="card-titulo">Decisão clínica com a Meire: capacidade da Cetamina</div>
-      <div class="card-desc">A observação do agendamento (agora visível na grade) revelou um conflito real: <code>equipe_preparo=1</code> não cabe na grade de 20 minutos — hoje 21 dos 28 turnos de julho estouram. Opções: aumentar a equipe de preparo, alongar a grade para 30 min, ou reduzir o tempo de preparo.</div>
+      <div class="card-desc">O conflito era real: <code>equipe_preparo=1</code> não cabia na grade de 20 minutos — 21 dos 28 turnos de julho estouravam. Já existe uma 4ª saída pronta e no ar: o motor de uma versão nova do painel (v2) corrige isso sozinho, ajustando a janela de preparo. Falta decidir com a Meire: promover o v2, manter os dois painéis em paralelo por enquanto, ou descartar o v2.</div>
     </div>
 
     <div class="card pendente">
@@ -459,6 +459,12 @@
       <div class="card-titulo">Corrigir coleta de resíduos temporários</div>
       <div class="card-desc">Os helpers de teste (<code>_q</code>, <code>_q mysql</code>, <code>_test Reset Conversa</code>) não limpam depois de si em caso de erro — precisa entrar num bloco <code>finally</code> para não acumular lixo a cada rodada de teste.</div>
     </div>
+
+    <div class="card">
+      <span class="badge claude">Claude Code</span>
+      <div class="card-titulo">Se o Agenda Cetamina v2 for promovido</div>
+      <div class="card-desc">O painel v1 hoje não mostra segunda/sexta/sábado como dias de atendimento (ficam invisíveis nele). Se a decisão for promover o v2, falta ensinar o v1 a exibir esses dias, ou aposentar o v1 de vez.</div>
+    </div>
   </section>
 
   <section>
@@ -481,12 +487,13 @@
           <tr><td>B — NPS · Pesquisa · Incentivo</td><td>Cron + conversa no bot + formulário</td><td class="status pausado">Construído · pausado</td></tr>
           <tr><td>C — Pós-falta</td><td>Cron + handoff</td><td class="status pausado">Construído · pausado</td></tr>
           <tr><td>D — Receitas/Relatórios</td><td>Coleta no bot → painel → notificações</td><td class="status on">Coleta em produção · painel reformulado (25/jul: EM ABERTO padrão, filtro de data, inclusão manual)</td></tr>
-          <tr><td>E — Agenda de Cetamina</td><td>Painel interno da equipe</td><td class="status on">No ar · 148 agendamentos (era 136) · falta distribuir senha (10 de 11 usuários)</td></tr>
+          <tr><td>E — Agenda de Cetamina (v1)</td><td>Painel interno da equipe</td><td class="status on">No ar · 148 agendamentos · falta distribuir senha (10 de 11 usuários)</td></tr>
+          <tr><td>E — Agenda de Cetamina (v2, novo)</td><td>Versão nova em avaliação: régua editável, motor de capacidade corrigido, novo fluxo de agendar</td><td class="status construido">Construído (26/jul), card admin-only no portal · aguarda decisão de promover</td></tr>
           <tr><td>E2 — WhatsApp de Cetamina</td><td>Confirmação D-2 + lembrete D-1</td><td class="status construido">Construído e provado nos 2 ramos com gatilho real · crons pausados</td></tr>
           <tr><td>G — Números inválidos</td><td>Detecta e limpa nº quebrado</td><td class="status on">Em produção (kill-switch) · falta repasse à Meire</td></tr>
           <tr><td>Menu receptivo</td><td>Qualquer mensagem abre o menu, agora com CPF + enriquecimento de contato</td><td class="status on">Em produção</td></tr>
           <tr><td>Handoff bot→humano</td><td>Roteia por motivo × unidade, com fila para quando ninguém está disponível</td><td class="status on">No ar · 100% dos pontos de transferência · disponibilidade agora nasce pausada por padrão</td></tr>
-          <tr><td>Painéis internos</td><td>Login unificado + widget recolhível + ficha cadastral/RH (25/jul)</td><td class="status on">No ar, 8 hosts, botão Intranet em todas as telas</td></tr>
+          <tr><td>Painéis internos</td><td>Login unificado + widget (agora bolinha 52px, com opção de desligar) + ficha cadastral/RH</td><td class="status on">No ar, 8 hosts, botão Intranet em todas as telas</td></tr>
           <tr><td>Painel de Agenda (leitura)</td><td>Cruza CliMed + status WhatsApp numa tela só</td><td class="status on">No ar em agenda.climed.tech</td></tr>
           <tr><td>Portal / Intranet</td><td>Porta de entrada única: cards por painel + notas pessoais</td><td class="status on">No ar em intranet.climed.tech · destino padrão pós-login</td></tr>
           <tr><td>Enriquecimento de contato</td><td>Cruza telefone/CPF com o CliMed e preenche dados na conversa</td><td class="status on">Construído e ativo, sem cron</td></tr>
@@ -539,7 +546,7 @@
   <section>
     <h2>⏱️ Trajetória até aqui</h2>
 
-    <p class="disclaimer">Estimativa a partir das datas e horários registrados no <code>handoff.md</code>/<code>legacy.md</code> e da atividade de arquivos do projeto — não é um cronômetro exato, é uma aproximação. O ritmo mais intenso ficou no sprint de 21 a 25/jul/2026, com uma sessão só na noite de 25/jul passando de 5h seguidas.</p>
+    <p class="disclaimer">Estimativa a partir das datas e horários registrados no <code>handoff.md</code>/<code>legacy.md</code> e da atividade de arquivos do projeto — não é um cronômetro exato, é uma aproximação. O ritmo mais intenso ficou no sprint de 21 a 26/jul/2026, com uma sessão só entre a noite de 25/jul e a madrugada de 26/jul passando de 7h seguidas.</p>
 
     <ul class="timeline">
       <li>
@@ -612,6 +619,20 @@
             <li><span class="check">✓</span>Botão Intranet adicionado a todas as telas de painel</li>
             <li><span class="check">✓</span>Auditoria geral de pendências — último workflow pendente publicado, CSS legado limpo em 12 workflows, credenciais soltas viraram <code>.env</code></li>
             <li><span class="check">✓</span>Auditoria de segurança no repositório — achou e removeu 2 vazamentos adicionais do índice (senha da equipe + 9 nomes de pacientes)</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="fase-card">
+          <div class="fase">26/jul/2026</div>
+          <div class="fase-titulo">Agenda Cetamina v2 e auditoria geral</div>
+          <ul class="itens">
+            <li><span class="check">✓</span>to-do.md reescrito do zero como lista de ações reais (era 20 de 21 itens já concluídos disfarçados de pendência)</li>
+            <li><span class="check">✓</span>Auditoria geral ao vivo — 54 workflows, 7 hosts e todas as credenciais conferidos sem divergência</li>
+            <li><span class="check">✓</span>Agenda Cetamina v2 construída em paralelo, sem tocar a v1: motor de capacidade corrigido, régua editável na tela, novo fluxo de agendar por modal</li>
+            <li><span class="check">✓</span>Falha de vazamento achada e fechada: a v1 expunha URLs de admin no HTML de qualquer operador</li>
+            <li><span class="check">✓</span>Widget de disponibilidade refeito — virou bolinha de 52px, com opção de desligar de vez</li>
+            <li><span class="check">✓</span>Pasta de código renomeada de <code>cetamina/</code> para <code>00-Plataforma/</code> — nome antigo enganava (guarda os 14 painéis, não só a Cetamina)</li>
           </ul>
         </div>
       </li>
