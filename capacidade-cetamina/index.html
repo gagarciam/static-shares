@@ -92,14 +92,14 @@
   .why-card p{margin:0;color:var(--cinza-medio);font-size:.9rem;}
 
   .gantt{background:var(--branco);border-radius:16px;padding:28px;box-shadow:0 2px 14px rgba(3,105,79,.08);}
-  .gantt-row{display:grid;grid-template-columns:110px 1fr;align-items:center;gap:14px;margin-bottom:10px;}
-  .gantt-label{font-size:.8rem;color:var(--cinza-medio);text-align:right;font-weight:600;}
-  .gantt-track{position:relative;height:26px;background:var(--verde-claro);border-radius:6px;overflow:hidden;}
-  .gantt-bar{position:absolute;top:2px;bottom:2px;border-radius:5px;font-size:.68rem;color:#fff;display:flex;align-items:center;justify-content:center;white-space:nowrap;overflow:hidden;}
-  .gantt-bar.g1{background:var(--verde-principal);}
-  .gantt-bar.g2{background:var(--verde-medio);}
-  .gantt-bar.g3{background:#2aa876;}
-  .gantt-bar.lunch{background:var(--aviso);color:#5a4300;}
+  .gantt-row{display:grid;grid-template-columns:110px 1fr;align-items:center;gap:14px;margin-bottom:14px;}
+  .gantt-label{font-size:.85rem;color:var(--cinza-escuro);text-align:right;font-weight:700;}
+  .gantt-track{position:relative;height:38px;background:#EDF2EF;border-radius:8px;overflow:hidden;border:1px solid #DCE6E1;}
+  .gantt-bar{position:absolute;top:3px;bottom:3px;border-radius:6px;font-size:.82rem;color:#fff;display:flex;align-items:center;justify-content:center;white-space:nowrap;overflow:hidden;font-weight:700;letter-spacing:.01em;text-shadow:0 1px 3px rgba(0,0,0,.45);box-shadow:0 1px 3px rgba(0,0,0,.15);}
+  .gantt-bar.g1{background:#054A39;}
+  .gantt-bar.g2{background:#0A5A70;}
+  .gantt-bar.g3{background:#0F7A49;}
+  .gantt-bar.lunch{background:#B8860B;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35);}
   .gantt-axis{display:grid;grid-template-columns:110px 1fr;margin-top:6px;}
   .gantt-axis-labels{display:flex;justify-content:space-between;font-size:.68rem;color:var(--cinza-claro);padding:0 2px;}
   .gantt-legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:20px;font-size:.8rem;color:var(--cinza-medio);}
@@ -253,10 +253,10 @@
         <div class="gantt-axis-labels"><span>08:00</span><span>10:00</span><span>12:00</span><span>14:00</span><span>16:00</span><span>17:30</span></div>
       </div>
       <div class="gantt-legend">
-        <span><i class="swatch" style="background:var(--verde-principal);"></i>Leva 1 — 8 pacientes (2 preparos em paralelo)</span>
-        <span><i class="swatch" style="background:var(--verde-medio);"></i>Leva 2 — 8 pacientes</span>
-        <span><i class="swatch" style="background:#2aa876;"></i>Leva 3 — 8 pacientes</span>
-        <span><i class="swatch" style="background:var(--aviso);"></i>Janela de almoço revezado</span>
+        <span><i class="swatch" style="background:#054A39;"></i>Leva 1 — 8 pacientes (2 preparos em paralelo)</span>
+        <span><i class="swatch" style="background:#0A5A70;"></i>Leva 2 — 8 pacientes</span>
+        <span><i class="swatch" style="background:#0F7A49;"></i>Leva 3 — 8 pacientes</span>
+        <span><i class="swatch" style="background:#B8860B;"></i>Janela de almoço revezado</span>
       </div>
     </div>
 
