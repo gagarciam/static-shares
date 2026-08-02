@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fluxo de chamados — intranet</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+<style>
+  :root{
+    --bg:#f7f6f2; --surface:#ffffff; --surface-2:#f1efe8;
+    --border:#e4e1d6; --border-strong:#cfcbba;
+    --text:#1f1e1a; --text-secondary:#6b6a63; --text-muted:#9a988e;
+    --gray:#5f5e5a; --purple:#534ab7; --purple-bg:#eeedfe; --purple-text:#3c3489;
+    --teal:#0f6e56; --teal-bg:#e1f5ee; --teal-text:#085041;
+    --coral:#d85a30; --coral-bg:#faece7; --coral-text:#993c1d;
+    --amber:#ba7517; --blue:#185fa5; --green:#3b6d11;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:40px 20px 80px}
+  .wrap{max-width:760px;margin:0 auto}
+  h1{font-size:20px;font-weight:600;margin:0 0 4px}
+  .sub{font-size:13px;color:var(--text-secondary);margin:0 0 32px}
+  .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .chip{background:var(--surface-2);border-radius:12px;padding:14px 10px;text-align:center}
+  .chip i{font-size:18px;color:var(--text-secondary)}
+  .chip p{font-size:12px;font-weight:600;margin:6px 0 0}
+  .arrow{display:flex;justify-content:center;padding:6px 0;color:var(--text-muted)}
+  .step{border-radius:12px;padding:14px 18px;text-align:center;max-width:420px;margin:0 auto}
+  .step i{font-size:20px}
+  .step p.t{font-size:14px;font-weight:600;margin:6px 0 0}
+  .step p.s{font-size:12px;margin:2px 0 0;opacity:.85}
+  .s-purple{background:var(--purple-bg);color:var(--purple-text)}
+  .s-teal{background:var(--teal-bg);color:var(--teal-text)}
+  .s-coral{background:var(--coral-bg);color:var(--coral-text)}
+  .divider{border-top:1px solid var(--border);margin:36px 0 24px}
+  h2{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);margin:0 0 14px}
+  .board{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+  .col-head{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .d-gray{background:var(--border-strong)}
+  .d-amber{background:var(--amber)}
+  .d-blue{background:var(--blue)}
+  .d-green{background:var(--green)}
+  .col-head span{font-size:12px;font-weight:600}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:8px;font-size:12px}
+  .card b{display:block;font-weight:600;margin-bottom:2px}
+  .card small{color:var(--text-muted)}
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .split-card{background:var(--surface-2);border-radius:12px;padding:14px 16px}
+  .split-card p.t{font-size:13px;font-weight:600;margin:0 0 4px}
+  .split-card p.s{font-size:12px;color:var(--text-secondary);margin:0}
+  footer{text-align:center;font-size:11px;color:var(--text-muted);margin-top:48px}
+  @media (max-width:520px){
+    .row3{grid-template-columns:1fr}
+    .board{grid-template-columns:repeat(2,1fr)}
+    .split{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Fluxo de chamados — intranet Clínica Assis</h1>
+  <p class="sub">Do relato bruto ao chamado rastreável, sem sair da intranet</p>
+
+  <div class="row3">
+    <div class="chip"><i class="ti ti-layout-dashboard" aria-hidden="true"></i><p>Botão "Reportar" no painel</p></div>
+    <div class="chip"><i class="ti ti-forms" aria-hidden="true"></i><p>"Abrir chamado" na intranet</p></div>
+    <div class="chip"><i class="ti ti-message-2" aria-hidden="true"></i><p>Comentar num chamado aberto</p></div>
+  </div>
+
+  <div class="arrow"><i class="ti ti-arrow-down" aria-hidden="true"></i></div>
+
+  <div class="step s-purple">
+    <i class="ti ti-photo-plus" aria-hidden="true"></i>
+    <p class="t">Editor com colar de imagem</p>
+    <p class="s">Ctrl+V embute o print, quantos precisar</p>
+  </div>
+
+  <div class="arrow"><i class="ti ti-arrow-down" aria-hidden="true"></i></div>
+
+  <div class="step s-teal">
+    <i class="ti ti-database-search" aria-hidden="true"></i>
+    <p class="t">Enriquecedor automático (n8n)</p>
+    <p class="s">consulta os logs e anota "o que o sistema fez"</p>
+  </div>
+
+  <div class="arrow"><i class="ti ti-arrow-down" aria-hidden="true"></i></div>
+
+  <div class="step s-coral">
+    <p class="t" style="margin:0">Chamado nasce, com número</p>
+  </div>
+
+  <div class="divider"></div>
+  <h2>Esteira</h2>
+
+  <div class="board">
+    <div>
+      <div class="col-head"><span class="dot d-gray"></span><span>Aberto</span></div>
+      <div class="card"><b>#118</b><small>relatado hoje</small></div>
+      <div class="card"><b>#119</b><small>relatado hoje</small></div>
+    </div>
+    <div>
+      <div class="col-head"><span class="dot d-amber"></span><span>Em triagem</span></div>
+      <div class="card"><b>#117</b><small>revisando nota do sistema</small></div>
+    </div>
+    <div>
+      <div class="col-head"><span class="dot d-blue"></span><span>Fila técnica</span></div>
+      <div class="card"><b>#112</b><small>virou issue no repo</small></div>
+    </div>
+    <div>
+      <div class="col-head"><span class="dot d-green"></span><span>Concluído</span></div>
+      <div class="card"><b>#109</b><small>respondido e fechado</small></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <h2>A separação</h2>
+
+  <div class="split">
+    <div class="split-card">
+      <p class="t"><i class="ti ti-users" aria-hidden="true"></i> Chamado de pessoa</p>
+      <p class="s">Sempre fica na esteira acima</p>
+    </div>
+    <div class="split-card">
+      <p class="t"><i class="ti ti-git-pull-request" aria-hidden="true"></i> Vira fila técnica</p>
+      <p class="s">Issue no repo — fecha, e o chamado original recebe a resposta</p>
+    </div>
+  </div>
+
+  <footer>Clínica Médica Assis — desenho de arquitetura, sem dado de paciente</footer>
+</div>
+</body>
+</html>
