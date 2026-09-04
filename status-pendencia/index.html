@@ -377,7 +377,7 @@
 <header>
   <div class="marca">ASSIS · clínica médica</div>
   <h1>Status &amp; Pendências — Operação SendPulse</h1>
-  <p>WhatsApp API (n8n + CliMed) · atualizado em 29/jul/2026</p>
+  <p>WhatsApp API (n8n + CliMed) · atualizado em 04/set/2026</p>
 </header>
 
 <main>
@@ -389,148 +389,113 @@
         <span class="rotulo">Início identificado</span>
       </div>
       <div class="hmetric">
-        <span class="valor">~62 dias</span>
+        <span class="valor">~99 dias</span>
         <span class="rotulo">Do diagnóstico até hoje</span>
       </div>
       <div class="hmetric">
-        <span class="valor">~62–69h</span>
+        <span class="valor">~145–170h</span>
         <span class="rotulo">Tempo ativo estimado</span>
       </div>
     </div>
-    <p class="header-disclaimer">Estimativa aproximada, revisada em 29/jul — ver metodologia na seção "Trajetória até aqui"</p>
+    <p class="header-disclaimer">Estimativa aproximada, revisada em 04/set — cruzada com o histórico de commits do repositório privado <code>operacao-sendpulse</code> — ver metodologia na seção "Trajetória até aqui"</p>
   </div>
 
   <div class="banner" style="border-left-color: var(--sucesso);">
-    <h2>🚀 Em produção — 2º dia de disparo real</h2>
-    <p>Sistema no ar desde 28/jul, 02h. Balanço fechado do 1º dia: 1.119 elegíveis → 1.061 aceitas → ~391 entregues (35%) — o gargalo é o teto da Meta de 250 conversas/24h, não decisão nem orçamento. Gabriel confirmou a estratégia: <strong>não pausar, não criar cap</strong> — deixar o volume subir naturalmente até destravar o degrau de 2.000 conversas/dia (meta: 1.000 clientes únicos em 7 dias corridos, hoje em 371).</p>
+    <h2>🎉 O teto da Meta subiu — 250 → 2.000 → 10.000 mensagens/24h (03/set)</h2>
+    <p>Depois de mais de 6 semanas travado em 250 conversas/24h (chamado aberto em 10/ago, dois casos na Meta sem solução formal), o teto subiu sozinho no dia 03/set: 18h33 foram para 2.000, 14h48 (do mesmo relógio, já no dia seguinte de disparo) para 10.000. Não se sabe ao certo se foi o escalonamento humano feito pela SendPulse em 27/ago ou reavaliação automática da Meta. No mesmo dia a VPS foi dobrada (Hostinger KVM 2 → KVM 4) e os 11 crons de disparo ganharam ritmo (rate limiting) para não estourar o limite de 30 req/min da SendPulse — o gargalo que definiu o projeto desde o go-live deixou de existir.</p>
   </div>
 
   <div class="banner">
-    <h2>📋 Pendências agora vivem no Todoist</h2>
-    <p>Desde 29/jul, a lista de ações saiu do <code>to-do.md</code> e foi para o Todoist (projeto <em>Job 💼 › Clínica-Assis › WhatsApp-SendPulse</em>, 58 itens). Esta página resume os itens mais relevantes por tema — para o detalhe completo e o estado em tempo real, o Todoist é a fonte de verdade.</p>
+    <h2>📋 Pendências continuam no Todoist</h2>
+    <p>Desde 29/jul, a lista de ações vive no Todoist (projeto <em>Job 💼 › Clínica-Assis › WhatsApp-SendPulse</em>) — esta página resume os itens mais relevantes por tema, com base no que ainda aparece em aberto no <code>handoff.md</code>/<code>to-do.md</code> em 04/set. Para o detalhe completo e o estado em tempo real, o Todoist é a fonte de verdade.</p>
   </div>
 
   <section>
     <h2>Pendências — Gabriel</h2>
 
-    <div class="card bloqueio">
+    <div class="card pendente">
       <span class="badge gabriel">Gabriel</span>
-      <div class="card-titulo">🚨 Cota de contatos esgota antes do plano renovar</div>
-      <div class="card-desc">~1.016 de 5.000 contatos usados — dobrou num único dia. No ritmo atual, esgota por volta de 5/ago, 18 dias antes do plano renovar em 23/ago. Decidir: fazer upgrade de plano ou podar o volume de disparo. (Prazo interno: 30/jul.)</div>
+      <div class="card-titulo">Ligar o robô fechando conversa sozinho</div>
+      <div class="card-desc"><code>fechar_bot_ativo</code> está construído desde 27/ago, mas o portão continua desligado — decisão pendente do Gabriel.</div>
     </div>
 
     <div class="card pendente">
       <span class="badge gabriel">Gabriel</span>
-      <div class="card-titulo">Segurança — 3 itens em aberto</div>
+      <div class="card-titulo">Plano SendPulse até a renovação de 24/set</div>
+      <div class="card-desc">Base de contatos caindo com a poda automática nova (<code>podar_contatos.py</code>), mas o piso do plano é o MAU (usuários ativos mensais), que não cai com poda — decidir se mantém ou reduz o plano.</div>
+    </div>
+
+    <div class="card pendente">
+      <span class="badge gabriel">Gabriel</span>
+      <div class="card-titulo">Segurança — pendência antiga, ainda aberta</div>
       <ul class="lista-obs">
-        <li>Rotacionar a <code>SP_CLIENT_SECRET</code> da SendPulse e as senhas da equipe — continuam válidas mesmo já removidas do código atual.</li>
-        <li>Portfólio Meta: 2FA está como "Ninguém", passkey desligado, 1 usuário inativo há 90+ dias e 1 usuário com <code>full_control</code> não documentado.</li>
-        <li>Definir política de PII de funcionário (retenção, quem vê, o que acontece no desligamento) — a ficha cadastral/RH já guarda CPF e endereço.</li>
+        <li>Rotacionar a <code>SP_CLIENT_SECRET</code> da SendPulse e a senha compartilhada dos 8 operadores — seguem válidas mesmo já removidas do código, aberta desde antes de 30/jul.</li>
+        <li>Política de retenção/acesso a PII de funcionário e de médicos cadastrados (CPF, endereço, conselho) — sem definição escrita.</li>
       </ul>
     </div>
 
     <div class="card pendente">
       <span class="badge gabriel">Gabriel</span>
-      <div class="card-titulo">Financeiro/operacional — conferir e decidir</div>
-      <ul class="lista-obs">
-        <li>Conferir a 1ª recarga automática de saldo (configuração não aparece pela API, só olhando o painel).</li>
-        <li>Confirmar o valor real da renovação do plano em 23/ago — ledger mostra R$380, valor citado foi R$391.</li>
-        <li>Distribuir a senha temporária: 9 das 12 pessoas ainda não trocaram.</li>
-      </ul>
+      <div class="card-titulo">Escopo "Alan recebe tudo enquanto treina"</div>
+      <div class="card-desc">Sem data de fim definida — risco de virar permanente por esquecimento; revisão marcada para 04/set na tarefa <code>[A043]</code>.</div>
     </div>
 
     <div class="card pendente">
       <span class="badge gabriel">Gabriel</span>
-      <div class="card-titulo">Decisões de produto/UX pendentes</div>
-      <ul class="lista-obs">
-        <li>Ligar a apresentação do atendente ao paciente (2 interruptores fechados, já construído).</li>
-        <li>Tirar ou manter "Infusão de Cetamina" no menu de MC (não erra roteamento, é só clareza).</li>
-        <li>Fechar se o handoff sem unidade definida continua caindo nas duas recepções.</li>
-        <li>Decidir horário do D-0 ou o texto de "fora do horário".</li>
-        <li>Confirmar anexo de mídia dentro do expediente (só testado fora do horário até agora).</li>
-        <li>Mostrar o painel "Iniciar conversa" para a Meire usar, e decidir de onde vem a lista de números do disparo manual.</li>
-      </ul>
-    </div>
-
-    <div class="card pendente">
-      <span class="badge gabriel">Gabriel</span>
-      <div class="card-titulo">Comunicação pendente</div>
-      <ul class="lista-obs">
-        <li>Repassar o Bloco G (números inválidos) à Meire — kill-switch já armado, falta só avisar.</li>
-        <li>Avisar a equipe que "Números inválidos"/"Bloqueios" saíram da barra de menu (viraram cards em Uso diário).</li>
-        <li>Avisar a recepção de SP sobre um pedido de receita recuperado.</li>
-        <li>Aguardar a Meta aprovar os templates <code>_v2</code> da Pesquisa.</li>
-      </ul>
+      <div class="card-titulo">Separação de permissão recepção × adm-Assis na SendPulse</div>
+      <div class="card-desc">Parqueada até o go-live da equipe toda.</div>
     </div>
   </section>
 
   <section>
     <h2>Pendências — Meire / Recepção / Equipe</h2>
 
-    <div class="card bloqueio">
+    <div class="card pendente">
       <span class="badge gabriel">Meire</span>
-      <div class="card-titulo">🚨 Vincular telefone aos agendamentos de Cetamina de agosto</div>
-      <div class="card-desc">10 de 12 agendamentos de agosto estão sem telefone — agosto inteiro praticamente zerado. Falta vincular a ficha do CliMed pra esses casos.</div>
+      <div class="card-titulo">Repassar decisões de disparo/bloqueio à equipe</div>
+      <div class="card-desc">Webhook de falha e critério de revisão manual precisam ser comunicados à recepção.</div>
     </div>
 
     <div class="card pendente">
       <span class="badge gabriel">Recepção</span>
-      <div class="card-titulo">Cadastro e disponibilidade</div>
-      <ul class="lista-obs">
-        <li>Limpar o campo de nome no CliMed — recados da recepção continuam entrando ali; o saneador automático só trata o sintoma no envio, não a causa.</li>
-        <li>45 cadastros hoje não são salvos pelo saneador e por isso não recebem mensagem automática.</li>
-        <li>Lembrete diário: clicar em "recebendo" no <code>status.climed.tech</code> antes das 9h.</li>
-        <li>Ler o checklist de qualidade do WhatsApp — protege a nota "Alta" do número.</li>
-      </ul>
+      <div class="card-titulo">Priorização do Incentivo D+3</div>
+      <div class="card-desc">Indecisão registrada sobre como priorizar o Incentivo dentro da cota de disparo — pendente de decisão.</div>
     </div>
   </section>
 
   <section>
     <h2>Pendências — Claude Code / VS Code</h2>
 
-    <div class="card bloqueio">
+    <div class="card">
       <span class="badge claude">Claude Code</span>
-      <div class="card-titulo">🚨 NPS não capturou nenhuma resposta no 1º dia</div>
-      <div class="card-desc">Causa já identificada: é problema de entrega (mensagem não chegou em 143 dos casos), não bug de código.</div>
+      <div class="card-titulo">Reavaliar priorização/batching dos crons agora que o teto subiu</div>
+      <div class="card-desc">A lógica foi desenhada para brigar por 250 conversas/24h — com 10.000 disponíveis, vale reolhar prioridades. Ainda sem decisão tomada, só ponto de atenção.</div>
     </div>
 
     <div class="card">
       <span class="badge claude">Claude Code</span>
-      <div class="card-titulo">Ajustes no roteador de resposta SIM/NÃO</div>
-      <div class="card-desc">Trocar a lista de negação por lista de permissão no bloco 0 (hoje gera falso "sim" em ambiguidade); ampliar o vocabulário reconhecido de confirmação/cancelamento; corrigir o bug do telefone de família, que hoje confirma só 1 agendamento por vez (11 casos identificados).</div>
+      <div class="card-titulo">Vigiar o degrau seguinte (100.000/dia)</div>
+      <div class="card-desc">Remedir <code>contatos_unicos_tier.py</code> — precisa de 5.000 únicos/7 dias, hoje em 1.304. Também acompanhar se o erro <code>131048</code> (teto) cai a zero de fato após a subida (KPI <code>falha_cota</code> no painel de Indicadores).</div>
     </div>
 
     <div class="card">
       <span class="badge claude">Claude Code</span>
-      <div class="card-titulo">Levar batching + retryOnFail aos crons restantes</div>
-      <div class="card-desc">Já aplicado nos 3 crons originais; faltam 6 (menos o de Cetamina, que precisa de builder próprio). Depende de medir a manhã de 29/jul primeiro.</div>
+      <div class="card-titulo">Proteger o quality_rating GREEN da Meta</div>
+      <div class="card-desc">Mais crítico agora, com até 40× mais volume possível de um dia para o outro.</div>
     </div>
 
     <div class="card">
       <span class="badge claude">Claude Code</span>
-      <div class="card-titulo">Saneador de nome — espalhar e medir</div>
-      <div class="card-desc">Medir se o vazamento de nome cru no D-0 foi de fato resolvido; levar o saneador para o Mapa da Cetamina e para <code>casaNome()</code>; decidir se o saneador entra no <code>build_agenda.py</code>.</div>
-    </div>
-
-    <div class="card">
-      <span class="badge claude">Claude Code</span>
-      <div class="card-titulo">Diagnósticos e verificações em aberto</div>
-      <ul class="lista-obs">
-        <li><code>build_reset.py --test</code> instável (~1 falha a cada 4, sem afetar produção, causa ainda não achada).</li>
-        <li>Diagnosticar a segunda atribuição do handoff de Cetamina.</li>
-        <li>Provar ao vivo os 3 pontos de despedida que a suíte de teste ainda não cobre.</li>
-        <li>Vigiar o volume de um novo tipo de escape (paciente digitou em vez de escolher da lista).</li>
-        <li>1 FAIL aberto no script de checagem de gravação (despedida silenciada).</li>
-      </ul>
+      <div class="card-titulo">Conferir o vínculo por wamid nas próximas manhãs</div>
+      <div class="card-desc"><code>[C177]</code> — achado de 03/set (confirmação por clique "sorteava" a consulta errada quando havia mais de uma aberta) ainda fresco; checar se a correção segue gravando certo.</div>
     </div>
 
     <div class="card">
       <span class="badge claude">Claude Code</span>
       <div class="card-titulo">Faxina e organização</div>
       <ul class="lista-obs">
-        <li>Apagar o usuário <code>demo</code> depois da gravação dos tutoriais.</li>
-        <li>Revisar os limites do painel de disparo manual (prazo 4/ago).</li>
-        <li>Escrever uma skill para o Cowork publicar auditoria sozinho, sem depender do Claude Code para esse passo específico.</li>
+        <li>Apagar a coluna legada <code>climed_usuarios.papel</code> — depende da <code>[C102]</code> (visão de equipe por permissão) vir primeiro.</li>
+        <li>Rotação de segredos vazados (<code>SP_CLIENT_SECRET</code>, senha compartilhada dos 8 operadores) — pendência de segurança nunca fechada.</li>
       </ul>
     </div>
   </section>
@@ -551,24 +516,27 @@
           <tr><th>Bloco</th><th>O que é</th><th>Situação</th></tr>
         </thead>
         <tbody>
-          <tr><td>A — Confirmação D-2/D-1/D-0</td><td>Cron lê CliMed, dispara template, captura SIM/NÃO</td><td class="status on">🚀 Disparando desde 28/jul, 07h30</td></tr>
-          <tr><td>B — NPS · Pesquisa · Incentivo</td><td>Cron + conversa no bot + formulário</td><td class="status on">🚀 No ar — Incentivo ligado com carência de 30 dias</td></tr>
-          <tr><td>C — Pós-falta</td><td>Cron + handoff</td><td class="status on">🚀 No ar · Reativação descartada em definitivo</td></tr>
-          <tr><td>D — Receitas/Relatórios</td><td>Coleta no bot → painel → notificações</td><td class="status on">Em produção desde 23/jul · notificações fazem push</td></tr>
-          <tr><td>E — Agenda de Cetamina</td><td>Painel interno da equipe (v2 promovido, v1 aposentado)</td><td class="status on">No ar · falta distribuir senha (9 de 12 pessoas)</td></tr>
-          <tr><td>E2 — WhatsApp de Cetamina</td><td>Confirmação D-2 + lembrete D-1</td><td class="status on">🚀 No ar e entregando desde 28/jul</td></tr>
-          <tr><td>G — Números inválidos</td><td>Detecta e limpa nº quebrado</td><td class="status on">Em produção (kill-switch) · falta repasse à Meire</td></tr>
-          <tr><td>Menu receptivo</td><td>Qualquer mensagem abre o menu, com CPF + enriquecimento de contato</td><td class="status on">Em produção</td></tr>
-          <tr><td>Handoff bot→humano</td><td>Roteia por motivo × unidade, com dead-letter contra resposta perdida</td><td class="status on">No ar · 100% dos pontos de transferência</td></tr>
-          <tr><td>Painéis internos</td><td>Login unificado + widget (bolinha 52px) + ficha cadastral/RH</td><td class="status on">No ar, 8 hosts · barra de menu reduzida em 14 telas (29/jul)</td></tr>
+          <tr><td>A — Confirmação D-2/D-1/D-0</td><td>Cron lê CliMed, dispara template, captura SIM/NÃO</td><td class="status on">🚀 No ar · vínculo por <code>wamid</code> e ritmo (rate limit) desde 03/set</td></tr>
+          <tr><td>B — NPS · Pesquisa · Incentivo</td><td>Cron + conversa no bot + formulário</td><td class="status on">🚀 No ar · achado bug que dobrou a base de NPS (252→502, 27/ago)</td></tr>
+          <tr><td>C — Pós-falta</td><td>Cron + handoff</td><td class="status on">🚀 No ar · ritmo aplicado (03/set) · Reativação segue descartada</td></tr>
+          <tr><td>D — Receitas/Relatórios</td><td>Coleta no bot → painel → notificações</td><td class="status on">Em produção · botão de recusa com aviso automático (16/ago)</td></tr>
+          <tr><td>E — Agenda de Cetamina</td><td>Painel interno + Sessão Clínica + Financeiro + Centro de Custo</td><td class="status on">No ar · ganhou atendimento clínico completo (17/ago)</td></tr>
+          <tr><td>E2 — WhatsApp de Cetamina</td><td>Confirmação D-2 + lembrete D-1 + repesque</td><td class="status on">🚀 No ar · apagão de 3 semanas nas segundas corrigido (25/ago)</td></tr>
+          <tr><td>G — Números inválidos</td><td>Detecta e limpa nº quebrado</td><td class="status on">Em produção · regra "3 falhas apaga" + Vigia do Bloco G (16/ago)</td></tr>
+          <tr><td>Menu receptivo</td><td>Qualquer mensagem abre o menu, com CPF + enriquecimento de contato</td><td class="status on">Em produção, estável</td></tr>
+          <tr><td>Handoff bot→humano</td><td>Roteia por motivo × unidade, com dead-letter contra resposta perdida</td><td class="status on">No ar · achado e corrigido: fila descartava por relógio cego (114 perdidas, 14/ago)</td></tr>
+          <tr><td>Painéis internos</td><td>Login unificado + permissões por perfil + ficha cadastral/RH</td><td class="status on">No ar, cresceu bastante: +Permissões, +Satisfação, +Relatórios, +Indicadores, +Convênios, +RH médicos</td></tr>
           <tr><td>Painel de Agenda (leitura)</td><td>Cruza CliMed + status WhatsApp numa tela só</td><td class="status on">No ar em agenda.climed.tech</td></tr>
-          <tr><td>Portal / Intranet</td><td>Porta de entrada única: cards por painel + notas pessoais</td><td class="status on">No ar · destino padrão pós-login</td></tr>
-          <tr><td>Enriquecimento de contato</td><td>Cruza telefone/CPF com o CliMed e preenche dados na conversa</td><td class="status on">No ar, 19 variáveis</td></tr>
+          <tr><td>Portal / Intranet</td><td>Porta de entrada única: cards por painel + notas pessoais</td><td class="status on">No ar · ganhou presença real da equipe (10/ago)</td></tr>
+          <tr><td>Enriquecimento de contato</td><td>Cruza telefone/CPF com o CliMed e preenche dados na conversa</td><td class="status on">No ar · redesenhado por evento — cobertura 125→415 contatos (30/jul)</td></tr>
           <tr><td>Bloqueio de disparos</td><td>Guarda por onde todo disparo passa</td><td class="status on">No ar</td></tr>
-          <tr><td>Iniciar conversa</td><td>Disparo manual de template — 35 modelos, agora com canvas de etiquetas arrastáveis</td><td class="status on">No ar, atualizado 29/jul</td></tr>
+          <tr><td>Iniciar conversa</td><td>Disparo manual — 35 modelos + modo "recado" + disjuntor de cota</td><td class="status on">No ar · modo texto livre sem consumir cota (02/ago)</td></tr>
           <tr><td>Apresentação do atendente</td><td>Atendente se apresenta ao paciente ao assumir a conversa</td><td class="status construido">Construído, aguardando Gabriel autorizar</td></tr>
           <tr><td>Despedida ao fechar chat</td><td>Mensagem automática de encerramento da conversa</td><td class="status on">No ar e ligada</td></tr>
-          <tr><td>Auditorias (novo)</td><td>Painel que publica auditorias internas na intranet</td><td class="status on">🆕 No ar desde 29/jul, atrás de login admin</td></tr>
+          <tr><td>Auditorias</td><td>Painel que publica auditorias internas na intranet</td><td class="status on">No ar · 15 auditorias publicadas desde 29/jul (cadência ~1 a cada 3-5 dias)</td></tr>
+          <tr><td>Vigias (novo)</td><td>Equipe, Bloco G, saldo financeiro, CliMed (5 em 5 min)</td><td class="status on">🆕 No ar — nasceram entre 16/ago e 03/set</td></tr>
+          <tr><td>Histórico de Conversas (novo)</td><td>Busca por telefone/CPF/nome, linha do tempo do paciente</td><td class="status on">🆕 No ar desde 04/set, acervo inicial de 135 conversas</td></tr>
+          <tr><td>Poda automática de contatos (novo)</td><td>Limpeza diária por systemd timer (inatividade 30d/7d)</td><td class="status on">🆕 No ar desde 03/set</td></tr>
         </tbody>
       </table>
     </div>
@@ -599,7 +567,7 @@
   <section>
     <h2>⏱️ Trajetória até aqui</h2>
 
-    <p class="disclaimer">Estimativa a partir das datas e horários registrados no <code>handoff.md</code>/<code>legacy.md</code> e da atividade de arquivos do projeto — não é um cronômetro exato, é uma aproximação. Os dias 27 e 28/jul foram os mais intensos até agora, com várias sessões de 4 a 6h e meia, culminando no go-live e na madrugada seguinte de estabilização.</p>
+    <p class="disclaimer">Estimativa a partir das datas e horários registrados no <code>handoff.md</code>/<code>legacy.md</code>, cruzada com o histórico de commits do repositório privado <code>github.com/gagarciam/operacao-sendpulse</code> — não é um cronômetro exato, é uma aproximação. Os commits confirmam as datas e a intensidade dos dias abaixo, mas não convertem 1:1 em horas (cada sessão gera dezenas de commits pequenos). Até 29/jul, os dias mais intensos foram 27 e 28/jul (go-live). Depois do go-live, o ritmo mudou: em vez de sprints de construção, passou a ser dinheiro e produção reais — 14/ago, 16→17/ago, 25/ago, 27/ago e 03/set concentram as sessões mais longas e as descobertas mais graves do projeto.</p>
 
     <ul class="timeline">
       <li>
@@ -735,6 +703,78 @@
           </ul>
         </div>
       </li>
+      <li>
+        <div class="fase-card">
+          <div class="fase">30/jul/2026</div>
+          <div class="fase-titulo">Templates com botão entram em produção</div>
+          <ul class="itens">
+            <li><span class="check">✓</span>6 crons religados com templates <code>_v2</code> com botão — a "Rota C" (o próprio botão carrega o destino) dispensa gatilho por palavra-chave</li>
+            <li><span class="check">✓</span>Disparo manual para "telefone de família" deixa de travar — modal de múltipla escolha, uma mensagem por pessoa marcada</li>
+            <li><span class="check">✓</span>Enriquecimento de contato redesenhado (cron → evento) — cobertura salta de 125 para 415 contatos</li>
+            <li><span class="check">✓</span>Trava de cancelamento de lote pelo admin corrigida no mesmo dia</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="fase-card">
+          <div class="fase">01–08/ago/2026</div>
+          <div class="fase-titulo">Primeira semana de produção real</div>
+          <ul class="itens">
+            <li><span class="check">✓</span>Grafo de conhecimento (<code>graphify</code>) reconstruído do zero — estava 67% órfão</li>
+            <li><span class="check">✓</span>Painel "Reportar erros" no ar (02/ago) — substitui o <code>feedback.docx</code> que vazava PHI por link sem login</li>
+            <li><span class="check">✓</span>Disparo manual ganha modo "Enviar recado" — texto livre sem consumir a cota de 250</li>
+            <li><span class="check">✓</span>Sistema de permissões por perfil substitui o papel único admin/operador (02–03/ago)</li>
+            <li><span class="check">✓</span>Primeiro backup real para os 5 bancos do Coolify (03/ago)</li>
+            <li>🚨<span style="margin-left:2px">Achado: a conta já cumpria o critério para o degrau de 2.000/dia havia mais de uma semana, e o pedido formal à Meta ainda não tinha sido aberto (04/ago)</span></li>
+            <li><span class="check">✓</span>Corte da agenda às 18:30 — consultas marcadas depois disso deixam de disparar automático (05/ago, decisão do Gabriel)</li>
+            <li><span class="check">✓</span>Auditoria 10: taxa de entrega real 31,6%, 93,6% da perda por teto da Meta (05/ago)</li>
+            <li>🚦<span style="margin-left:2px">Fuso da VPS muda de UTC para America/Sao_Paulo (07/ago) — gerou cadeia de bugs de fuso que se estendeu por semanas</span></li>
+            <li><span class="check">✓</span>14 aplicações do Coolify redeployadas com fuso correto; sininho de notificações no ar (08/ago)</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="fase-card">
+          <div class="fase">09–17/ago/2026</div>
+          <div class="fase-titulo">Segunda e terceira semanas — achados graves e Cetamina completa</div>
+          <ul class="itens">
+            <li><span class="check">✓</span>Migração <code>[C088]</code>: 187 colunas de data viram <code>TIMESTAMPTZ</code> — Auditoria 13 (09/ago)</li>
+            <li>🚨<span style="margin-left:2px">Chamado aberto à Meta pedindo o degrau de 2.000 — bot de suporte da Meta alucinou instruções falsas por dias (10/ago)</span></li>
+            <li>🚨<span style="margin-left:2px"><strong>Achado grave</strong>: a fila de atendimento descartava conversas em silêncio por relógio cego — 114 perdidas entre 06–09/ago, 32 sem nenhuma resposta humana; causa raiz: produção rodava um build de 3 semanas atrás (14/ago)</span></li>
+            <li><span class="check">✓</span>Painel de Satisfação criado — primeiro cálculo de NPS do projeto (14/ago)</li>
+            <li><span class="check">✓</span>Sessão maratona (16→17/ago): Bloco G ganha regra "3 falhas apaga telefone" + Vigia; painel de Relatórios; painel de Indicadores (53 KPIs); Cadastro de Médicos</li>
+            <li><span class="check">✓</span><strong>17/ago, dia mais denso do período</strong>: Sessão Clínica da Cetamina completa (ficha em tela, dose com trava de segurança); Financeiro da Cetamina + Centro de Custo (achado bug de ~R$180 mil/ano no repasse médico); painel de Convênios; nome de médico malformado corrigido (afetava 44% das confirmações)</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="fase-card">
+          <div class="fase">23–28/ago/2026</div>
+          <div class="fase-titulo">Quarta semana — auditorias que reviram números publicados</div>
+          <ul class="itens">
+            <li><span class="check">✓</span>Auditoria do fluxo de recusa: 16 pacientes recusados entre 30/jul e 15/ago nunca souberam — decisão do Gabriel de não reenviar retroativamente (23/ago)</li>
+            <li><span class="check">✓</span>Atendimento da Cetamina reorganizado num modal de 5 abas; alta médica passa a travar de fato nos 90 min de observação (25/ago)</li>
+            <li>🐞<span style="margin-left:2px">Segunda-feira da Cetamina não recebia nenhuma mensagem havia 3 semanas — corrigido; repesque D-2 sobe cobertura de 58% para 79% (25/ago)</span></li>
+            <li>🚨<span style="margin-left:2px"><strong>Achado do mês</strong>: desde 30/jul, confirmação por botão chegava com corpo vazio — ~120 confirmações/dia perdidas por 28 dias (1.412 respostas resgatadas do banco) (27/ago)</span></li>
+            <li><span class="check">✓</span>250 notas de NPS resgatadas do limbo — base dobra (252→502) e o índice publicado, achado subestimado pela equipe, na verdade estava inflado (96,0 → 93,0 real) — Auditoria 22 (27/ago)</li>
+            <li><span class="check">✓</span>Nasce o Vigia da Equipe — descobre atendente 13 dias fora do roteamento sem sintoma aparente (27/ago)</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <div class="fase-card">
+          <div class="fase">01–04/set/2026</div>
+          <div class="fase-titulo">🎉 O gargalo da Meta acaba</div>
+          <ul class="itens">
+            <li>🎉<span style="margin-left:2px">Queda do CliMed de madrugada (1h40, 01/set) — 505 agendamentos elegíveis sem disparo; nasce vigia de 5 em 5 min — Auditoria 23</span></li>
+            <li>🎉<span style="margin-left:2px"><strong>O teto da Meta sobe: 250 → 2.000 → 10.000 mensagens/24h</strong>, depois de mais de 6 semanas travado (03/set)</span></li>
+            <li><span class="check">✓</span>Mensalidade da SendPulse subiu sozinha (R$380→R$600/mês) ao cruzar 5.000 contatos — nasce a poda automática diária (03/set)</li>
+            <li><span class="check">✓</span>VPS dobrada (Hostinger KVM 2 → KVM 4); vigia de saldo financeiro no ar; 11 crons ganham ritmo contra o limite de 30 req/min da SendPulse (03/set)</li>
+            <li><span class="check">✓</span>Confirmação por clique deixa de ser "sorteada" entre consultas do mesmo telefone — vínculo por <code>wamid</code> (03/set)</li>
+            <li><span class="check">✓</span>Painel "Histórico de Conversas" no ar na intranet — busca por telefone/CPF/nome, linha do tempo do paciente (04/set)</li>
+          </ul>
+        </div>
+      </li>
     </ul>
   </section>
 
@@ -742,7 +782,7 @@
 
 <footer>
   <div class="atualizado">Clínica Médica Assis</div>
-  Gerado a partir de <code>to-do.md</code> / <code>handoff.md</code> — atualizar quando o estado mudar.
+  Gerado a partir de <code>to-do.md</code> / <code>handoff.md</code> / histórico de commits — atualizar quando o estado mudar.
 </footer>
 
 </body>
