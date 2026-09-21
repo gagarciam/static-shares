@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Planner Assis · Livance · Domingo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F4EEDF; --page:#FFFDF7; --line:#E2D6B8; --ink:#2B2A22; --ink-muted:#8A8367;
+  --blue-h:#4C6C9B; --blue-bg:#E2ECF7;
+  --green-h:#4C7A4E; --green-bg:#E4F0E1;
+  --orange-h:#B0642A; --orange-bg:#FBE8D4;
+  --alert:#C15A3E; --alert-bg:#FBEAE4;
+  --font-display:'Fraunces',Georgia,serif;
+  --font-body:'IBM Plex Sans',-apple-system,sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;}
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);margin:0;padding-inline:16px;padding-block:32px 48px;}
+.sheet{max-width:1180px;margin:0 auto;background:var(--page);border:1px solid var(--line);border-radius:20px;padding:28px 26px 30px;position:relative;box-shadow:0 1px 0 var(--line), 0 18px 34px -24px rgba(43,42,34,.35);}
+.rings{display:flex;justify-content:center;gap:22px;margin-bottom:14px;}
+.rings i{width:12px;height:12px;border-radius:50%;background:var(--page);border:2.5px solid var(--line);display:block;}
+.fold{position:absolute;right:0;bottom:0;width:34px;height:34px;background:linear-gradient(135deg,transparent 50%,var(--paper) 50%);border-radius:0 0 20px 0;box-shadow:-1px -1px 3px rgba(43,42,34,.12) inset;}
+h1{font-family:var(--font-display);font-weight:600;font-size:24px;text-align:center;margin:0 0 4px;text-wrap:balance;}
+h1 b{font-weight:700;}
+.sub{text-align:center;color:var(--ink-muted);font-size:13px;margin:0 0 18px;}
+hr.tear{border:none;border-top:1.5px dashed var(--line);margin:0 0 18px;}
+
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;}
+table{width:100%;min-width:920px;border-collapse:collapse;table-layout:fixed;}
+colgroup col.lbl{width:88px;}
+th,td{border:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top;}
+thead th{padding:9px 8px 8px;}
+th.corner{background:var(--paper);}
+.dayhead{font-family:var(--font-display);font-weight:700;font-size:13px;margin:0;}
+.dayhead .loc{display:block;font-family:var(--font-body);font-weight:400;font-size:9px;margin-top:1px;opacity:.8;}
+th.assis{background:var(--blue-bg);color:var(--blue-h);}
+th.livance{background:var(--green-bg);color:var(--green-h);}
+th.domingo{background:var(--orange-bg);color:var(--orange-h);}
+td.rowlabel{background:var(--paper);font-family:var(--font-mono);font-weight:500;font-size:10px;color:var(--ink-muted);white-space:nowrap;}
+td.cell{font-size:10.5px;line-height:1.3;}
+td.cell b{display:block;font-weight:600;font-size:11px;color:var(--ink);}
+td.cell span{display:block;color:var(--ink-muted);font-size:9.5px;margin-top:1px;}
+td.cell.warn{background:var(--alert-bg);}
+td.cell.warn b{color:var(--alert);}
+tr.notesrow td{background:var(--paper);}
+tr.notesrow td.rowlabel{font-weight:600;color:var(--ink);}
+tr.notesrow td.cell{font-size:9.5px;color:var(--ink-muted);line-height:1.35;font-style:italic;}
+
+.general{margin-top:18px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--page);}
+.general h3{font-family:var(--font-display);font-weight:600;font-size:14px;margin:0;padding:12px 18px;background:var(--paper);color:var(--ink);border-bottom:1px solid var(--line);}
+.general .section{padding:14px 18px;}
+.general .section+.section{border-top:1px dashed var(--line);}
+.general .eyebrow{font-size:9.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-muted);font-weight:600;margin:0 0 10px;}
+.general .rules{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none;}
+.general .rules li{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:6px 11px;font-size:11.5px;display:flex;align-items:center;gap:6px;}
+.general .rules li b{font-family:var(--font-mono);font-weight:500;color:var(--ink-muted);}
+.general .rules li.alert{border-color:var(--alert);color:var(--alert);background:var(--alert-bg);}
+.general p.note{font-size:11.5px;color:var(--ink);margin:0;line-height:1.55;}
+.general p.note+.taglist{margin-top:10px;}
+.general .taglist{display:flex;flex-wrap:wrap;gap:6px;margin:0;}
+.general .taglist+.note{margin-top:10px;}
+.general .tag{background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:10.5px;color:var(--ink);}
+.general .tiers{display:flex;flex-direction:column;gap:8px;}
+.general .tier{display:flex;gap:10px;align-items:baseline;}
+.general .tier b{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-muted);min-width:112px;flex:none;font-weight:500;}
+.general .tier span{font-size:11.5px;color:var(--ink);line-height:1.4;}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="rings"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <h1>Minha agenda semanal: <b>rotina adaptada (perfil matinal)</b></h1>
+  <p class="sub">ALFA protegido todo dia — o resto muda porque a agenda muda, não porque a energia muda.</p>
+  <hr class="tear">
+
+  <div class="tablewrap">
+  <table>
+    <colgroup>
+      <col class="lbl">
+      <col><col><col><col><col><col><col>
+    </colgroup>
+    <thead>
+      <tr>
+        <th class="corner"></th>
+        <th class="assis"><p class="dayhead">segunda<span class="loc">Assis · 08h30–18h</span></p></th>
+        <th class="assis"><p class="dayhead">terça<span class="loc">Assis · 08h30–18h</span></p></th>
+        <th class="livance"><p class="dayhead">quarta<span class="loc">Livance · 08h–18h</span></p></th>
+        <th class="livance"><p class="dayhead">quinta<span class="loc">Livance · 08h–18h</span></p></th>
+        <th class="assis"><p class="dayhead">sexta<span class="loc">Assis · 09h–17h</span></p></th>
+        <th class="livance"><p class="dayhead">sábado<span class="loc">Livance · 08h–14h</span></p></th>
+        <th class="domingo"><p class="dayhead">domingo<span class="loc">livre</span></p></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="rowlabel">06h–07h30</td>
+        <td class="cell"><b>ALFA</b><span>Sapo A1 — documento clínico, estudo clínico, consultório particular (backoffice) ou automação técnica</span></td>
+        <td class="cell"><b>ALFA</b><span>Sapo A1 — documento clínico, estudo clínico, consultório particular (backoffice) ou automação técnica</span></td>
+        <td class="cell"><b>ALFA</b><span>Sapo A1 — documento clínico, estudo clínico, consultório particular (backoffice) ou automação técnica</span></td>
+        <td class="cell"><b>ALFA</b><span>Sapo A1 — documento clínico, estudo clínico, consultório particular (backoffice) ou automação técnica</span></td>
+        <td class="cell"><b>ALFA</b><span>Sapo A1 — documento clínico, estudo clínico, consultório particular (backoffice) ou automação técnica</span></td>
+        <td class="cell"><b>ALFA</b><span>Sapo A1 — documento clínico, estudo clínico, consultório particular (backoffice) ou automação técnica</span></td>
+        <td class="cell"><b>acordar</b><span>acorda às 6h, sem puxar tarefa pesada</span></td>
+      </tr>
+      <tr>
+        <td class="rowlabel">07h30–08h30</td>
+        <td class="cell"><b>café</b><span>se arrumar, ir pra Marselhesa 75</span></td>
+        <td class="cell"><b>café</b><span>se arrumar, ir pra Marselhesa 75</span></td>
+        <td class="cell"><b>deslocamento</b><span>café, ir pra Livance</span></td>
+        <td class="cell"><b>deslocamento</b><span>café, ir pra Livance</span></td>
+        <td class="cell"><b>café</b><span>se arrumar (1º paciente só às 9h)</span></td>
+        <td class="cell"><b>deslocamento</b><span>café, ir pra Livance</span></td>
+        <td class="cell"><b>dia livre</b><span>começa, sem pressa</span></td>
+      </tr>
+      <tr>
+        <td class="rowlabel">08h30–12h</td>
+        <td class="cell"><b>atendimento</b><span>consulta + cetamina · gap &lt;30min: Todoist, 1 e-mail</span></td>
+        <td class="cell"><b>atendimento</b><span>consulta + cetamina · gap &lt;30min: Todoist, 1 e-mail</span></td>
+        <td class="cell"><b>atendimento</b><span>consulta particular · gap ≥20min: Memed, prescrição, nota</span></td>
+        <td class="cell"><b>atendimento</b><span>consulta particular · gap ≥20min: Memed, prescrição, nota</span></td>
+        <td class="cell"><b>atendimento</b><span>consulta (início 9h) · captura rápida nos gaps</span></td>
+        <td class="cell"><b>atendimento</b><span>consulta particular · gap ≥20min: Memed, prescrição, nota</span></td>
+        <td class="cell"><b>revisão semanal</b><span>ver Todoist, olhar a agenda de segunda</span></td>
+      </tr>
+      <tr>
+        <td class="rowlabel">12h–14h</td>
+        <td class="cell"><b>atendimento</b><span>consulta contínua · comer algo entre pacientes</span></td>
+        <td class="cell"><b>atendimento</b><span>consulta contínua · comer algo entre pacientes</span></td>
+        <td class="cell"><b>atendimento</b><span>consulta contínua · comer algo entre pacientes</span></td>
+        <td class="cell"><b>atendimento</b><span>consulta contínua · comer algo entre pacientes</span></td>
+        <td class="cell"><b>atendimento</b><span>consulta contínua · comer algo entre pacientes</span></td>
+        <td class="cell"><b>atendimento até 14h</b><span>consulta · comer algo entre pacientes</span></td>
+        <td class="cell"><b>dia livre</b><span>sem tarefa de clínica</span></td>
+      </tr>
+      <tr>
+        <td class="rowlabel">14h–18h</td>
+        <td class="cell"><b>atendimento</b><span>consulta + cetamina · gap &lt;30min: Todoist, 1 e-mail</span></td>
+        <td class="cell"><b>atendimento</b><span>consulta + cetamina · gap &lt;30min: Todoist, 1 e-mail</span></td>
+        <td class="cell"><b>atendimento</b><span>consulta contínua · gap grande em BETA: documento clínico, estudo ou consultório particular</span></td>
+        <td class="cell"><b>atendimento</b><span>consulta contínua · gap grande em BETA: documento clínico, estudo ou consultório particular</span></td>
+        <td class="cell"><b>atendimento até 17h</b><span>17h–18h: administrativo/financeiro represado ou já sair</span></td>
+        <td class="cell"><b>tarde livre</b><span>caminhada/academia, revisar Todoist, consultório particular represado</span></td>
+        <td class="cell"><b>exercício tranquilo</b><span>caminhada, tempo com quem importa</span></td>
+      </tr>
+      <tr>
+        <td class="rowlabel">18h–20h</td>
+        <td class="cell"><b>saída 18h+</b><span>sem tarefa — só desligar</span></td>
+        <td class="cell"><b>saída 18h+</b><span>sem tarefa — só desligar</span></td>
+        <td class="cell"><b>recuperação</b><span>sem tarefa</span></td>
+        <td class="cell"><b>recuperação</b><span>sem tarefa</span></td>
+        <td class="cell"><b>livre / telemed.</b><span>17h–19h livre · 19h–20h consulta online particular (~60% das sextas)</span></td>
+        <td class="cell"><b>recuperação</b><span>sem tarefa</span></td>
+        <td class="cell"><b>dia livre</b><span>ainda sem tarefa</span></td>
+      </tr>
+      <tr>
+        <td class="rowlabel">20h–22h</td>
+        <td class="cell"><b>recuperação</b><span>romance, Wicca/tarot, série, filme, podcast, jogo — nada técnico</span></td>
+        <td class="cell"><b>recuperação</b><span>romance, Wicca/tarot, série, filme, podcast, jogo — nada técnico</span></td>
+        <td class="cell"><b>recuperação</b><span>romance, Wicca/tarot, série, filme, podcast, jogo — nada técnico</span></td>
+        <td class="cell"><b>recuperação</b><span>romance, Wicca/tarot, série, filme, podcast, jogo — nada técnico</span></td>
+        <td class="cell"><b>recuperação</b><span>romance, Wicca/tarot, série, filme, podcast, jogo — nada técnico</span></td>
+        <td class="cell"><b>recuperação</b><span>romance, Wicca/tarot, série, filme, podcast, jogo — nada técnico</span></td>
+        <td class="cell warn"><b>noite crítica</b><span>romance, Wicca/tarot, série, filme, podcast, jogo — só que mais curto, priorize desligar cedo</span></td>
+      </tr>
+      <tr>
+        <td class="rowlabel">22h–00h</td>
+        <td class="cell"><b>Mac off 22h</b><span>guardar notebook · iPhone de lado 23h30 · dormir até 00h</span></td>
+        <td class="cell"><b>Mac off 22h</b><span>guardar notebook · iPhone de lado 23h30 · dormir até 00h</span></td>
+        <td class="cell"><b>Mac off 22h</b><span>guardar notebook · iPhone de lado 23h30 · dormir até 00h</span></td>
+        <td class="cell"><b>Mac off 22h</b><span>guardar notebook · iPhone de lado 23h30 · dormir até 00h</span></td>
+        <td class="cell"><b>Mac off 22h</b><span>guardar notebook · iPhone de lado 23h30 · dormir até 00h</span></td>
+        <td class="cell"><b>Mac off 22h</b><span>guardar notebook · iPhone de lado 23h30 · dormir até 00h</span></td>
+        <td class="cell"><b>Mac off 22h</b><span>guardar notebook · iPhone de lado 23h30 · dormir até 00h</span></td>
+      </tr>
+      <tr class="notesrow">
+        <td class="rowlabel">notas do dia</td>
+        <td class="cell">sem janela planejável — só buracos de falta imprevisíveis.</td>
+        <td class="cell">sem janela planejável — só buracos de falta imprevisíveis.</td>
+        <td class="cell">nº de pacientes varia (1 só ou vários) — a regra reage ao tamanho do buraco, não ao relógio.</td>
+        <td class="cell">nº de pacientes varia (1 só ou vários) — a regra reage ao tamanho do buraco, não ao relógio.</td>
+        <td class="cell">único dia Assis com folga real (17h–19h) + possível telemedicina depois.</td>
+        <td class="cell">atendimento termina 14h — a tarde livre é o espaço mais confiável da semana.</td>
+        <td class="cell">HRV diurna mais baixa da semana — não é dia de energia, é dia de blindar a noite.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="general">
+    <h3>observações gerais do planner</h3>
+
+    <div class="section">
+      <p class="eyebrow">regras diárias</p>
+      <ul class="rules">
+        <li><b>06h00</b>&nbsp;acordar (pés no chão em 5min)</li>
+        <li><b>22h00</b>&nbsp;Mac off</li>
+        <li><b>23h30</b>&nbsp;iPhone de lado</li>
+        <li><b>00h00</b>&nbsp;meta de dormir (mudança gradual)</li>
+        <li class="alert">alerta HRV: domingo/segunda = pior recuperação</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <p class="eyebrow">regra do buraco (dias Livance)</p>
+      <p class="note">Quantidade de pacientes varia — a regra reage ao tamanho do buraco entre consultas, não ao relógio:</p>
+      <div class="tiers">
+        <div class="tier"><b>&lt;20min</b><span>captura rápida — Todoist, mensagem, 1 e-mail curto. Não abrir caso.</span></div>
+        <div class="tier"><b>20–40min</b><span>trabalho raso — e-mail, prescrição (Memed), nota de prontuário.</span></div>
+        <div class="tier"><b>40–90min</b><span>depende do horário — em BETA (10h, 12h–17h): documento clínico, estudo ou consultório particular. Em DELTA (08h–09h, 18h): continua em raso.</span></div>
+        <div class="tier"><b>≥90min</b><span>janela bônus — em BETA vira mini-ALFA (mesmo critério do Sapo A1); fora de BETA, é hora de exercício ou consultório particular represado.</span></div>
+      </div>
+      <p class="note">Sábado à tarde não é uma regra à parte — é o tier ≥90min garantido: o atendimento sempre termina às 14h, então a tarde inteira já nasce como janela bônus.</p>
+    </div>
+
+    <div class="section">
+      <p class="eyebrow">regra do buraco (dias Assis)</p>
+      <p class="note">Não tem os quatro tiers do Livance. Segunda, terça e sexta são dias sem janela planejável — os únicos buracos que aparecem vêm de falta de paciente (5–7 por semana, imprevisíveis) e ficam sempre na casa dos 30min, nunca maiores, porque a agenda seguinte já está ocupada com o próximo paciente marcado. Por isso a regra é uma só, sem escalada: qualquer buraco em dia Assis é captura rápida (Todoist, mensagem, 1 e-mail curto) — nunca vira foco real, porque não dá pra confiar que ele vai durar.</p>
+    </div>
+
+    <div class="section">
+      <p class="eyebrow">domingo não usa essa regra</p>
+      <p class="note">Domingo não tem paciente, então não existe "buraco" — o dia inteiro já é a coluna livre da tabela (revisão semanal, exercício tranquilo, tempo intencional), sem precisar classificar nada por tamanho de intervalo.</p>
+    </div>
+
+    <div class="section">
+      <p class="eyebrow">recuperação noturna</p>
+      <p class="note">Qualquer coisa não técnica ajuda a desligar — vale em qualquer dia da semana:</p>
+      <div class="taglist">
+        <span class="tag">romance</span>
+        <span class="tag">espiritualidade / Wicca / tarot / bruxaria</span>
+        <span class="tag">série</span>
+        <span class="tag">filme</span>
+        <span class="tag">podcast</span>
+        <span class="tag">jogo</span>
+        <span class="tag">hobby manual</span>
+      </div>
+      <p class="note">Leitura técnica/estudo fica reservada pro ALFA da manhã — puxar isso pra noite só empurra o horário de dormir, que já é o problema real.</p>
+    </div>
+
+    <div class="section">
+      <p class="eyebrow">categorias de trabalho (do seu Todoist)</p>
+      <div class="taglist">
+        <span class="tag">documento clínico</span>
+        <span class="tag">estudo clínico</span>
+        <span class="tag">consultório particular</span>
+        <span class="tag">automação técnica (SendPulse/CliMed)</span>
+        <span class="tag">conteúdo / autoridade técnica</span>
+        <span class="tag">administrativo / financeiro</span>
+      </div>
+      <p class="note">É o que preenche ALFA, os gaps de foco real e a tarde livre do sábado — sem inventar tarefa específica, só a categoria que cabe no momento.</p>
+    </div>
+  </div>
+
+  <div class="fold"></div>
+</div>
+</body>
+</html>
